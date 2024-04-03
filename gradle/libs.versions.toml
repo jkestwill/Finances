@@ -1,0 +1,92 @@
+[versions]
+activity-compose = "1.8.2"
+androidx-junit = "1.1.5"
+compose = "1.13.1"
+converterSimplexml = "2.3.0"
+core = "1.5.0"
+core-ktx = "1.12.0"
+espressoVersion = "3.5.1"
+hilt-android = "2.50"
+hilt-navigation-compose = "1.2.0"
+junit = "4.13.2"
+kizitonwose-compose = "2.4.1"
+lifecycle-runtime-ktx = "2.7.0"
+navigation-compose = "2.7.7"
+paging-compose = "3.3.0-alpha03"
+paging-runtime = "3.2.1"
+room-ktx = "2.6.1"
+room-runtime = "2.6.1"
+runner = "1.5.2"
+truth = "1.4.0"
+ycharts = "2.1.0"
+
+android-application= "8.2.2"
+jetbrains-kotlin-android="1.9.22"
+kapt="1.8.0"
+google-dagger-hilt-android="2.50"
+google-devtools-ksp="1.9.22-1.0.17"
+ktor = "2.3.8"
+coroutines = "1.8.0"
+retrofit = "2.9.0"
+json="1.6.3"
+retrofit-json-converter="1.0.0"
+retrofit-adapters-result="1.0.9"
+appcompat = "1.6.1"
+material = "1.11.0"
+
+colorpicker="1.0.7"
+[libraries]
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+androidx-espresso-accessibility = { module = "androidx.test.espresso:espresso-accessibility", version.ref = "espressoVersion" }
+androidx-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoVersion" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoVersion" }
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoVersion" }
+androidx-espresso-web = { module = "androidx.test.espresso:espresso-web", version.ref = "espressoVersion" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
+androidx-idling-concurrent = { module = "androidx.test.espresso.idling:idling-concurrent", version.ref = "espressoVersion" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "androidx-junit" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging-compose" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging-runtime" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-ktx" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-ktx" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+androidx-truth = { module = "androidx.test.ext:truth", version.ref = "core" }
+calendar-compose = { module = "com.kizitonwose.calendar:compose", version.ref = "kizitonwose-compose" }
+compose = { module = "com.patrykandpatrick.vico:compose", version.ref = "compose" }
+converter-simplexml = { module = "com.squareup.retrofit2:converter-simplexml", version.ref = "converterSimplexml" }
+core-ktx = { module = "androidx.test:core-ktx", version.ref = "core" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
+retrofit-serialization-kotlinx-converter={module="com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter",version.ref="retrofit-json-converter"}
+retrofit-adapters-result={module="com.github.skydoves:retrofit-adapters-result",version.ref="retrofit-adapters-result"}
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+skydoves-colorpicker = {module="com.github.skydoves:colorpicker-compose", version.ref="colorpicker"}
+
+[plugins]
+android-application={id="com.android.application",version.ref="android-application"}
+jetbrains-kotlin-android={id="org.jetbrains.kotlin.android",version.ref="jetbrains-kotlin-android"}
+google-dagger-hilt-android={id="com.google.dagger.hilt.android",version.ref="google-dagger-hilt-android"}
+google-devtools-ksp={id="com.google.devtools.ksp",version.ref="google-devtools-ksp"}
+android-library={id="com.android.library",version.ref="android-application"}
+jetbrains-kotlin-jvm={id="org.jetbrains.kotlin.jvm",version.ref="jetbrains-kotlin-android"}
+kotilinx-serialization={id="org.jetbrains.kotlin.plugin.serialization",version.ref="jetbrains-kotlin-android"}
+jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "jetbrains-kotlin-android" }
