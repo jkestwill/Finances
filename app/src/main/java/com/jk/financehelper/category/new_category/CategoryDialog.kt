@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
@@ -200,6 +201,7 @@ fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
                 inclusive = false,
                 saveState = false
             )
+            navController.navigate(Routes.CATEGORY_LIST,navOptions = NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(route =Routes.CATEGORY_LIST,true).build())
         }
 
         is State.Error -> {

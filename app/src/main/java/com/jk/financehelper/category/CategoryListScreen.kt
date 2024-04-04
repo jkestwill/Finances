@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,13 +33,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentRecomposeScope
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +55,7 @@ import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.jk.category.Category
 import com.jk.category.CategoryViewModel
 import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
@@ -59,14 +70,14 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     val searchText = remember {
         mutableStateOf("")
     }
-    viewModel.getAllCategories(searchText.value)
+    // viewModel.getAllCategories(searchText.value)
     Scaffold(topBar = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
-            Search(text =searchText.value)
+            Search(text = searchText.value, viewModel)
         }
     }) {
         Box(
@@ -145,7 +156,7 @@ fun ColumnScope.CategoryGrid(
                 ErrorCategory()
                 Log.e(
                     "qq",
-                    "CategoryGrid: ${(categoryPagingList.loadState.refresh as LoadState.Error).error.stackTrace[0].fileName}",
+                    "CategoryGrid: ${(state as LoadState.Error).error.stackTrace[0].fileName}",
                 )
             }
 
@@ -161,7 +172,13 @@ fun ColumnScope.CategoryGrid(
                                 CategoryItem(
                                     category = category,
                                     color = Color(category.color),
-                                    onClick = onItemClick
+                                    onClick = { onItemClick(category) },
+                                    onLongClick = {
+                                        Log.e("TAG", "CategoryGrid: zxc")
+                                    },
+                                    onSelect = {
+                                        Log.e("TAG", "CategoryGrid: ${category}")
+                                    }
                                 )
                             }
                         }
@@ -198,21 +215,64 @@ fun ColumnScope.ErrorCategory() {
 fun LoadingCategory(data: LazyPagingItems<TransactionCategory>) {
     CircularProgressIndicator()
 }
-
+// сделать выбор элементов по долгому нажатимю и вынести это в общее тк это нужно будет для других списков
 @Composable
 fun CategoryItem(
     category: TransactionCategory,
     color: Color,
-    onClick: (TransactionCategory) -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onSelect: () -> Unit
 ) {
+    var isSelected = remember {
+        mutableStateOf(false)
+    }
+    var c by remember {
+        mutableStateOf(color)
+    }
+    var selectedId = remember {
+        mutableStateOf("")
+    }
+    var isBorderVisible by remember {
+        mutableStateOf(false)
+    }
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(15))
+            .border(width =if(isBorderVisible) 2.dp else 0.dp,color= Color.Black, shape = RoundedCornerShape(15))
+
             .drawBehind {
                 drawRect(color)
+
             }
+
             .height(100.dp)
-            .clickable { onClick(category) }
+            .clickable { onClick() }
+            .selectable(selected = selectedId.value == category.id, onClick = {
+
+                onSelect()
+
+                Log.e("sas", "CategoryItem:${isSelected} ")
+                if (selectedId.value == category.id) {
+                    isBorderVisible = true
+                    selectedId.value = ""
+                }
+                else {
+                    isBorderVisible=false
+                    selectedId.value = category.id
+                }
+
+            })
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        selectedId.value=category.id
+                        onLongClick()
+                    },
+
+                    )
+            }
+
 
     ) {
         Text(
@@ -225,8 +285,9 @@ fun CategoryItem(
 }
 
 @Composable
-fun Search(text: String) {
+fun Search(text: String, viewModel: CategoryViewModel) {
     var searchText = remember() { mutableStateOf(text) }
+    viewModel.getAllCategories(searchText.value)
     TextField(
         modifier = Modifier
             .width(150.dp)

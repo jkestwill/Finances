@@ -26,10 +26,6 @@ class CategoryPagingSource @AssistedInject constructor(
         val page = params.key ?: 0
         val response = categoryDao.getAll(q=q,sortBy = sortBy, isAsc = isAsc, limit = pageSize, offset = page*pageSize)
 
-        Log.e("LOAD", "load:${response.size} ", )
-        Log.e("LOAD", "load:${pageSize} ", )
-        Log.e("LOAD", "page:${page} ", )
-        Log.e("LOAD", "page:${response.size < pageSize} ", )
 
         return if (response.isNotEmpty()) {
             val nextKey = if (response.size < pageSize) null else page + 1
