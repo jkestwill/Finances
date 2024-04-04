@@ -21,9 +21,9 @@ class CategoryRepository @Inject constructor (
     private val categoryDao: CategoryDao,
     private val categoryPagingSource: CategoryPagingSourceFactory
 ) {
-    fun getList(sortBy: String, isAsc: Boolean): Flow<PagingData<TransactionCategory>> {
+    fun getList(q:String,sortBy: String, isAsc: Boolean): Flow<PagingData<TransactionCategory>> {
         return Pager(PagingConfig(20)) {
-            categoryPagingSource.create(sortBy, isAsc)
+            categoryPagingSource.create(sortBy=sortBy, isAsc=isAsc,q=q)
         }.flow
     }
 
@@ -72,6 +72,7 @@ class CategoryRepository @Inject constructor (
 @AssistedFactory
 interface CategoryPagingSourceFactory {
     fun create(
+        @Assisted("q") q:String,
         @Assisted("sortBy") sortBy: String,
         @Assisted("isAsc") isAsc: Boolean
     ): CategoryPagingSource

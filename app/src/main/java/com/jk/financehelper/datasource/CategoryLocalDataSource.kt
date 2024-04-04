@@ -17,11 +17,12 @@ class CategoryLocalDataSource @Inject constructor(
     }
 
     override suspend fun getAllItems(
+        q:String,
         sortBy: String,
         isAsc: Boolean
     ): Response<List<TransactionCategoryDatabaseEntity>> {
         return apiRequest<List<TransactionCategoryDatabaseEntity>> {
-            categoryDao.getAll(sortBy, isAsc,0,0)
+            categoryDao.getAll(q,sortBy, isAsc,0,0)
         }
     }
 

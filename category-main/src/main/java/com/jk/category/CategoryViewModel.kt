@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -25,17 +26,28 @@ class CategoryViewModel @Inject constructor(
 
     companion object {
         const val SEED = 11023
+        private const val TAG = "CategoryViewModel"
     }
+
+    private val searchRegex = Regex("([a-zA-Z]\\s){0,30}")
 
     private var _categoryFLow =
         MutableStateFlow<PagingData<TransactionCategory>>(PagingData.empty())
     val categoryFlow: StateFlow<PagingData<TransactionCategory>> get() = _categoryFLow
 
-    fun getAllCategories() {
-        Log.e("TAG", "getAllCategories: ", )
+    fun searchMatch(input: String): Boolean {
+        return isMatch(regex = searchRegex, input = input)
+    }
+
+    private fun isMatch(regex: Regex, input: String): Boolean {
+        return regex.matches(input)
+    }
+
+    fun getAllCategories(search:String) {
+        Log.e(TAG, "getAllCategories: ")
         viewModelScope.launch {
             _categoryFLow.emitAll(
-                categoryRepository.getList("id", true).cachedIn(viewModelScope).stateIn(
+                categoryRepository.getList(search,"id", true).cachedIn(viewModelScope).stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.Lazily,
                     initialValue = PagingData.empty()

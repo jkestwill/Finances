@@ -206,7 +206,7 @@ fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
             Log.e("qqs", "AddCategory:ERROR")
             Toast.makeText(
                 context,
-                "${(state.value as State.Error<Long>).message}",
+                (state.value as State.Error<Long>).message,
                 Toast.LENGTH_LONG
             ).show()
         }

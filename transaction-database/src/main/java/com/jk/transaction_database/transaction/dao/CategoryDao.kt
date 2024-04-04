@@ -30,12 +30,13 @@ interface CategoryDao {
     suspend fun update(t: TransactionCategoryDatabaseEntity)
 
     @Query(
-        value = "SELECT * FROM category ORDER BY " +
+        value = "SELECT * FROM category  WHERE LOWER(category.name) LIKE '%'||:q||'%'  ORDER BY " +
                 " CASE WHEN :isAsc ==1 THEN :sortBy END ASC," +
                 " CASE WHEN :isAsc ==0 THEN :sortBy END DESC " +
-                "LIMIT :limit OFFSET :offset "
+                "LIMIT :limit OFFSET :offset"
     )
     suspend fun getAll(
+        q:String,
         sortBy: String,
         isAsc: Boolean,
         offset:Int,

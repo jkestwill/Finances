@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
     // при первом запуске спрашивается основная валюта
     val currentCurrency=MutableStateFlow<String>("BYN")
 
-    val categoryFlow = categoryRepository.getList("id", true).stateIn(
+    val categoryFlow = categoryRepository.getList(" ","id", true).stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = PagingData.empty()
