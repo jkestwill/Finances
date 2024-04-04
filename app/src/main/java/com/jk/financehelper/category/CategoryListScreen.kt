@@ -238,6 +238,4 @@ fun Search(text: String) {
         placeholder = {
             Text(text = "Search")
         })
-
-
 }
