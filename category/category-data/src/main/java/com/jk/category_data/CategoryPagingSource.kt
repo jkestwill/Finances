@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 
 class CategoryPagingSource @AssistedInject constructor(
     private var categoryDao: CategoryDao,
+    @Assisted("q") private val q:String,
     @Assisted("sortBy") private var sortBy: String,
     @Assisted("isAsc") private var isAsc: Boolean
 ) : PagingSource<Int, TransactionCategory>() {
@@ -23,7 +24,7 @@ class CategoryPagingSource @AssistedInject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TransactionCategory> {
         val pageSize = params.loadSize.coerceAtMost(20)
         val page = params.key ?: 0
-        val response = categoryDao.getAll(sortBy = sortBy, isAsc = isAsc, limit = pageSize, offset = page*pageSize)
+        val response = categoryDao.getAll(q=q,sortBy = sortBy, isAsc = isAsc, limit = pageSize, offset = page*pageSize)
 
         Log.e("LOAD", "load:${response.size} ", )
         Log.e("LOAD", "load:${pageSize} ", )

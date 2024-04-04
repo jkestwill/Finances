@@ -7,7 +7,7 @@ interface LocalDataSource<G, I> {
 
     suspend fun getById(id: String): Response<TransactionCategoryDatabaseEntity?>
 
-    suspend fun getAllItems(sortBy: String, isAsc: Boolean): Response<List<G>>
+    suspend fun getAllItems(q:String,sortBy: String, isAsc: Boolean): Response<List<G>>
 
     suspend fun add(t: I): Response<Unit>
 

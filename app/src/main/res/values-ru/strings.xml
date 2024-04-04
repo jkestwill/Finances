@@ -25,4 +25,6 @@
         <item name="saturday">Суббота</item>
         <item name="sunday">Воскресенье</item>
     </string-array>
+
+    <string name="list_empty">Список пуст</string>
 </resources>

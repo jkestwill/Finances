@@ -27,9 +27,9 @@ class CategoryListViewModel @Inject constructor(
         }
     }
 
-    fun getAll(sortBy: String, isAsc: Boolean) {
+    fun getAll(q:String,sortBy: String, isAsc: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            categoryRepository.getList(sortBy, isAsc)
+            categoryRepository.getList(q,sortBy, isAsc)
         }
     }
 }
