@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,14 +27,18 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawStyle
@@ -70,6 +76,12 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     val searchText = remember {
         mutableStateOf("")
     }
+    var isSelectionEnable by remember {
+        mutableStateOf(false)
+    }
+    var selectedIdList by remember {
+        mutableStateOf(listOf<String>())
+    }
     // viewModel.getAllCategories(searchText.value)
     Scaffold(topBar = {
         Row(
@@ -78,6 +90,18 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         ) {
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
             Search(text = searchText.value, viewModel)
+            if (isSelectionEnable) {
+                SelectionBar(
+                    selectedCount = selectedIdList.size,
+                    onSelectAll = {
+                        if (it)
+                        selectedIdList+=categoryList.itemSnapshotList.map { it?.id?:"" }
+                        else selectedIdList= listOf()
+                    },
+                    onClose = { isSelectionEnable=false }) {
+
+                }
+            }
         }
     }) {
         Box(
@@ -95,9 +119,18 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 
                 CategoryGrid(
                     categoryPagingList = categoryList,
-                ) {
-                    navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
-                }
+                    onSelectEnable = { enabled ->
+                        Log.e("TAG", "CategoryListScreen:$enabled ")
+                        isSelectionEnable = enabled
+                    },
+                    onItemClick = {
+                        navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
+                    },
+                    onItemSelected = {
+                        selectedIdList=it
+                    }
+                )
+
             }
             Box(
                 modifier = Modifier
@@ -130,15 +163,43 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 
 }
 
+/**
+ * Selection bar for handling selected item
+ * */
+@Composable
+fun SelectionBar(
+    selectedCount: Int,
+    onSelectAll: (Boolean) -> Unit,
+    onClose: () -> Unit,
+    onDelete: () -> Unit
+) {
+    val selected = remember {
+        mutableStateOf(false)
+    }
+    Row {
+        RadioButton(selected = selected.value, onClick = {
+            selected.value = !selected.value
+            onSelectAll(selected.value)
+        })
+        Text(text = "$selectedCount")
+        Icon(
+            modifier = Modifier.clickable { onClose() },
+            imageVector = Icons.Filled.Close,
+            contentDescription = "close"
+        )
+    }
+}
 
 @Composable
 fun ColumnScope.CategoryGrid(
     categoryPagingList: LazyPagingItems<TransactionCategory>,
-    onItemClick: (TransactionCategory) -> Unit
+    onItemClick: (TransactionCategory) -> Unit,
+    onSelectEnable:(Boolean)->Unit,
+    onItemSelected:(List<String>)->Unit,
 ) {
-
-    Log.e("zxc", "CategoryGrid:${categoryPagingList.itemCount} ")
-    Log.e("zxc", "CategoryGrid:${categoryPagingList.loadState.refresh} ")
+    var selectedIdList by remember {
+        mutableStateOf(listOf<String>())
+    }
     Crossfade(
         targetState = categoryPagingList.loadState.refresh, animationSpec = tween(),
     ) { state ->
@@ -161,6 +222,7 @@ fun ColumnScope.CategoryGrid(
             }
 
             else -> {
+
                 if (categoryPagingList.itemCount > 0)
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(4),
@@ -169,15 +231,25 @@ fun ColumnScope.CategoryGrid(
                     ) {
                         items(categoryPagingList.itemCount) {
                             categoryPagingList[it]?.let { category ->
+                                var isSelected by remember {
+                                    mutableStateOf(false)
+                                }
                                 CategoryItem(
                                     category = category,
                                     color = Color(category.color),
                                     onClick = { onItemClick(category) },
-                                    onLongClick = {
-                                        Log.e("TAG", "CategoryGrid: zxc")
-                                    },
-                                    onSelect = {
-                                        Log.e("TAG", "CategoryGrid: ${category}")
+                                    isSelected = isSelected,
+                                    onSelectEnable = onSelectEnable,
+                                    onSelectItem = {selected->
+                                        if(selected){
+                                            selectedIdList+=category.id
+
+                                        }
+                                        else{
+                                            selectedIdList-=category.id
+                                        }
+                                        onItemSelected(selectedIdList)
+                                        isSelected = selected
                                     }
                                 )
                             }
@@ -215,66 +287,47 @@ fun ColumnScope.ErrorCategory() {
 fun LoadingCategory(data: LazyPagingItems<TransactionCategory>) {
     CircularProgressIndicator()
 }
+
 // сделать выбор элементов по долгому нажатимю и вынести это в общее тк это нужно будет для других списков
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryItem(
     category: TransactionCategory,
     color: Color,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    onSelect: () -> Unit
+    selectedColor: Color? = null,
+    isSelected: Boolean,
+    onSelectEnable: (Boolean) -> Unit,
+    onSelectItem: (Boolean) -> Unit
 ) {
-    var isSelected = remember {
-        mutableStateOf(false)
-    }
-    var c by remember {
-        mutableStateOf(color)
-    }
-    var selectedId = remember {
-        mutableStateOf("")
-    }
-    var isBorderVisible by remember {
+    var selectedMode by remember {
         mutableStateOf(false)
     }
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(15))
-            .border(width =if(isBorderVisible) 2.dp else 0.dp,color= Color.Black, shape = RoundedCornerShape(15))
-
+            .combinedClickable(
+                onLongClick = {
+                    Log.e("TAG", "CategoryItem: ")
+                    selectedMode = !selectedMode
+                    onSelectEnable(selectedMode)
+                },
+                onClick = onClick
+            )
             .drawBehind {
                 drawRect(color)
-
             }
 
             .height(100.dp)
-            .clickable { onClick() }
-            .selectable(selected = selectedId.value == category.id, onClick = {
-
-                onSelect()
-
-                Log.e("sas", "CategoryItem:${isSelected} ")
-                if (selectedId.value == category.id) {
-                    isBorderVisible = true
-                    selectedId.value = ""
-                }
-                else {
-                    isBorderVisible=false
-                    selectedId.value = category.id
-                }
-
-            })
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = {
-                        selectedId.value=category.id
-                        onLongClick()
-                    },
-
-                    )
-            }
+        // .clickable { onClick() }
 
 
     ) {
+        if (selectedMode)
+            Checkbox(checked = isSelected, onCheckedChange = {
+                onSelectItem(it)
+            })
+
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = category.name,
