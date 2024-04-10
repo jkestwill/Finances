@@ -74,7 +74,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
         Box() {
             Column(
                 modifier = Modifier
-                    .clip(FinanceHelperTheme.shape.shape)
+                    .clip(FinanceHelperTheme.shape.shape10)
                     .background(FinanceHelperTheme.colors.secondaryBackground)
                     .height(250.dp)
                     .padding(FinanceHelperTheme.shape.padding)
@@ -227,6 +227,11 @@ fun ColorPicker(controller: ColorPickerController, onColorChange: (color: Color)
             onColorChange(colorEnvelope.color)
         }
     )
+
+}
+
+fun ColorPicker(onPick:(ULong)->Unit){
+
 }
 
 @SuppressLint("RememberReturnType")
@@ -254,7 +259,7 @@ fun ColorPopup(
     ) {
         Box(
             modifier = Modifier
-                .clip(FinanceHelperTheme.shape.shape)
+                .clip(FinanceHelperTheme.shape.shape10)
                 .background(FinanceHelperTheme.colors.secondaryBackground)
                 .height(200.dp)
                 .width(150.dp)

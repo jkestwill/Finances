@@ -43,12 +43,16 @@ data class FinanceHelperColors(
     val secondaryText: Color,
     val primaryBackground: Color,
     val secondaryBackground: Color,
+    val buttonDeleteColor:Color,
+    val defaultButtonColor:Color,
     val error: Color
 )
 
 data class FinanceHelperShape(
     val padding: Dp,
-    val shape: Shape
+    val shape10: Shape,
+    val shape20: Shape,
+    val shape30: Shape,
 )
 
 data class FinanceHelperTypography(
@@ -103,7 +107,9 @@ fun FinanceHelperTheme(
                 error("No such size $paddingSize")
             }
         },
-        shape = RoundedCornerShape(10)
+        shape10 = RoundedCornerShape(10),
+        shape20 = RoundedCornerShape(20),
+        shape30 = RoundedCornerShape(30),
     )
     val typography = FinanceHelperTypography(
         label = TextStyle(

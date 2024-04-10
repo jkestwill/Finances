@@ -1,16 +1,18 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.jk.financehelper.category
 
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -22,17 +24,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentRecomposeScope
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,21 +45,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawStyle
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.category.Category
 import com.jk.category.CategoryViewModel
 import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
@@ -70,7 +70,9 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     val searchText = remember {
         mutableStateOf("")
     }
-    // viewModel.getAllCategories(searchText.value)
+    val isSelectionMode = remember {
+        mutableStateOf(false)
+    }
     Scaffold(topBar = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -95,48 +97,79 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 
                 CategoryGrid(
                     categoryPagingList = categoryList,
-                ) {
-                    navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(10.dp)
-                    .background(
-                        Celadon,
-                        RoundedCornerShape(30)
-                    )
-                    .clickable {
-
-                        navController.navigate(Routes.NEW_CATEGORY)
-
+                    onItemClick = {
+                        navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
                     },
-            ) {
-
-                Icon(
-                    modifier = Modifier.align(Alignment.Center),
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "add"
+                    isSelectionMode = isSelectionMode,
+                    onSelectionMode = {
+                        isSelectionMode.value = it
+                    }
                 )
+            }
+            if (isSelectionMode.value) {
+                SelectItemsMenu {
+
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(65.dp)
+                        .padding(10.dp)
+                        .background(
+                           FinanceHelperTheme.colors.defaultButtonColor,
+                           FinanceHelperTheme.shape.shape10
+                        )
+                        .clickable {
+
+                            navController.navigate(Routes.NEW_CATEGORY)
+
+                        },
+                ) {
+
+                    Icon(
+                        modifier = Modifier.align(Alignment.Center),
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "add"
+                    )
+
+                }
 
             }
-
         }
     }
 
 
 }
 
+/**
+ * Menu for selected items*/
+@Composable
+fun BoxScope.SelectItemsMenu(onDelete: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .padding(10.dp)
+            .align(Alignment.BottomCenter)
+
+    ) {
+
+        IconButton(modifier = Modifier.weight(1f).background(FinanceHelperTheme.colors.buttonDeleteColor, shape = FinanceHelperTheme.shape.shape20), onClick = onDelete) {
+            Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+        }
+    }
+}
 
 @Composable
 fun ColumnScope.CategoryGrid(
     categoryPagingList: LazyPagingItems<TransactionCategory>,
-    onItemClick: (TransactionCategory) -> Unit
+    onSelectionMode: (Boolean) -> Unit,
+    isSelectionMode: State<Boolean>,
+    onItemClick: (TransactionCategory) -> Unit,
 ) {
-
+    val selectedItemList = remember {
+        mutableStateOf(listOf<String>())
+    }
     Log.e("zxc", "CategoryGrid:${categoryPagingList.itemCount} ")
     Log.e("zxc", "CategoryGrid:${categoryPagingList.loadState.refresh} ")
     Crossfade(
@@ -169,16 +202,31 @@ fun ColumnScope.CategoryGrid(
                     ) {
                         items(categoryPagingList.itemCount) {
                             categoryPagingList[it]?.let { category ->
+                                var isSelected by remember {
+                                    mutableStateOf(false)
+                                }
                                 CategoryItem(
+                                    modifier = Modifier
+                                        .combinedClickable(
+                                            onClick = {
+                                                if (isSelectionMode.value) {
+                                                    isSelected = !isSelected
+                                                    if (isSelected) {
+                                                        selectedItemList.value += category.id
+                                                    } else {
+                                                        selectedItemList.value -= category.id
+                                                    }
+                                                } else {
+                                                    onItemClick(category)
+                                                }
+
+                                            }, onLongClick = {
+                                                onSelectionMode(!isSelectionMode.value)
+                                            }),
                                     category = category,
                                     color = Color(category.color),
-                                    onClick = { onItemClick(category) },
-                                    onLongClick = {
-                                        Log.e("TAG", "CategoryGrid: zxc")
-                                    },
-                                    onSelect = {
-                                        Log.e("TAG", "CategoryGrid: ${category}")
-                                    }
+                                    isSelectionMode = isSelectionMode,
+                                    isSelected = isSelected
                                 )
                             }
                         }
@@ -192,6 +240,7 @@ fun ColumnScope.CategoryGrid(
 
 
 }
+
 
 @Composable
 fun ColumnScope.ErrorCategory() {
@@ -211,70 +260,44 @@ fun ColumnScope.ErrorCategory() {
     }
 }
 
-@Composable
-fun LoadingCategory(data: LazyPagingItems<TransactionCategory>) {
-    CircularProgressIndicator()
-}
 // сделать выбор элементов по долгому нажатимю и вынести это в общее тк это нужно будет для других списков
 @Composable
 fun CategoryItem(
+    modifier: Modifier,
     category: TransactionCategory,
     color: Color,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    onSelect: () -> Unit
+    isSelectionMode: State<Boolean>,
+    isSelected: Boolean
 ) {
-    var isSelected = remember {
-        mutableStateOf(false)
-    }
-    var c by remember {
-        mutableStateOf(color)
-    }
-    var selectedId = remember {
-        mutableStateOf("")
-    }
-    var isBorderVisible by remember {
-        mutableStateOf(false)
-    }
+
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(15))
-            .border(width =if(isBorderVisible) 2.dp else 0.dp,color= Color.Black, shape = RoundedCornerShape(15))
-
-            .drawBehind {
-                drawRect(color)
-
-            }
-
             .height(100.dp)
-            .clickable { onClick() }
-            .selectable(selected = selectedId.value == category.id, onClick = {
-
-                onSelect()
-
-                Log.e("sas", "CategoryItem:${isSelected} ")
-                if (selectedId.value == category.id) {
-                    isBorderVisible = true
-                    selectedId.value = ""
-                }
-                else {
-                    isBorderVisible=false
-                    selectedId.value = category.id
-                }
-
-            })
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = {
-                        selectedId.value=category.id
-                        onLongClick()
-                    },
-
+            .drawBehind {
+                drawRect(color = color)
+                if (isSelectionMode.value) {
+                    val offset = Offset(
+                        x = size.width / 4f,
+                        y = size.height - size.height / 5
                     )
+                    drawRect(
+                        color = Color.Black,
+                        topLeft = offset,
+                        size = Size(width = size.width / 2, height = 10f)
+                    )
+                    if (isSelected) {
+                        drawRect(
+                            color = Color.Cyan,
+                            topLeft = offset,
+                            size = Size(width = size.width / 2, height = 10f)
+                        )
+                    }
+
+                }
             }
-
-
     ) {
+
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = category.name,

@@ -100,7 +100,7 @@ fun CategoryScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .weight(0.6f)
-                    .shadow(2.dp, shape = FinanceHelperTheme.shape.shape),
+                    .shadow(2.dp, shape = FinanceHelperTheme.shape.shape10),
                 categoryName = "Taxi",
                 description = "All Transactions",
                 icon = painterResource(id = R.drawable.ic_sort_down),
@@ -110,16 +110,16 @@ fun CategoryScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .shadow(2.dp, FinanceHelperTheme.shape.shape)
+                    .shadow(2.dp, FinanceHelperTheme.shape.shape10)
                     .background(
-                        color = lightColor.value, FinanceHelperTheme.shape.shape
+                        color = lightColor.value, FinanceHelperTheme.shape.shape10
                     )
                     .padding(10.dp), verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 ButtonWithDropdownMenu(modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(20))
                     .background(
-                        color = color.value,shape= FinanceHelperTheme.shape.shape
+                        color = color.value,shape= FinanceHelperTheme.shape.shape10
                     )
                     .weight(0.2f),
                     list = listOf("Date", "Name", "Amount"),
@@ -132,7 +132,7 @@ fun CategoryScreen(
                     .weight(0.2f)
                     .shadow(4.dp, RoundedCornerShape(20))
                     .background(
-                        color = color.value, FinanceHelperTheme.shape.shape
+                        color = color.value, FinanceHelperTheme.shape.shape10
                     ),
                     list = listOf("Date", "Name", "Amount"),
                     color = Red,

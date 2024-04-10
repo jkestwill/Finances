@@ -30,5 +30,7 @@ val lightPalette = FinanceHelperColors(
     secondaryText = Color.Black,
     primaryBackground = LightCreamy,
     secondaryBackground = TeaGreen,
+    buttonDeleteColor = Red,
+    defaultButtonColor = Celadon,
     error = Red
 )
