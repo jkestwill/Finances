@@ -112,7 +112,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                 }
             } else {
                 Box(
-                    modifier = Modifier
+                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(65.dp)
