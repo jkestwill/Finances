@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
@@ -13,6 +14,11 @@ import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 interface CategoryDao {
     @Delete(entity = TransactionCategoryDatabaseEntity::class)
     suspend fun delete(t: TransactionCategoryDatabaseEntity)
+
+    @Query("DELETE FROM category WHERE category.id IN (:idList)")
+    suspend fun delete(idList: List<String>)
+
+
 
     @Insert(
         entity = TransactionCategoryDatabaseEntity::class,
@@ -36,11 +42,11 @@ interface CategoryDao {
                 "LIMIT :limit OFFSET :offset"
     )
     suspend fun getAll(
-        q:String,
+        q: String,
         sortBy: String,
         isAsc: Boolean,
-        offset:Int,
-        limit:Int
+        offset: Int,
+        limit: Int
     ): List<TransactionCategoryDatabaseEntity>
 
     @Query(value = "SELECT * FROM category WHERE category.id LIKE :id")

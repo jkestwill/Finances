@@ -41,16 +41,23 @@ class AddCategoryViewModel @Inject constructor(
             }
 
             else -> {
-                Log.e("pp", "addCategory:${color} ", )
-                _newCategoryNameErr.value=""
-                addCategory(TransactionCategory("$name $color $isExpenses".sha256(), name, color, isExpenses))
+                Log.e("pp", "addCategory:${color} ")
+                _newCategoryNameErr.value = ""
+                addCategory(
+                    TransactionCategory(
+                        "$name $color $isExpenses".sha256(),
+                        name,
+                        color,
+                        isExpenses
+                    )
+                )
             }
         }
     }
 
     private fun addCategory(category: TransactionCategory) {
         viewModelScope.launch(Dispatchers.IO) {
-            _addCategoryResponse.emitAll(categoryRepository.add(category).map {apiRequest->
+            _addCategoryResponse.emitAll(categoryRepository.add(category).map { apiRequest ->
                 apiRequest.toState()
             })
         }

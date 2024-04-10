@@ -4,6 +4,7 @@ package com.jk.financehelper.category
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,7 +37,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,8 +73,11 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     val searchText = remember {
         mutableStateOf("")
     }
-    val isSelectionMode = remember {
-        mutableStateOf(false)
+    val isSelectionMode = viewModel.selectionState.collectAsState()
+    BackHandler(isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
+
+        viewModel.selectionState.value = CategoryViewModel.SelectionState.OFF
+
     }
     Scaffold(topBar = {
         Row(
@@ -81,12 +87,12 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
             Search(text = searchText.value, viewModel)
         }
-    }) {
+    }) { paddingValues ->
         Box(
             modifier = Modifier
                 .background(FinanceHelperTheme.colors.primaryBackground)
                 .fillMaxSize()
-                .padding(top = it.calculateTopPadding())
+                .padding(top = paddingValues.calculateTopPadding())
         ) {
             Column(
                 modifier = Modifier
@@ -100,26 +106,25 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                     onItemClick = {
                         navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
                     },
-                    isSelectionMode = isSelectionMode,
-                    onSelectionMode = {
-                        isSelectionMode.value = it
-                    }
+                    viewModel = viewModel
                 )
             }
-            if (isSelectionMode.value) {
+            if (isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
                 SelectItemsMenu {
-
+                    //  selectedItemList.value
+                    Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
+                     viewModel.removeCategoriesById(viewModel.selectedCategoryIdList.value)
                 }
             } else {
                 Box(
-                     modifier = Modifier
+                    modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(65.dp)
                         .padding(10.dp)
                         .background(
-                           FinanceHelperTheme.colors.defaultButtonColor,
-                           FinanceHelperTheme.shape.shape10
+                            FinanceHelperTheme.colors.defaultButtonColor,
+                            FinanceHelperTheme.shape.shape10
                         )
                         .clickable {
 
@@ -154,7 +159,14 @@ fun BoxScope.SelectItemsMenu(onDelete: () -> Unit) {
 
     ) {
 
-        IconButton(modifier = Modifier.weight(1f).background(FinanceHelperTheme.colors.buttonDeleteColor, shape = FinanceHelperTheme.shape.shape20), onClick = onDelete) {
+        IconButton(
+            modifier = Modifier
+                .weight(1f)
+                .background(
+                    FinanceHelperTheme.colors.buttonDeleteColor,
+                    shape = FinanceHelperTheme.shape.shape20
+                ), onClick = onDelete
+        ) {
             Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
         }
     }
@@ -163,15 +175,14 @@ fun BoxScope.SelectItemsMenu(onDelete: () -> Unit) {
 @Composable
 fun ColumnScope.CategoryGrid(
     categoryPagingList: LazyPagingItems<TransactionCategory>,
-    onSelectionMode: (Boolean) -> Unit,
-    isSelectionMode: State<Boolean>,
     onItemClick: (TransactionCategory) -> Unit,
+    viewModel: CategoryViewModel
 ) {
     val selectedItemList = remember {
         mutableStateOf(listOf<String>())
     }
-    Log.e("zxc", "CategoryGrid:${categoryPagingList.itemCount} ")
-    Log.e("zxc", "CategoryGrid:${categoryPagingList.loadState.refresh} ")
+    val selectionState = viewModel.selectionState.collectAsState()
+
     Crossfade(
         targetState = categoryPagingList.loadState.refresh, animationSpec = tween(),
     ) { state ->
@@ -203,29 +214,44 @@ fun ColumnScope.CategoryGrid(
                         items(categoryPagingList.itemCount) {
                             categoryPagingList[it]?.let { category ->
                                 var isSelected by remember {
-                                    mutableStateOf(false)
+                                    mutableStateOf(
+                                        viewModel.selectedCategoryIdList.value.contains(
+                                            category.id
+                                        )
+                                    )
                                 }
                                 CategoryItem(
                                     modifier = Modifier
                                         .combinedClickable(
                                             onClick = {
-                                                if (isSelectionMode.value) {
+                                                if (selectionState.value == CategoryViewModel.SelectionState.ON) {
                                                     isSelected = !isSelected
                                                     if (isSelected) {
-                                                        selectedItemList.value += category.id
+                                                        viewModel.selectedCategoryIdList.value += category.id
                                                     } else {
-                                                        selectedItemList.value -= category.id
+                                                        viewModel.selectedCategoryIdList.value -= category.id
                                                     }
                                                 } else {
+                                                    selectedItemList.value = listOf()
                                                     onItemClick(category)
                                                 }
 
                                             }, onLongClick = {
-                                                onSelectionMode(!isSelectionMode.value)
+
+                                                viewModel.selectionState.value =
+                                                    if (viewModel.selectionState.value ==
+                                                        CategoryViewModel.SelectionState.OFF
+                                                    ) {
+                                                        CategoryViewModel.SelectionState.ON
+                                                    } else {
+                                                        viewModel.selectedCategoryIdList.value =
+                                                            listOf()
+                                                        CategoryViewModel.SelectionState.OFF
+                                                    }
                                             }),
                                     category = category,
                                     color = Color(category.color),
-                                    isSelectionMode = isSelectionMode,
+                                    isSelectionMode = selectionState.value,
                                     isSelected = isSelected
                                 )
                             }
@@ -266,7 +292,7 @@ fun CategoryItem(
     modifier: Modifier,
     category: TransactionCategory,
     color: Color,
-    isSelectionMode: State<Boolean>,
+    isSelectionMode: CategoryViewModel.SelectionState,
     isSelected: Boolean
 ) {
 
@@ -276,7 +302,7 @@ fun CategoryItem(
             .height(100.dp)
             .drawBehind {
                 drawRect(color = color)
-                if (isSelectionMode.value) {
+                if (isSelectionMode == CategoryViewModel.SelectionState.ON) {
                     val offset = Offset(
                         x = size.width / 4f,
                         y = size.height - size.height / 5
@@ -293,7 +319,6 @@ fun CategoryItem(
                             size = Size(width = size.width / 2, height = 10f)
                         )
                     }
-
                 }
             }
     ) {

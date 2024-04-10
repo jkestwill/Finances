@@ -18,7 +18,7 @@ class CategoryListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _categoryList = MutableStateFlow<State<Category>>(State.None())
-    val categoryList: StateFlow<State<Category>> get() =_categoryList
+    val categoryList: StateFlow<State<Category>> get() = _categoryList
 
 
     fun getById(categoryId: String) {
@@ -27,9 +27,9 @@ class CategoryListViewModel @Inject constructor(
         }
     }
 
-    fun getAll(q:String,sortBy: String, isAsc: Boolean) {
+    fun getAll(q: String, sortBy: String, isAsc: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            categoryRepository.getList(q,sortBy, isAsc)
+            categoryRepository.getList(q, sortBy, isAsc)
         }
     }
 }

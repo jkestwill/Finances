@@ -17,18 +17,30 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
-class CategoryRepository @Inject constructor (
+class CategoryRepository @Inject constructor(
     private val categoryDao: CategoryDao,
     private val categoryPagingSource: CategoryPagingSourceFactory
 ) {
-    fun getList(q:String,sortBy: String, isAsc: Boolean): Flow<PagingData<TransactionCategory>> {
+    fun getList(q: String, sortBy: String, isAsc: Boolean): Flow<PagingData<TransactionCategory>> {
         return Pager(PagingConfig(20)) {
-            categoryPagingSource.create(sortBy=sortBy, isAsc=isAsc,q=q)
+            categoryPagingSource.create(sortBy = sortBy, isAsc = isAsc, q = q)
         }.flow
     }
 
 
-     fun add(category: TransactionCategory): Flow<ApiRequest<Long>> {
+    fun removeByIdList(categoryIdList: List<String>): Flow<ApiRequest<Unit>> {
+        val startFlow: Flow<ApiRequest<Unit>> = flowOf(ApiRequest.Loading<Unit>())
+        val result: Flow<ApiRequest<Unit>> = flow<ApiRequest<Unit>> {
+            try {
+                emit(ApiRequest.Success(categoryDao.delete(categoryIdList)))
+            } catch (e: Exception) {
+                ApiRequest.Error<Unit>(data = null, error = e)
+            }
+        }
+        return merge(startFlow, result)
+    }
+
+    fun add(category: TransactionCategory): Flow<ApiRequest<Long>> {
         val startFlow = flowOf(ApiRequest.Loading<Long>())
         val result: Flow<ApiRequest<Long>> = flow {
             emit(categoryDao.insert(category.toEntity()))
@@ -72,7 +84,7 @@ class CategoryRepository @Inject constructor (
 @AssistedFactory
 interface CategoryPagingSourceFactory {
     fun create(
-        @Assisted("q") q:String,
+        @Assisted("q") q: String,
         @Assisted("sortBy") sortBy: String,
         @Assisted("isAsc") isAsc: Boolean
     ): CategoryPagingSource

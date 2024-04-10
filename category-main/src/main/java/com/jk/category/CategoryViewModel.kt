@@ -1,6 +1,7 @@
 package com.jk.category
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +9,17 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.jk.category_data.CategoryRepository
 import com.jk.category_data.TransactionCategory
+import com.jk.common_data.ApiRequest
+import com.jk.common_data.State
+import com.jk.common_data.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -35,6 +42,13 @@ class CategoryViewModel @Inject constructor(
         MutableStateFlow<PagingData<TransactionCategory>>(PagingData.empty())
     val categoryFlow: StateFlow<PagingData<TransactionCategory>> get() = _categoryFLow
 
+    val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None())
+
+    val selectedCategoryIdList = MutableStateFlow(listOf<String>())
+
+    val selectionState = MutableStateFlow<SelectionState>(SelectionState.OFF)
+
+
     fun searchMatch(input: String): Boolean {
         return isMatch(regex = searchRegex, input = input)
     }
@@ -43,11 +57,20 @@ class CategoryViewModel @Inject constructor(
         return regex.matches(input)
     }
 
-    fun getAllCategories(search:String) {
+    fun removeCategoriesById(idList: List<String>) {
+        viewModelScope.launch {
+            categoryDeleteState.emitAll(
+                categoryRepository.removeByIdList(selectedCategoryIdList.value)
+                    .map { it.toState() }.onEach { println(it) })
+        }
+
+    }
+
+    fun getAllCategories(search: String) {
         Log.e(TAG, "getAllCategories: ")
         viewModelScope.launch {
             _categoryFLow.emitAll(
-                categoryRepository.getList(search,"id", true).cachedIn(viewModelScope).stateIn(
+                categoryRepository.getList(search, "id", true).cachedIn(viewModelScope).stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.Lazily,
                     initialValue = PagingData.empty()
@@ -66,5 +89,9 @@ class CategoryViewModel @Inject constructor(
                 alpha = 150
             )
         }
+    }
+
+    enum class SelectionState() {
+        ON, OFF,
     }
 }
