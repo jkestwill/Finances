@@ -29,7 +29,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +61,6 @@ import com.jk.category.CategoryViewModel
 import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
-import com.jk.financehelper.ui.theme.Celadon
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
 @SuppressLint("RememberReturnType")
@@ -74,6 +71,8 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         mutableStateOf("")
     }
     val isSelectionMode = viewModel.selectionState.collectAsState()
+
+
     BackHandler(isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
 
         viewModel.selectionState.value = CategoryViewModel.SelectionState.OFF
@@ -109,13 +108,13 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                     viewModel = viewModel
                 )
             }
-            if (isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
-                SelectItemsMenu {
+
+                SelectItemsMenu(isSelectionMode.value == CategoryViewModel.SelectionState.ON,viewModel = viewModel) {
                     //  selectedItemList.value
                     Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
-                     viewModel.removeCategoriesById(viewModel.selectedCategoryIdList.value)
+                    viewModel.removeCategoriesById(viewModel.selectedCategoryIdList.value)
                 }
-            } else {
+           if (isSelectionMode.value != CategoryViewModel.SelectionState.ON) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -151,7 +150,11 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 /**
  * Menu for selected items*/
 @Composable
-fun BoxScope.SelectItemsMenu(onDelete: () -> Unit) {
+fun BoxScope.SelectItemsMenu(visible:Boolean,viewModel: CategoryViewModel, onDelete: () -> Unit) {
+    val deleteState = viewModel.categoryDeleteState.collectAsState()
+
+    com.jk.financehelper.ui.common.Error(modifier=Modifier.align(Alignment.Center),visible=visible,message = "Can't delete category")
+
     Row(
         modifier = Modifier
             .padding(10.dp)
@@ -159,16 +162,61 @@ fun BoxScope.SelectItemsMenu(onDelete: () -> Unit) {
 
     ) {
 
-        IconButton(
-            modifier = Modifier
-                .weight(1f)
-                .background(
-                    FinanceHelperTheme.colors.buttonDeleteColor,
-                    shape = FinanceHelperTheme.shape.shape20
-                ), onClick = onDelete
-        ) {
-            Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+        when (deleteState.value) {
+            is com.jk.common_data.State.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            FinanceHelperTheme.colors.buttonDeleteColor,
+                            shape = FinanceHelperTheme.shape.shape20
+                        )
+                        .weight(1f)
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+            }
+
+            is com.jk.common_data.State.Success -> {
+                
+            }
+
+            is com.jk.common_data.State.Error -> {
+                // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
+
+            }
+
+            is com.jk.common_data.State.None -> {
+                if(visible)
+                IconButton(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(
+                            FinanceHelperTheme.colors.buttonDeleteColor,
+                            shape = FinanceHelperTheme.shape.shape20
+                        ), onClick = onDelete
+
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+                }
+            }
         }
+        if(visible)
+            IconButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(
+                        FinanceHelperTheme.colors.buttonDeleteColor,
+                        shape = FinanceHelperTheme.shape.shape20
+                    ), onClick = onDelete
+
+            ) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+            }
+    }
+
+
+    LaunchedEffect(key1 = deleteState.value) {
+        viewModel.getAllCategories("")
     }
 }
 
@@ -213,13 +261,13 @@ fun ColumnScope.CategoryGrid(
                     ) {
                         items(categoryPagingList.itemCount) {
                             categoryPagingList[it]?.let { category ->
-                                var isSelected by remember {
-                                    mutableStateOf(
-                                        viewModel.selectedCategoryIdList.value.contains(
-                                            category.id
-                                        )
+                                var isSelected by
+                                mutableStateOf(
+                                    viewModel.selectedCategoryIdList.value.contains(
+                                        category.id
                                     )
-                                }
+                                )
+
                                 CategoryItem(
                                     modifier = Modifier
                                         .combinedClickable(
@@ -242,6 +290,7 @@ fun ColumnScope.CategoryGrid(
                                                     if (viewModel.selectionState.value ==
                                                         CategoryViewModel.SelectionState.OFF
                                                     ) {
+                                                        viewModel.selectedCategoryIdList.value += category.id
                                                         CategoryViewModel.SelectionState.ON
                                                     } else {
                                                         viewModel.selectedCategoryIdList.value =
