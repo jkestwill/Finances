@@ -28,4 +28,6 @@
     </string-array>
 
     <string name="list_empty">List is empty</string>
+    <string name="select_all">Select all</string>
+    <string name="search">Search</string>
 </resources>

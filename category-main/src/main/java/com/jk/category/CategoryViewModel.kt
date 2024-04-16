@@ -13,9 +13,11 @@ import com.jk.common_data.ApiRequest
 import com.jk.common_data.State
 import com.jk.common_data.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -44,7 +46,7 @@ class CategoryViewModel @Inject constructor(
 
     val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None())
 
-    val selectedCategoryIdList = MutableStateFlow(listOf<String>())
+    var selectedCategoryIdList = MutableStateFlow(listOf<String>())
 
     val selectionState = MutableStateFlow<SelectionState>(SelectionState.OFF)
 
@@ -57,12 +59,27 @@ class CategoryViewModel @Inject constructor(
         return regex.matches(input)
     }
 
-    fun removeCategoriesById(idList: List<String>) {
+
+    fun observeCategoryDeleteState(){
+        viewModelScope.launch {
+            categoryDeleteState.collect {
+                if(it is State.Success){
+                    delay(1000L)
+                    categoryDeleteState.value=State.None()
+                    selectedCategoryIdList.value= listOf()
+                }
+            }
+        }
+    }
+
+    fun removeCategoriesById() {
         viewModelScope.launch {
             categoryDeleteState.emitAll(
                 categoryRepository.removeByIdList(selectedCategoryIdList.value)
-                    .map { it.toState() }.onEach { println(it) })
+                    .map { it.toState() }
+            )
         }
+
 
     }
 

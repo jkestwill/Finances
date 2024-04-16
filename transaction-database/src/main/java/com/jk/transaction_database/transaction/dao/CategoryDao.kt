@@ -15,7 +15,9 @@ interface CategoryDao {
     @Delete(entity = TransactionCategoryDatabaseEntity::class)
     suspend fun delete(t: TransactionCategoryDatabaseEntity)
 
-    @Query("DELETE FROM category WHERE category.id IN (:idList)")
+    @Query("DELETE FROM category " +
+            "WHERE category.id IN (:idList)" +
+            "")
     suspend fun delete(idList: List<String>)
 
 

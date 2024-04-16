@@ -3,6 +3,7 @@
 package com.jk.financehelper.category
 
 import android.annotation.SuppressLint
+import android.provider.MediaStore.Audio.Radio
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
@@ -32,6 +33,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -78,6 +80,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         viewModel.selectionState.value = CategoryViewModel.SelectionState.OFF
 
     }
+
     Scaffold(topBar = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -85,7 +88,16 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         ) {
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
             Search(text = searchText.value, viewModel)
+            if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
+                SelectAll {
+                    if (it)
+                        viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
+                            it?.id ?: ""
+                        }
+                    else viewModel.selectedCategoryIdList.value = listOf()
+                }
         }
+
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -109,12 +121,14 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                 )
             }
 
-                SelectItemsMenu(isSelectionMode.value == CategoryViewModel.SelectionState.ON,viewModel = viewModel) {
-                    //  selectedItemList.value
-                    Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
-                    viewModel.removeCategoriesById(viewModel.selectedCategoryIdList.value)
-                }
-           if (isSelectionMode.value != CategoryViewModel.SelectionState.ON) {
+            SelectItemsMenu(
+                isSelectionMode.value == CategoryViewModel.SelectionState.ON,
+                viewModel = viewModel
+            ) {
+                Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
+                viewModel.removeCategoriesById()
+            }
+            if (isSelectionMode.value != CategoryViewModel.SelectionState.ON) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -126,12 +140,9 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                             FinanceHelperTheme.shape.shape10
                         )
                         .clickable {
-
                             navController.navigate(Routes.NEW_CATEGORY)
-
                         },
                 ) {
-
                     Icon(
                         modifier = Modifier.align(Alignment.Center),
                         imageVector = Icons.Filled.Add,
@@ -147,13 +158,42 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 
 }
 
+@Composable
+fun SelectAll(onSelectAll: (Boolean) -> Unit) {
+    val selected = remember {
+        mutableStateOf(false)
+    }
+    Row {
+        Text(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            text = stringResource(id = R.string.select_all),
+            style = FinanceHelperTheme.typography.body,
+            fontSize = 12.sp
+        )
+        RadioButton(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            selected = selected.value, onClick = {
+                selected.value = !selected.value
+                onSelectAll(selected.value)
+            })
+    }
+}
+
 /**
  * Menu for selected items*/
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun BoxScope.SelectItemsMenu(visible:Boolean,viewModel: CategoryViewModel, onDelete: () -> Unit) {
+fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onDelete: () -> Unit) {
     val deleteState = viewModel.categoryDeleteState.collectAsState()
+    val deletedItem = viewModel.selectedCategoryIdList.collectAsState()
 
-    com.jk.financehelper.ui.common.Error(modifier=Modifier.align(Alignment.Center),visible=visible,message = "Can't delete category")
+    viewModel.observeCategoryDeleteState()
+
+    com.jk.financehelper.ui.common.Error(
+        modifier = Modifier.align(Alignment.Center),
+        visible = visible,
+        message = "Can't delete category"
+    )
 
     Row(
         modifier = Modifier
@@ -177,7 +217,8 @@ fun BoxScope.SelectItemsMenu(visible:Boolean,viewModel: CategoryViewModel, onDel
             }
 
             is com.jk.common_data.State.Success -> {
-                
+                Log.e("TAG", "Succ")
+                Text(text = "${deletedItem.value.size} items deleted")
             }
 
             is com.jk.common_data.State.Error -> {
@@ -185,36 +226,26 @@ fun BoxScope.SelectItemsMenu(visible:Boolean,viewModel: CategoryViewModel, onDel
 
             }
 
-            is com.jk.common_data.State.None -> {
-                if(visible)
-                IconButton(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            FinanceHelperTheme.colors.buttonDeleteColor,
-                            shape = FinanceHelperTheme.shape.shape20
-                        ), onClick = onDelete
+            else -> {
+                Log.e("TAG", "None")
+                if (visible)
+                    IconButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(
+                                FinanceHelperTheme.colors.buttonDeleteColor,
+                                shape = FinanceHelperTheme.shape.shape20
+                            ), onClick = onDelete
 
-                ) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
-                }
+                    ) {
+                        Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+                    }
             }
+
         }
-        if(visible)
-            IconButton(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(
-                        FinanceHelperTheme.colors.buttonDeleteColor,
-                        shape = FinanceHelperTheme.shape.shape20
-                    ), onClick = onDelete
 
-            ) {
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
-            }
     }
-
-
+    
     LaunchedEffect(key1 = deleteState.value) {
         viewModel.getAllCategories("")
     }
@@ -226,9 +257,7 @@ fun ColumnScope.CategoryGrid(
     onItemClick: (TransactionCategory) -> Unit,
     viewModel: CategoryViewModel
 ) {
-    val selectedItemList = remember {
-        mutableStateOf(listOf<String>())
-    }
+
     val selectionState = viewModel.selectionState.collectAsState()
 
     Crossfade(
@@ -261,13 +290,10 @@ fun ColumnScope.CategoryGrid(
                     ) {
                         items(categoryPagingList.itemCount) {
                             categoryPagingList[it]?.let { category ->
-                                var isSelected by
-                                mutableStateOf(
-                                    viewModel.selectedCategoryIdList.value.contains(
+                                var isSelected =
+                                    viewModel.selectedCategoryIdList.collectAsState().value.contains(
                                         category.id
                                     )
-                                )
-
                                 CategoryItem(
                                     modifier = Modifier
                                         .combinedClickable(
@@ -280,7 +306,8 @@ fun ColumnScope.CategoryGrid(
                                                         viewModel.selectedCategoryIdList.value -= category.id
                                                     }
                                                 } else {
-                                                    selectedItemList.value = listOf()
+                                                    viewModel.selectedCategoryIdList.value =
+                                                        listOf()
                                                     onItemClick(category)
                                                 }
 
@@ -383,17 +410,19 @@ fun CategoryItem(
 
 @Composable
 fun Search(text: String, viewModel: CategoryViewModel) {
-    var searchText = remember() { mutableStateOf(text) }
+    val searchText = remember() { mutableStateOf(text) }
     viewModel.getAllCategories(searchText.value)
     TextField(
         modifier = Modifier
             .width(150.dp)
-            .height(50.dp),
+            .height(50.dp)
+            .background(color= Color.Transparent)
+        ,
         value = searchText.value, onValueChange = {
             searchText.value = it
         },
         textStyle = FinanceHelperTheme.typography.body,
         placeholder = {
-            Text(text = "Search")
+            Text(text = stringResource(id = R.string.search))
         })
 }

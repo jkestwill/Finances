@@ -6,6 +6,7 @@ import com.example.currencyexchangeapi.NBRBApi
 import com.example.currencyexchangeapi.services.by.NBRBApi
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.database.transactionDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,9 +26,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRoom(@ApplicationContext context: Context): TransactionDatabase =
-        Room.databaseBuilder(
-            context = context, TransactionDatabase::class.java, name = "transaction"
-        ).fallbackToDestructiveMigration().build()
+        transactionDatabase(context)
+
 
     @Provides
     @Singleton

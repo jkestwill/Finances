@@ -50,7 +50,7 @@ import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConver
         LedgerEntity::class,
         LedgerTransactionList::class,
         ExchangeRateEntity::class
-    ], version = 8, exportSchema = false
+    ], version = 9, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {
@@ -90,4 +90,7 @@ fun transactionDatabase(context: Context): TransactionDatabase {
         name="transaction_db"
     ).fallbackToDestructiveMigration()
         .build()
+        .apply {
+            query(query = "PRAGMA foreign_keys=ON", args =null)
+        }
 }
