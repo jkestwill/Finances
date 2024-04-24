@@ -1,9 +1,6 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.jk.financehelper.category
 
 import android.annotation.SuppressLint
-import android.provider.MediaStore.Audio.Radio
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
@@ -27,6 +24,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -36,22 +35,22 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,6 +62,7 @@ import com.jk.category.CategoryViewModel
 import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
+import com.jk.financehelper.ui.common.Error
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
 @SuppressLint("RememberReturnType")
@@ -73,7 +73,9 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         mutableStateOf("")
     }
     val isSelectionMode = viewModel.selectionState.collectAsState()
-
+    val selectAll = remember {
+        mutableStateOf(false)
+    }
 
     BackHandler(isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
 
@@ -87,10 +89,15 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
-            Search(text = searchText.value, viewModel)
+            Search(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                text = searchText.value,
+                viewModel = viewModel
+            )
             if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
-                SelectAll {
-                    if (it)
+                SelectAll(isSelected = selectAll.value) {
+                    selectAll.value = !selectAll.value
+                    if (selectAll.value)
                         viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
                             it?.id ?: ""
                         }
@@ -127,6 +134,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
             ) {
                 Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
                 viewModel.removeCategoriesById()
+                selectAll.value = false
             }
             if (isSelectionMode.value != CategoryViewModel.SelectionState.ON) {
                 Box(
@@ -159,22 +167,19 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 }
 
 @Composable
-fun SelectAll(onSelectAll: (Boolean) -> Unit) {
-    val selected = remember {
-        mutableStateOf(false)
-    }
+fun SelectAll(isSelected: Boolean, onSelectAll: () -> Unit) {
+
     Row {
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = stringResource(id = R.string.select_all),
-            style = FinanceHelperTheme.typography.body,
-            fontSize = 12.sp
-        )
+            style = FinanceHelperTheme.typography.h3,
+
+            )
         RadioButton(
             modifier = Modifier.align(Alignment.CenterVertically),
-            selected = selected.value, onClick = {
-                selected.value = !selected.value
-                onSelectAll(selected.value)
+            selected = isSelected, onClick = {
+                onSelectAll()
             })
     }
 }
@@ -188,11 +193,11 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onD
     val deletedItem = viewModel.selectedCategoryIdList.collectAsState()
 
     viewModel.observeCategoryDeleteState()
-
-    com.jk.financehelper.ui.common.Error(
+    this.Error(
         modifier = Modifier.align(Alignment.Center),
         visible = visible,
-        message = "Can't delete category"
+        message = "Can't delete category",
+        alignment = Alignment.TopStart
     )
 
     Row(
@@ -245,12 +250,13 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onD
         }
 
     }
-    
+
     LaunchedEffect(key1 = deleteState.value) {
         viewModel.getAllCategories("")
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ColumnScope.CategoryGrid(
     categoryPagingList: LazyPagingItems<TransactionCategory>,
@@ -409,20 +415,48 @@ fun CategoryItem(
 }
 
 @Composable
-fun Search(text: String, viewModel: CategoryViewModel) {
+fun Search(modifier: Modifier = Modifier, text: String, viewModel: CategoryViewModel) {
     val searchText = remember() { mutableStateOf(text) }
-    viewModel.getAllCategories(searchText.value)
-    TextField(
-        modifier = Modifier
-            .width(150.dp)
-            .height(50.dp)
-            .background(color= Color.Transparent)
-        ,
-        value = searchText.value, onValueChange = {
-            searchText.value = it
-        },
-        textStyle = FinanceHelperTheme.typography.body,
-        placeholder = {
-            Text(text = stringResource(id = R.string.search))
+
+    LaunchedEffect(key1 = searchText.value) {
+        viewModel.getAllCategories(searchText.value)
+    }
+    BasicTextField(
+        modifier = modifier
+            .width(100.dp)
+            .height(40.dp)
+
+            .background(
+                FinanceHelperTheme.colors.secondaryBackground,
+                shape = FinanceHelperTheme.shape.shape10
+            ),
+        value = searchText.value,
+        textStyle = FinanceHelperTheme.typography.h3,
+        singleLine = true,
+        onValueChange = { searchText.value = it },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Search
+        ),
+        decorationBox = {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+            ) {
+
+                if (searchText.value.isBlank()) {
+                    Text(
+                        modifier = Modifier
+                            .alpha(0.5f),
+                        text = stringResource(id = R.string.search),
+                        style = FinanceHelperTheme.typography.h3,
+                    )
+
+                }
+                it()
+            }
+
         })
+
 }

@@ -57,7 +57,11 @@ data class FinanceHelperShape(
 
 data class FinanceHelperTypography(
     val label: TextStyle,
-    val body: TextStyle
+    val body: TextStyle,
+    val h1:TextStyle,
+    val h2:TextStyle,
+    val h3:TextStyle,
+    val h4:TextStyle,
 )
 
 enum class FinanceHelperSize {
@@ -132,6 +136,10 @@ fun FinanceHelperTheme(
             fontWeight = FontWeight.SemiBold,
             color = Color.Black
         ),
+        h1 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 24.sp),
+        h2 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 20.sp),
+        h3 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 16.sp),
+        h4 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 12.sp),
     )
     val view = LocalView.current
     if (!view.isInEditMode) {

@@ -31,15 +31,18 @@ class AddCategoryViewModel @Inject constructor(
     val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
 
     val random = Random(213123)
-    fun addCategory(name: String, color: ULong, isExpenses: Boolean) {
-        val regex = Regex("([a-zA-Z]){3,40}")
+
+    fun addCategory(name: String, color: ULong?, isExpenses: Boolean) {
+        val regex = Regex("([a-zA-Zа-яА-я]){3,40}")
         when {
             !name.matches(regex) -> {
                 _newCategoryNameErr.value =
                     "Name length must be in range 3..40 and symbols must match a-z, A-Z"
                 println("Name length must be in range 3..40 and symbols must match a-z, A-Z")
             }
-
+            color==null->{
+                _newCategoryNameErr.value = "Choose color"
+            }
             else -> {
                 Log.e("pp", "addCategory:${color} ")
                 _newCategoryNameErr.value = ""
@@ -69,6 +72,3 @@ class AddCategoryViewModel @Inject constructor(
         super.onCleared()
     }
 }
-
-
-

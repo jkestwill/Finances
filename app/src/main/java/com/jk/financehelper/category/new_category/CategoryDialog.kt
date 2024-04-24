@@ -1,34 +1,40 @@
+
 package com.jk.financehelper.category.new_category
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -45,40 +51,45 @@ import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.jk.category.AddCategoryViewModel
-import com.jk.financehelper.navigation.Routes
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import com.jk.common_data.State
+import com.jk.financehelper.navigation.Routes
+import com.jk.financehelper.ui.common.clickAnimation
+import com.jk.financehelper.ui.custom.ThemedTextField
+import com.jk.financehelper.ui.theme.FinanceHelperTheme
+import com.jk.financehelper.ui.theme.colorPickList
 
 @Composable
 fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController) {
     val name = remember {
         mutableStateOf("")
     }
-    val isColorPopupVisible = remember {
-        mutableStateOf(false)
-    }
     val colorHex = remember {
-        mutableStateOf(Color(0xFF000000))
+        mutableStateOf<ULong?>(null)
     }
 
     val isExpensesSwitch = remember {
         mutableStateOf(false)
     }
-    AddCategory(viewModel = viewModel, navController =navController )
+    AddCategory(viewModel = viewModel, navController = navController)
 
     val nameError = viewModel.newCategoryNameErr.collectAsState()
     Log.e("zxc", "CategoryDialog: $nameError")
     Dialog(onDismissRequest = {
         navController.popBackStack()
     }) {
-        Box() {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
             Column(
                 modifier = Modifier
                     .clip(FinanceHelperTheme.shape.shape10)
                     .background(FinanceHelperTheme.colors.secondaryBackground)
-                    .height(250.dp)
                     .padding(FinanceHelperTheme.shape.padding)
-                    .fillMaxSize(),
+                    .height(250.dp)
+                    .fillMaxSize()
+                    .align(Alignment.BottomCenter),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
@@ -86,57 +97,38 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                     text = "Add new category",
                     style = FinanceHelperTheme.typography.label
                 )
-                Row(modifier = Modifier.height(100.dp)) {
-                    EditField(
-                        modifier = Modifier.weight(1f),
-                        text = name.value,
-                        placeHolderText = "Name",
-                        errorText = nameError.value,
-                        isError = nameError.value.isNotBlank()
-                    ) {
+                ThemedTextField(
+                    modifier = Modifier.padding(FinanceHelperTheme.shape.padding),
+                    value = name.value,
+                    onValueChange = {
                         name.value = it
+                    },
+                    placeHolder = { Text(modifier=Modifier.alpha(0.5f),text="Name", style = FinanceHelperTheme.typography.body) },
+                    textStyle = FinanceHelperTheme.typography.body
+                )
+
+                ColorPicker {
+                    colorHex.value = if (colorHex.value != it) {
+                        it
+                    } else {
+                        null
                     }
-                    Column(
-                        modifier = Modifier
-                            .weight(0.5f)
-                            .align(Alignment.Top)
-                    ) {
-                        Box(modifier = Modifier
-                            .drawBehind {
-                                Log.e("qwe", "CategoryDialog:${colorHex.value} ")
-                                drawRect(
-                                    color = colorHex.value,
-                                )
-                            }
-                            .width(60.dp)
-                            .fillMaxHeight()
-                            .clickable {
-                                isColorPopupVisible.value = true
-                            }
-                            .align(Alignment.CenterHorizontally)
-                        )
-                        if (isColorPopupVisible.value)
-                            ColorPopup(onColorChange = {
-                                colorHex.value = it
-                            }, initialColor = colorHex) {
-                                isColorPopupVisible.value = false
-                            }
-                    }
+                    Log.e(this.javaClass.name, "CategoryDialog: ")
                 }
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                     Text(
                         modifier = Modifier
-                            .align(Alignment.CenterVertically)
                             .padding(FinanceHelperTheme.shape.padding),
                         text = "Expenses",
-                        style = FinanceHelperTheme.typography.body
+                        style = FinanceHelperTheme.typography.body,
                     )
                     Switch(
-                        modifier = Modifier.align(Alignment.CenterVertically),
+                        modifier = Modifier,
                         checked = isExpensesSwitch.value,
                         onCheckedChange = {
                             isExpensesSwitch.value = it
-                        })
+                        }, colors = SwitchDefaults.colors().copy(checkedTrackColor = FinanceHelperTheme.colors.defaultButtonColor)
+                    )
                 }
             }
             Row(
@@ -150,20 +142,15 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                     .clickable {
                         viewModel.addCategory(
                             name = name.value,
-                            color = colorHex.value.value,
+                            color = colorHex.value,
                             isExpenses = false
                         )
-//                        navController.popBackStack(
-//                            route = Routes.CATEGORY_LIST,
-//                            inclusive = false,
-//                            saveState = false
-//                        )
 
                     }) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
                         text = "Create",
-                        fontSize = 16.sp
+                        style = FinanceHelperTheme.typography.label
                     )
                 }
                 Box(modifier = Modifier
@@ -178,7 +165,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                     Text(
                         modifier = Modifier.align(Alignment.Center),
                         text = "Cancel",
-                        fontSize = 16.sp
+                        style = FinanceHelperTheme.typography.label
                     )
                 }
             }
@@ -187,13 +174,64 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
 
 }
 
+
+@Composable
+fun ColorPicker(onPick: (ULong) -> Unit) {
+    val selectedColor = remember {
+        mutableStateOf<ULong?>(null)
+    }
+    val borderColor = FinanceHelperTheme.colors.secondaryText
+    val shape = FinanceHelperTheme.shape.shape10
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxWidth(),
+        columns = GridCells.Adaptive(30.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        items(colorPickList) {
+            val borderModifier by remember(selectedColor.value) {
+                mutableStateOf(
+                    if (selectedColor.value == it.value) Modifier.border(
+                        2.dp,
+                        borderColor,
+                        shape
+                    ) else Modifier
+                )
+            }
+            Box(
+                modifier = borderModifier
+                    .clickable {
+                        onPick(it.value)
+                    }
+                    .height(30.dp)
+                    .width(30.dp)
+                    .background(color = it, shape = FinanceHelperTheme.shape.shape20)
+                    .clickAnimation {
+                        if (it.value == selectedColor.value) {
+                            selectedColor.value = null
+                        } else {
+                            selectedColor.value = it.value
+                        }
+                    }
+            )
+        }
+    }
+}
+
 @Composable
 fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
     val state = viewModel.addCategoryResponse.collectAsState()
     val context = LocalContext.current
+
     when (state.value) {
-        is State.None -> {Log.e("qqs", "AddCategory:NONE")}
-        is State.Loading -> {Log.e("qqs", "AddCategory:LOADING")}
+        is State.None -> {
+            Log.e("qqs", "AddCategory:NONE")
+        }
+
+        is State.Loading -> {
+            Log.e("qqs", "AddCategory:LOADING")
+        }
+
         is State.Success -> {
             Log.e("qqs", "AddCategory:Success")
             navController.popBackStack(
@@ -201,7 +239,11 @@ fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
                 inclusive = false,
                 saveState = false
             )
-            navController.navigate(Routes.CATEGORY_LIST,navOptions = NavOptions.Builder().setLaunchSingleTop(true).setPopUpTo(route =Routes.CATEGORY_LIST,true).build())
+            navController.navigate(
+                Routes.CATEGORY_LIST,
+                navOptions = NavOptions.Builder().setLaunchSingleTop(true)
+                    .setPopUpTo(route = Routes.CATEGORY_LIST, true).build()
+            )
         }
 
         is State.Error -> {
@@ -230,10 +272,6 @@ fun ColorPicker(controller: ColorPickerController, onColorChange: (color: Color)
 
 }
 
-fun ColorPicker(onPick:(ULong)->Unit){
-
-}
-
 @SuppressLint("RememberReturnType")
 @Composable
 fun ColorPopup(
@@ -247,7 +285,6 @@ fun ColorPopup(
     val controller = rememberColorPickerController().apply {
 
     }
-
     remember {
         controller.selectByColor(initialColor.value, false)
         controller.setWheelRadius(4.dp)
