@@ -1,8 +1,6 @@
 package com.jk.financehelper.ui.common
 
 
-
-
 /**
  *@param allowedSpecialCharacters allowedCharacters  - The only specials characters that can be used in text field. If null - all characters allowed.
  *@param requiredCharacters requiredCharacters  - Required specials characters that must be used in text field. If null - all characters allowed;

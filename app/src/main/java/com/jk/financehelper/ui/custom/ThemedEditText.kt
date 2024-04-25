@@ -16,10 +16,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jk.common_data.Languages
+import com.jk.financehelper.R
 import com.jk.financehelper.ui.common.TextLimit
+import com.jk.financehelper.ui.common.TextError
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
 @Composable
@@ -37,7 +41,7 @@ fun CharacterLimitTextField(
         value = value,
         onValueChange = {
 
-            if (matchTextLimit(value, textLimit = textLimit)) {
+            if (matchTextLimit(value, textLimit = textLimit,)) {
                 onValueChange(value)
             }
 
@@ -46,26 +50,49 @@ fun CharacterLimitTextField(
         maxLines = maxLines,
     )
 }
-
+@Composable
+fun GetTextLimitErrorFromResource(){
+   val maxLengthError =   stringResource(id = R.string.maxLengthError )
+}
 // разделить на несколько регексов и матчит все вместе для локализации ошибок например длинна больше допустимой и лишний симов то выдаст сначала длинна кароч ты вкурил друк
-fun errorMessage(textLimit: TextLimit) {
+fun throwExceptionIfNotMatch(
+    text: String,
+    textLimit: TextLimit,
+    pattern: String,
+    textError: TextError
+) {
+    val regex = Regex(pattern)
+    when {
+        text.length > textLimit.maxLength -> {
+            throw IllegalStateException(textError.maxTextLengthError)
+        }
 
+        text.length < textLimit.minLength -> {
+            throw IllegalStateException(textError.minTextLengthError)
+        }
+
+        text.any {
+            !it.isLetter() && textLimit.allowedSpecialCharacters?.contains(it)?.not() ?: true
+        } -> {
+            throw IllegalStateException(textError.allowedCharactersError)
+        }
+
+        regex.matches(text) -> {
+            throw IllegalStateException(textError.allowedCharactersError)
+        }
+    }
 }
 
-fun matchTextLimit(text: String, textLimit: TextLimit): Boolean {
-    val allowedCharacters = if (textLimit.allowedSpecialCharacters != null) {
-        textLimit.allowedSpecialCharacters.joinToString { "" }
-    } else ""
-    val pattern = "[a-zA-z$allowedCharacters]"
-
-    return isMatch(text, pattern)
+fun matchTextLimit(text: String, textLimit: TextLimit, textError: TextError): String? {
+    val pattern = "[${Languages.ENG}${Languages.RU}]"
+    return try {
+        throwExceptionIfNotMatch(text, textLimit, pattern, textError = textError)
+        null
+    } catch (e: IllegalStateException) {
+        e.message
+    }
 }
 
-fun isMatch(string: String, pattern: String): Boolean {
-    val regex = Regex.fromLiteral(pattern)
-
-    return regex.matches(string)
-}
 
 @Composable
 fun ThemedTextField(

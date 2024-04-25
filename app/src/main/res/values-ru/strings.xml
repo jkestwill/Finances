@@ -29,4 +29,9 @@
     <string name="list_empty">Список пуст</string>
     <string name="select_all">Выбрать все</string>
     <string name="search">Поиск</string>
+
+    <string name="maxLengthError">Используйте $ символов или меньше</string>
+    <string name="minLengthError">Используйте $ символов или больше</string>
+    <string name="allowedCharacters">Разрешенные символы: $</string>
+
 </resources>
