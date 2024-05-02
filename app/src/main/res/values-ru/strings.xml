@@ -34,4 +34,6 @@
     <string name="minLengthError">Используйте $ символов или больше</string>
     <string name="allowedCharacters">Разрешенные символы: $</string>
 
+    <string name="error">Ошибка</string>
+
 </resources>

@@ -30,8 +30,9 @@
     <string name="list_empty">List is empty</string>
     <string name="select_all">Select all</string>
     <string name="search">Search</string>
-    
-    <string name="maxLengthError">Use $ characters or fewer</string>
-    <string name="minLengthError">Use $ characters or more</string>
-    <string name="allowedCharacters">Allowed characters: $</string>
+
+    <string name="maxLengthError">Use %d characters or fewer</string>
+    <string name="minLengthError">Use %d characters or more</string>
+    <string name="allowedCharacters">Allowed characters: %S</string>
+    <string name="error">Error</string>
 </resources>

@@ -23,7 +23,7 @@ val MidnightGreen = Color(0xFF114B5F)
 val TeaGreen = Color(0xFFC6DABF)
 val Parchment = Color(0xFFF3E9D2)
 val Red = Color(0xFFDF6363)
-
+//color picker
 val SendyBrown = Color(0xFFF7934C)
 val Melon = Color(0xFFFFA8A9)
 val Aero = Color(0xFF14BDEB)

@@ -41,9 +41,9 @@ fun CharacterLimitTextField(
         value = value,
         onValueChange = {
 
-            if (matchTextLimit(value, textLimit = textLimit,)) {
+            matchTextLimit(value, textLimit = textLimit)
                 onValueChange(value)
-            }
+
 
         },
         textStyle = textStyle,
@@ -59,34 +59,33 @@ fun throwExceptionIfNotMatch(
     text: String,
     textLimit: TextLimit,
     pattern: String,
-    textError: TextError
 ) {
     val regex = Regex(pattern)
     when {
         text.length > textLimit.maxLength -> {
-            throw IllegalStateException(textError.maxTextLengthError)
+            throw IllegalStateException(textLimit.textError.maxTextLengthError)
         }
 
         text.length < textLimit.minLength -> {
-            throw IllegalStateException(textError.minTextLengthError)
+            throw IllegalStateException(textLimit.textError.minTextLengthError)
         }
 
         text.any {
             !it.isLetter() && textLimit.allowedSpecialCharacters?.contains(it)?.not() ?: true
         } -> {
-            throw IllegalStateException(textError.allowedCharactersError)
+            throw IllegalStateException(textLimit.textError.allowedCharactersError)
         }
 
         regex.matches(text) -> {
-            throw IllegalStateException(textError.allowedCharactersError)
+            throw IllegalStateException(textLimit.textError.allowedCharactersError)
         }
     }
 }
 
-fun matchTextLimit(text: String, textLimit: TextLimit, textError: TextError): String? {
+fun matchTextLimit(text: String, textLimit: TextLimit): String? {
     val pattern = "[${Languages.ENG}${Languages.RU}]"
     return try {
-        throwExceptionIfNotMatch(text, textLimit, pattern, textError = textError)
+        throwExceptionIfNotMatch(text, textLimit, pattern)
         null
     } catch (e: IllegalStateException) {
         e.message

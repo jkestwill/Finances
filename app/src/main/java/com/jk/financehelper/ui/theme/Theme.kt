@@ -20,24 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Celadon,
-    secondary = SeaGreen,
-    tertiary = BrownPurple,
-    background = LightCreamy,
-
-    )
-
-private val LightColorScheme = lightColorScheme(
-    primary = Celadon,
-    secondary = TeaGreen,
-    onSecondary = LightPink,
-    tertiary = BrownPurple,
-    background = LightCreamy,
-
-    )
-
-
 data class FinanceHelperColors(
     val primaryText: Color,
     val secondaryText: Color,
@@ -123,7 +105,7 @@ fun FinanceHelperTheme(
                 FinanceHelperSize.SMALL-> 16.sp
                 else-> error("No such typography style $textSize")
             },
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             color = MidnightGreen
         ),
         body =TextStyle(
@@ -133,7 +115,7 @@ fun FinanceHelperTheme(
                 FinanceHelperSize.SMALL-> 12.sp
                 else-> error("No such typography style $textSize")
             },
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             color = Color.Black
         ),
         h1 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 24.sp),
