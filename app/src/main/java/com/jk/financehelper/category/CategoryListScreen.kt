@@ -63,6 +63,8 @@ import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
 import com.jk.financehelper.ui.common.Error
+import com.jk.financehelper.ui.common.TextLimit
+import com.jk.financehelper.ui.custom.CharacterLimitTextField
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
 @SuppressLint("RememberReturnType")
@@ -91,9 +93,10 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
             Text(text = "Categories", style = FinanceHelperTheme.typography.label)
             Search(
                 modifier = Modifier.align(Alignment.CenterVertically),
-                text = searchText.value,
-                viewModel = viewModel
-            )
+                text = searchText.value
+            ){
+                viewModel.getAllCategories(it)
+            }
             if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
                 SelectAll(isSelected = selectAll.value) {
                     selectAll.value = !selectAll.value
@@ -283,7 +286,7 @@ fun ColumnScope.CategoryGrid(
                 ErrorCategory()
                 Log.e(
                     "qq",
-                    "CategoryGrid: ${(state as LoadState.Error).error.stackTrace[0].fileName}",
+                    "CategoryGrid: ${state.error.message}",
                 )
             }
 
@@ -415,48 +418,67 @@ fun CategoryItem(
 }
 
 @Composable
-fun Search(modifier: Modifier = Modifier, text: String, viewModel: CategoryViewModel) {
+fun Search(modifier: Modifier = Modifier, text: String,onValueChange:(String)->Unit) {
     val searchText = remember() { mutableStateOf(text) }
 
     LaunchedEffect(key1 = searchText.value) {
-        viewModel.getAllCategories(searchText.value)
+        onValueChange(searchText.value)
     }
-    BasicTextField(
+
+    CharacterLimitTextField(
         modifier = modifier
             .width(100.dp)
             .height(40.dp)
-
             .background(
                 FinanceHelperTheme.colors.secondaryBackground,
                 shape = FinanceHelperTheme.shape.shape10
             ),
-        value = searchText.value,
         textStyle = FinanceHelperTheme.typography.h3,
-        singleLine = true,
+        maxLines = 1,
+        value = searchText.value,
         onValueChange = { searchText.value = it },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search
-        ),
-        decorationBox = {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
-            ) {
+        textLimit = TextLimit.SearchTextLimit(),
+        onError = {
+            Log.e("TAG", "Search:${it} ", )
+        }
+    )
 
-                if (searchText.value.isBlank()) {
-                    Text(
-                        modifier = Modifier
-                            .alpha(0.5f),
-                        text = stringResource(id = R.string.search),
-                        style = FinanceHelperTheme.typography.h3,
-                    )
 
-                }
-                it()
-            }
-
-        })
+//    BasicTextField(
+//        modifier = modifier
+//            .width(100.dp)
+//            .height(40.dp)
+//            .background(
+//                FinanceHelperTheme.colors.secondaryBackground,
+//                shape = FinanceHelperTheme.shape.shape10
+//            ),
+//        value = searchText.value,
+//        textStyle = FinanceHelperTheme.typography.h3,
+//        singleLine = true,
+//        onValueChange = { searchText.value = it },
+//        keyboardOptions = KeyboardOptions(
+//            keyboardType = KeyboardType.Text,
+//            imeAction = ImeAction.Search
+//        ),
+//        decorationBox = {
+//            Box(
+//                Modifier
+//                    .fillMaxSize()
+//                    .padding(10.dp)
+//            ) {
+//
+//                if (searchText.value.isBlank()) {
+//                    Text(
+//                        modifier = Modifier
+//                            .alpha(0.5f),
+//                        text = stringResource(id = R.string.search),
+//                        style = FinanceHelperTheme.typography.h3,
+//                    )
+//
+//                }
+//                it()
+//            }
+//
+//        })
 
 }

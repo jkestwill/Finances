@@ -31,8 +31,8 @@
     <string name="select_all">Select all</string>
     <string name="search">Search</string>
 
-    <string name="maxLengthError">Use %d characters or fewer</string>
-    <string name="minLengthError">Use %d characters or more</string>
-    <string name="allowedCharacters">Allowed characters: %S</string>
+    <string name="maxLengthError">Use %1$d characters or fewer</string>
+    <string name="minLengthError">Use %1$d characters or more</string>
+    <string name="allowedCharacters">Allowed characters: %1$S</string>
     <string name="error">Error</string>
 </resources>
