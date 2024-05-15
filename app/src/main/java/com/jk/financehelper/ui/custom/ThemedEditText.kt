@@ -2,6 +2,7 @@ package com.jk.financehelper.ui.custom
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,10 +22,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jk.common_data.Languages
+import com.jk.financehelper.R
 import com.jk.financehelper.ui.common.Limit
 import com.jk.financehelper.ui.common.TextError
 import com.jk.financehelper.ui.common.TextLimit
@@ -59,10 +62,10 @@ fun CharacterLimitTextField(
                 onValueChange(it)
         },
         placeHolder = {
-            Text("Search")
+            Text(stringResource(id = R.string.search))
         },
         postfix = {
-                  Text(text = "${value.length}/${textLimit.maxLength.value}")
+            Text(text = "${value.length}/${textLimit.maxLength.value}")
         },
         textStyle = textStyle,
         maxLines = maxLines,
@@ -70,12 +73,10 @@ fun CharacterLimitTextField(
 }
 
 
-// разделить на несколько регексов и матчит все вместе для локализации ошибок например длинна больше допустимой и лишний симов то выдаст сначала длинна кароч ты вкурил друк
-fun throwExceptionIfNotMatch(
+private fun checkText(
     text: String,
     textLimit: TextLimit,
-    textError: TextError,
-    pattern: String,
+    textError: TextError
 ): Pair<String, Limit<out Any>?> {
 
     return when {
@@ -101,20 +102,17 @@ fun throwExceptionIfNotMatch(
     }
 }
 
-fun matchTextLimit(
+private fun matchTextLimit(
     text: String,
     textLimit: TextLimit,
     textError: TextError
 ): Pair<String, Limit<out Any>?>? {
-    val pattern = "[${Languages.ENG}${Languages.RU}]"
     return try {
-        throwExceptionIfNotMatch(text, textLimit, textError, pattern)
+        checkText(text, textLimit, textError)
     } catch (e: IllegalStateException) {
         e.printStackTrace()
         null
     }
-
-
 }
 
 
@@ -134,6 +132,7 @@ fun ThemedTextField(
         onValueChange = onValueChange,
         textStyle = textStyle,
         maxLines = maxLines,
+        interactionSource =remember{ MutableInteractionSource()},
         decorationBox = {
 
             Row(
@@ -156,9 +155,8 @@ fun ThemedTextField(
                 Box(Modifier.weight(2f)) {
                     if (value.isEmpty()) {
                         placeHolder?.invoke()
-                    } else {
-                        it()
                     }
+                    it()
                 }
 
                 if (postfix != null)

@@ -191,7 +191,7 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onD
     val deletedItem = viewModel.selectedCategoryIdList.collectAsState()
 
     viewModel.observeCategoryDeleteState()
-    this.Error(
+        Error(
         modifier = Modifier.align(Alignment.Center),
         visible = visible,
         message = "Can't delete category",
@@ -250,7 +250,7 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onD
     }
 
     LaunchedEffect(key1 = deleteState.value) {
-        viewModel.getAllCategories("")
+        viewModel.getAllCategories(search = "")
     }
 }
 
