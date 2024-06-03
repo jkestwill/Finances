@@ -423,11 +423,11 @@ fun Search(modifier: Modifier = Modifier, text: String,onValueChange:(String)->U
     CharacterLimitTextField(
         modifier = modifier
             .width(200.dp)
-            .height(40.dp)
-            .background(
-                FinanceHelperTheme.colors.secondaryBackground,
-                shape = FinanceHelperTheme.shape.shape10
-            ),
+            .height(40.dp),
+//            .background(
+//                FinanceHelperTheme.colors.secondaryBackground,
+//                shape = FinanceHelperTheme.shape.shape10
+//            ),
         textStyle = FinanceHelperTheme.typography.h3,
         maxLines = 1,
         value = searchText.value,

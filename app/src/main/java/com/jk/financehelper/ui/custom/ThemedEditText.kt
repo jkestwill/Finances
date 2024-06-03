@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,8 +23,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jk.common_data.Languages
@@ -32,6 +35,7 @@ import com.jk.financehelper.ui.common.Limit
 import com.jk.financehelper.ui.common.TextError
 import com.jk.financehelper.ui.common.TextLimit
 import com.jk.financehelper.ui.common.rememberTextError
+import com.jk.financehelper.ui.common.shake
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
 @Composable
@@ -53,7 +57,10 @@ fun CharacterLimitTextField(
         Log.e("ERROR", "CharacterLimitTextField:${error.value} ")
     }
     ThemedTextField(
-        modifier = modifier,
+        modifier = modifier.shake(error.value!=null)        .background(
+                FinanceHelperTheme.colors.secondaryBackground,
+                shape = FinanceHelperTheme.shape.shape10
+            ),
         value = value,
         onValueChange = {
             val errorMatcher = matchTextLimit(it, textLimit = textLimit, textError)
@@ -62,10 +69,19 @@ fun CharacterLimitTextField(
                 onValueChange(it)
         },
         placeHolder = {
-            Text(stringResource(id = R.string.search))
+            Text(stringResource(id = R.string.search),style = FinanceHelperTheme.typography.h3)
         },
         postfix = {
-            Text(text = "${value.length}/${textLimit.maxLength.value}")
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(Color.Unspecified)
+                    ,
+                text = "${value.length}/${textLimit.maxLength.value}",
+                textAlign = TextAlign.End,
+                style = FinanceHelperTheme.typography.h3,
+
+            )
         },
         textStyle = textStyle,
         maxLines = maxLines,
@@ -84,7 +100,7 @@ private fun checkText(
             Pair(textError.maxTextLengthError, textLimit.maxLength)
         }
 
-        text.length <= textLimit.minLength.value -> {
+        text.length < textLimit.minLength.value -> {
             Pair(textError.minTextLengthError, textLimit.minLength)
         }
 
@@ -97,7 +113,7 @@ private fun checkText(
         }
 
         else -> {
-            throw IllegalStateException("Wrong textLimit state")
+            throw IllegalStateException("Wrong textLimit state ${textLimit}" )
         }
     }
 }
@@ -109,7 +125,7 @@ private fun matchTextLimit(
 ): Pair<String, Limit<out Any>?>? {
     return try {
         checkText(text, textLimit, textError)
-    } catch (e: IllegalStateException) {
+    } catch (e: Throwable) {
         e.printStackTrace()
         null
     }
@@ -132,7 +148,7 @@ fun ThemedTextField(
         onValueChange = onValueChange,
         textStyle = textStyle,
         maxLines = maxLines,
-        interactionSource =remember{ MutableInteractionSource()},
+        interactionSource = remember { MutableInteractionSource() },
         decorationBox = {
 
             Row(
@@ -148,7 +164,7 @@ fun ThemedTextField(
             ) {
 
                 if (prefix != null)
-                    Box(modifier = Modifier.weight(1f)) {
+                    Box(modifier = Modifier.weight(1f) .background(Color.Transparent)) {
                         prefix()
                     }
 
@@ -164,6 +180,8 @@ fun ThemedTextField(
                         modifier = Modifier
                             .weight(1f)
                             .padding(2.dp)
+                            .background(Color.Transparent)
+
                     ) {
                         postfix()
                     }

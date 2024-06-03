@@ -1,6 +1,10 @@
 package com.jk.financehelper.ui.common
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -17,6 +21,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.dp
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 
@@ -26,15 +31,17 @@ fun Modifier.clickAnimation(onClick: () -> Unit): Modifier = composed {
     var state = remember { mutableStateOf(ButtonState.IDLE) }
     val scale by animateFloatAsState(if (state.value == ButtonState.PRESSED) 0.70f else 1f)
     val interactionSource = remember { MutableInteractionSource() }
-   this.graphicsLayer {
-        scaleX = scale
-        scaleY = scale
-    }
+    this
+        .graphicsLayer {
+            scaleX = scale
+            scaleY = scale
+        }
         .clickable(
             interactionSource = interactionSource,
             indication = null,
             onClick = onClick
-        ).pointerInput(state.value) {
+        )
+        .pointerInput(state.value) {
             awaitPointerEventScope {
                 state.value = if (state.value == ButtonState.PRESSED) {
                     waitForUpOrCancellation()
@@ -46,3 +53,24 @@ fun Modifier.clickAnimation(onClick: () -> Unit): Modifier = composed {
             }
         }
 }
+
+fun Modifier.shake(enabled: Boolean) = composed(
+    factory = {
+        val scale by animateFloatAsState(
+            targetValue = if (enabled) 0.9f else 1f,
+            animationSpec = repeatable(
+                iterations = 6,
+                animation = tween(durationMillis = 50, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+        this.graphicsLayer {
+            scaleX=if(enabled) scale else 1f
+            scaleY = if(enabled) scale else 1f
+        }
+    },
+    inspectorInfo = debugInspectorInfo{
+        name = "shake"
+        properties["enabled"] = enabled
+    }
+)

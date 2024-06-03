@@ -31,10 +31,6 @@ data class TextError internal constructor(
     val wrongNameError: String = ""
 )
 
-enum class FieldType {
-    DEFAULT, SEARCH
-}
-
 
 /**
  *@param allowedSpecialCharacters allowedCharacters  - The only specials characters that can be used in text field. If null - all characters allowed.
@@ -52,7 +48,7 @@ sealed class TextLimit(
     val allowedSpecialCharacters: Limit<List<Char>>? = null,
     val requiredCharacters: Limit<List<Char>>? = null,
 ) {
-    class SearchTextLimit() : TextLimit(Limit(value = 3, isTypingAllowed = true), Limit(32, false))
+    class SearchTextLimit() : TextLimit(Limit(value = 0, isTypingAllowed = true), Limit(32, false))
 
 }
 
