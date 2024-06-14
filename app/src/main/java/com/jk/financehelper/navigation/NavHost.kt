@@ -1,5 +1,6 @@
 package com.jk.financehelper.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,10 +17,12 @@ import com.jk.financehelper.main.HomeScreen
 import com.jk.financehelper.ui.theme.Celadon
 
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
+
     NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)

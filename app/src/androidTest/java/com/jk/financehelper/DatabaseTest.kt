@@ -4,42 +4,41 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.common.truth.Truth.assertThat
+import com.jk.transaction_database.transaction.LedgerEntity
+import com.jk.transaction_database.transaction.OperationDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CategoryDao
+import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.GoodsDao
+import com.jk.transaction_database.transaction.dao.LedgerDao
+import com.jk.transaction_database.transaction.dao.LedgerTransactionListDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
+import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
 import com.jk.transaction_database.transaction.dao.ScheduleDao
+import com.jk.transaction_database.transaction.dao.TransactionDao
+import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.dao.TypeDao
+import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.list.LedgerTransactionList
+import com.jk.transaction_database.transaction.list.OperationCategoryList
+import com.jk.transaction_database.transaction.list.TransactionGoodsList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
-import java.time.LocalDateTime
-import com.google.common.truth.Truth.assertThat
-import com.jk.transaction_database.transaction.LedgerEntity
-import com.jk.transaction_database.transaction.OperationDatabaseEntity
-
-import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
-import com.jk.transaction_database.transaction.dao.CurrencyDao
-import com.jk.transaction_database.transaction.dao.LedgerDao
-import com.jk.transaction_database.transaction.dao.LedgerTransactionListDao
-import com.jk.transaction_database.transaction.dao.OperationCategoryDao
-import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
-import com.jk.transaction_database.transaction.list.LedgerTransactionList
-import com.jk.transaction_database.transaction.list.OperationCategoryList
-import com.jk.transaction_database.transaction.list.TransactionGoodsList
-import com.jk.transaction_database.transaction.TransactionDatabaseEntity
-import com.jk.transaction_database.transaction.dao.TransactionDao
-import com.jk.transaction_database.transaction.database.TransactionDatabase
-import kotlinx.coroutines.Dispatchers
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @RunWith(AndroidJUnit4::class)
@@ -74,7 +73,7 @@ class DatabaseTest {
         operationCategoryDao = db.getOperationCategoryDao()
         transactionGoodsListDao = db.getTransactionGoodsListDao()
         ledgerDao = db.getLedgerDao()
-      ledgerTransactionListDao=db.getLedgerTransactionListDao()
+        ledgerTransactionListDao = db.getLedgerTransactionListDao()
     }
 
     @After
@@ -123,9 +122,13 @@ class DatabaseTest {
             goodsDao.insert(it)
         }
     }
+
     @Test
-    fun writeReadTransactionGoodsList()= runBlocking {
-        writeReadTest(dbData = { transactionGoodsListDao.getAll() }, checkDataList = testTransactionGoodsList()) {
+    fun writeReadTransactionGoodsList() = runBlocking {
+        writeReadTest(
+            dbData = { transactionGoodsListDao.getAll() },
+            checkDataList = testTransactionGoodsList()
+        ) {
             transactionGoodsListDao.insert(it)
         }
     }
@@ -146,7 +149,15 @@ class DatabaseTest {
 
     @Test
     fun writeReadCategoryTest(): Unit = runBlocking {
-        writeReadTest(dbData = { categoryDao.getAll(sortBy="id",isAsc = true) }, checkDataList = testCategoryList()) {
+        writeReadTest(dbData = {
+            categoryDao.getAll(
+                sortBy = "id",
+                isAsc = true,
+                offset = 0,
+                q = "",
+                limit = 20
+            )
+        }, checkDataList = testCategoryList()) {
             categoryDao.insert(it)
         }
     }
@@ -167,8 +178,9 @@ class DatabaseTest {
             operationCategoryDao.insert(it)
         }
     }
+
     @Test
-    fun writeReadTransactionGoodsListTest():Unit = runBlocking {
+    fun writeReadTransactionGoodsListTest(): Unit = runBlocking {
         writeReadTest(
             dbData = { transactionGoodsListDao.getAll() },
             checkDataList = testTransactionGoodsList()
@@ -176,8 +188,9 @@ class DatabaseTest {
             transactionGoodsListDao.insert(it)
         }
     }
+
     @Test
-    fun writeReadTransactionsListTest():Unit = runBlocking {
+    fun writeReadTransactionsListTest(): Unit = runBlocking {
         writeReadTest(
             dbData = { transactionDao.getAll() },
             checkDataList = testTransactionList()
@@ -185,9 +198,10 @@ class DatabaseTest {
             transactionDao.insert(it)
         }
     }
+
     @Test
-    fun writeReadTransactionRelation():Unit = runBlocking {
-        for (i in testTransactionList()){
+    fun writeReadTransactionRelation(): Unit = runBlocking {
+        for (i in testTransactionList()) {
             transactionDao.insert(i)
         }
         writeOperationRelationTest()
@@ -197,18 +211,20 @@ class DatabaseTest {
     }
 
 
-    fun writeReadLedger():Unit = runBlocking {
-        writeReadTest({ledgerDao.getAll()}, testLedgerData()){
+    fun writeReadLedger(): Unit = runBlocking {
+        writeReadTest({ ledgerDao.getAll() }, testLedgerData()) {
             ledgerDao.insert(it)
         }
     }
-    fun writeReadLedgerTransactionList():Unit = runBlocking {
-        writeReadTest({ledgerTransactionListDao.getAll()}, testLedgerTransactionListData()){
+
+    fun writeReadLedgerTransactionList(): Unit = runBlocking {
+        writeReadTest({ ledgerTransactionListDao.getAll() }, testLedgerTransactionListData()) {
             ledgerTransactionListDao.insert(it)
         }
     }
+
     @Test
-    fun writeReadLedgerRelation() = runBlocking{
+    fun writeReadLedgerRelation() = runBlocking {
         for (i in testLedgerData()) {
             ledgerDao.insert(i)
         }
@@ -218,7 +234,7 @@ class DatabaseTest {
         println(ledgerDao.getRelation())
     }
 
-// тест записи и чтения тестовых данных
+    // тест записи и чтения тестовых данных
     private suspend fun <T> writeReadTest(
         dbData: suspend () -> List<T>,
         checkDataList: List<T>,
@@ -237,13 +253,19 @@ class DatabaseTest {
 
     companion object {
 
-        fun testTransactionList():List<TransactionDatabaseEntity>{
+        fun testTransactionList(): List<TransactionDatabaseEntity> {
             return listOf(
                 TransactionDatabaseEntity(
-                    id="t1",date=LocalDateTime.of(2011, 5, 9, 17, 4), operationId = "1", typeId = "11"
+                    id = "t1",
+                    date = LocalDateTime.of(2011, 5, 9, 17, 4),
+                    operationId = "1",
+                    typeId = "11"
                 ),
                 TransactionDatabaseEntity(
-                    id="t2",date=LocalDateTime.of(2021, 7, 9, 9, 4), operationId = "2", typeId = "11"
+                    id = "t2",
+                    date = LocalDateTime.of(2021, 7, 9, 9, 4),
+                    operationId = "2",
+                    typeId = "11"
                 )
             )
         }
@@ -289,16 +311,16 @@ class DatabaseTest {
         fun testCategoryList(): List<TransactionCategoryDatabaseEntity> {
             return listOf(
                 TransactionCategoryDatabaseEntity(
-                    id = "k1", name = "Sport",color=0xFFFF8484.toString(), isExpenses = true
+                    id = "k1", name = "Sport", color = 0xFFFF8484.toString(), isExpenses = true
                 ),
                 TransactionCategoryDatabaseEntity(
-                    id = "k2", name = "Home",color=0xFF2374AB.toString(), isExpenses = true
+                    id = "k2", name = "Home", color = 0xFF2374AB.toString(), isExpenses = true
                 ),
                 TransactionCategoryDatabaseEntity(
-                    id = "k3", name = "Health",color=0xFFFFEC51.toString(), isExpenses = true
+                    id = "k3", name = "Health", color = 0xFFFFEC51.toString(), isExpenses = true
                 ),
                 TransactionCategoryDatabaseEntity(
-                    id = "k4", name = "Computer",color=0xFF9E2B25.toString(), isExpenses = true
+                    id = "k4", name = "Computer", color = 0xFF9E2B25.toString(), isExpenses = true
                 )
             )
         }
@@ -394,13 +416,13 @@ class DatabaseTest {
             )
         }
 
-        fun testLedgerData():List<LedgerEntity>{
+        fun testLedgerData(): List<LedgerEntity> {
             return listOf(
                 LedgerEntity(
-                    id="l1",name="Funerals", LocalDate.of(2023,9,12)
+                    id = "l1", name = "Funerals", LocalDate.of(2023, 9, 12)
                 ),
                 LedgerEntity(
-                    id="l2",name="Worker's salary", LocalDate.of(2024,10,12)
+                    id = "l2", name = "Worker's salary", LocalDate.of(2024, 10, 12)
                 )
             )
         }
@@ -410,12 +432,13 @@ class DatabaseTest {
                 LedgerTransactionList(
                     transactionId = "t1",
                     ledgerId = "l1"
-                ),LedgerTransactionList(
+                ),
+                LedgerTransactionList(
                     transactionId = "t2",
                     ledgerId = "l1"
                 ),
 
-            )
+                )
         }
 
     }

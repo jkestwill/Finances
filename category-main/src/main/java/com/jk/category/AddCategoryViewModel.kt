@@ -8,10 +8,12 @@ import com.jk.category_data.TransactionCategory
 import com.jk.common_data.State
 import com.jk.common_data.sha256
 import com.jk.common_data.toState
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
@@ -24,8 +26,12 @@ class AddCategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
-    private var _newCategoryNameErr = MutableStateFlow("")
-    val newCategoryNameErr: StateFlow<String> get() = _newCategoryNameErr
+    companion object{
+        private const val TAG = "AddCategoryViewModel"
+    }
+
+    private var _addCategoryError = MutableSharedFlow<String>(1, onBufferOverflow =  BufferOverflow.DROP_LATEST)
+    val addCategoryError: SharedFlow<String> get() = _addCategoryError
 
     private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None())
     val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
@@ -33,27 +39,31 @@ class AddCategoryViewModel @Inject constructor(
     val random = Random(213123)
 
     fun addCategory(name: String, color: ULong?, isExpenses: Boolean) {
-        val regex = Regex("([a-zA-Zа-яА-я]){3,40}")
-        when {
-            !name.matches(regex) -> {
-                _newCategoryNameErr.value =
-                    "Name length must be in range 3..40 and symbols must match a-z, A-Z"
-                println("Name length must be in range 3..40 and symbols must match a-z, A-Z")
-            }
-            color==null->{
-                _newCategoryNameErr.value = "Choose color"
-            }
-            else -> {
-                Log.e("pp", "addCategory:${color} ")
-                _newCategoryNameErr.value = ""
-                addCategory(
-                    TransactionCategory(
-                        "$name $color $isExpenses".sha256(),
-                        name,
-                        color,
-                        isExpenses
+        Log.e(TAG, "addCategory:${name} ${color} ${isExpenses} ")
+        viewModelScope.launch {
+            when {
+                name.isEmpty() -> {
+                    Log.e(TAG, "addCategory:name is null ")
+                    _addCategoryError.emit("Name must not be empty")
+                }
+
+                color == null -> {
+                    Log.e(TAG, "addCategory:color is null ")
+                    _addCategoryError.emit("Choose a color")
+                }
+
+                else -> {
+                    Log.e(TAG, "addCategory:${color} ")
+                    _addCategoryError.emit( "")
+                    addCategory(
+                        TransactionCategory(
+                            "$name $color $isExpenses".sha256(),
+                            name,
+                            color,
+                            isExpenses
+                        )
                     )
-                )
+                }
             }
         }
     }
@@ -68,7 +78,9 @@ class AddCategoryViewModel @Inject constructor(
 
     override fun onCleared() {
         Log.e("ViewModel", "onCleared: ")
-        _newCategoryNameErr.value = ""
+        viewModelScope.launch {
+            _addCategoryError.emit("")
+        }
         super.onCleared()
     }
 }

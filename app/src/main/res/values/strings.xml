@@ -30,6 +30,11 @@
     <string name="list_empty">List is empty</string>
     <string name="select_all">Select all</string>
     <string name="search">Search</string>
+    <string name="create">Create</string>
+    <string name="name">Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_new_category">Add new category</string>
+    <string name="expenses">Expenses</string>
 
     <string name="maxLengthError">Use %1$d characters or fewer</string>
     <string name="minLengthError">Use %1$d characters or more</string>
