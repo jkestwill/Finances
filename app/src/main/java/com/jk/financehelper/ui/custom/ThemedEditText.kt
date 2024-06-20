@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jk.common_data.Languages
 import com.jk.financehelper.R
 import com.jk.financehelper.ui.common.Limit
 import com.jk.financehelper.ui.common.TextError
@@ -57,7 +55,9 @@ fun CharacterLimitTextField(
         Log.e("ERROR", "CharacterLimitTextField:${error.value} ")
     }
     ThemedTextField(
-        modifier = modifier.shake(error.value!=null)        .background(
+        modifier = modifier
+            .shake(error.value != null)
+            .background(
                 FinanceHelperTheme.colors.secondaryBackground,
                 shape = FinanceHelperTheme.shape.shape10
             ),
@@ -69,19 +69,18 @@ fun CharacterLimitTextField(
                 onValueChange(it)
         },
         placeHolder = {
-            Text(stringResource(id = R.string.search),style = FinanceHelperTheme.typography.h3)
+            Text(stringResource(id = R.string.search), style = FinanceHelperTheme.typography.h3)
         },
         postfix = {
             Text(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Unspecified)
-                    ,
+                    .background(Color.Unspecified),
                 text = "${value.length}/${textLimit.maxLength.value}",
                 textAlign = TextAlign.End,
                 style = FinanceHelperTheme.typography.h3,
 
-            )
+                )
         },
         textStyle = textStyle,
         maxLines = maxLines,
@@ -113,7 +112,7 @@ private fun checkText(
         }
 
         else -> {
-            throw IllegalStateException("Wrong textLimit state ${textLimit}" )
+            throw IllegalStateException("Wrong textLimit state ${textLimit}")
         }
     }
 }
@@ -164,7 +163,9 @@ fun ThemedTextField(
             ) {
 
                 if (prefix != null)
-                    Box(modifier = Modifier.weight(1f) .background(Color.Transparent)) {
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .background(Color.Transparent)) {
                         prefix()
                     }
 

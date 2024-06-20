@@ -3,8 +3,6 @@ package com.jk.financehelper.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -118,7 +116,7 @@ fun FinanceHelperTheme(
             fontWeight = FontWeight.Bold,
             color = Color.Black
         ),
-        h1 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 24.sp),
+        h1 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 32.sp),
         h2 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 20.sp),
         h3 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 16.sp),
         h4 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 12.sp),

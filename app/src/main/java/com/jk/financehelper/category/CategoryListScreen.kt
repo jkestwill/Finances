@@ -7,7 +7,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,6 +39,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +47,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -60,8 +63,8 @@ import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
 import com.jk.financehelper.ui.common.Error
-import com.jk.financehelper.ui.common.TextLimit
-import com.jk.financehelper.ui.custom.CharacterLimitTextField
+import com.jk.financehelper.ui.common.Search
+import com.jk.financehelper.ui.common.SearchState
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -79,6 +82,13 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     val selectAll = remember {
         mutableStateOf(false)
     }
+    var searchPositionY by remember {
+        mutableStateOf(0f)
+    }
+
+    val searchState = remember {
+        mutableStateOf(SearchState.COLLAPSED)
+    }
 
     BackHandler(isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
 
@@ -86,57 +96,54 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
     }
 
     LaunchedEffect(key1 = s) {
-        println(selectAll.value)
         viewModel.selectedCategoryIdList.collect {
             println(it)
-            if (it.size == categoryList.itemSnapshotList.items.size) {
-                selectAll.value = true
-            } else {
-                selectAll.value = false
-            }
+            selectAll.value = it.size == categoryList.itemSnapshotList.items.size
 
         }
     }
 
 
     Scaffold(topBar = {
-        Row(
-            modifier=Modifier.padding(start = 5.dp,end=5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-
-            Log.e(TAG, "CategoryListScreen: ${ navController.currentBackStack.collectAsState()}", )
-            if(navController.currentBackStack.collectAsState().value.size>1){
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .clickable {
-                            navController.popBackStack()
-                        },
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "zxc"
-                )
-            }
-            Text(text = "Categories", style = FinanceHelperTheme.typography.label)
+        Box(modifier = Modifier.fillMaxWidth()) {
             Search(
-                modifier = Modifier.align(Alignment.CenterVertically),
-                text = searchText.value
-            ) {
-                viewModel.getAllCategories(it)
-            }
-            if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
-                SelectAll(isSelected = selectAll.value) {
-                    selectAll.value = !selectAll.value
-                    if (selectAll.value) {
-                        viewModel.selectedCategoryIdList.value = listOf()
-                        viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
-                            it?.id ?: ""
-                        }
-                    } else viewModel.selectedCategoryIdList.value = listOf()
-                }
-        }
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .onGloballyPositioned {
+                        searchPositionY = it.positionInRoot().y
 
+                    },
+                text = searchText.value,
+                onValueChange = {
+                    searchText.value = it
+                    viewModel.getAllCategories(it)
+                }
+            )
+            Row(
+                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = "Categories",
+                    style = FinanceHelperTheme.typography.label,
+                    color=FinanceHelperTheme.colors.primaryText
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
+                    SelectAll(modifier = Modifier.weight(1f), isSelected = selectAll.value) {
+                        selectAll.value = !selectAll.value
+                        if (selectAll.value) {
+                            viewModel.selectedCategoryIdList.value = listOf()
+                            viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
+                                it?.id ?: ""
+                            }
+                        } else viewModel.selectedCategoryIdList.value = listOf()
+                    }
+            }
+        }
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -146,6 +153,10 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         ) {
             Column(
                 modifier = Modifier
+                    .graphicsLayer {
+                        Log.e(TAG, "CategoryListScqqqqreen: ${searchPositionY}")
+                        this.translationY = searchPositionY
+                    }
                     .padding(FinanceHelperTheme.shape.padding)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -199,13 +210,12 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
 }
 
 @Composable
-fun SelectAll(isSelected: Boolean, onSelectAll: () -> Unit) {
-
-    Row {
+fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: () -> Unit) {
+    Row(modifier) {
         Text(
             modifier = Modifier.align(Alignment.CenterVertically),
             text = stringResource(id = R.string.select_all),
-            style = FinanceHelperTheme.typography.h3,
+            style = FinanceHelperTheme.typography.h2,
 
             )
         RadioButton(
@@ -445,29 +455,5 @@ fun CategoryItem(
     }
 }
 
-@Composable
-fun Search(modifier: Modifier = Modifier, text: String, onValueChange: (String) -> Unit) {
-    val searchText = remember() { mutableStateOf(text) }
 
-    LaunchedEffect(key1 = searchText.value) {
-        onValueChange(searchText.value)
-    }
 
-    CharacterLimitTextField(
-        modifier = modifier
-            .width(150.dp)
-            .height(40.dp),
-//            .background(
-//                FinanceHelperTheme.colors.secondaryBackground,
-//                shape = FinanceHelperTheme.shape.shape10
-//            ),
-        textStyle = FinanceHelperTheme.typography.h3,
-        maxLines = 1,
-        value = searchText.value,
-        onValueChange = { searchText.value = it },
-        textLimit = TextLimit.SearchTextLimit(),
-        onError = {
-            Log.e("TAG", "Search:${it} ")
-        }
-    )
-}
