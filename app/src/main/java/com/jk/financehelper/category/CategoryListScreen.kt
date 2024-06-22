@@ -7,6 +7,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.DrawStyle
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -129,7 +133,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                     modifier = Modifier.weight(1f),
                     text = "Categories",
                     style = FinanceHelperTheme.typography.label,
-                    color=FinanceHelperTheme.colors.primaryText
+                    color = FinanceHelperTheme.colors.primaryText
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
@@ -417,29 +421,32 @@ fun CategoryItem(
     isSelectionMode: CategoryViewModel.SelectionState,
     isSelected: Boolean
 ) {
-
+    val borderWidth by remember {
+        mutableStateOf(
+            if (isSelected) {
+                5.dp
+            } else 0.dp
+        )
+    }
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(15))
             .height(100.dp)
+//            .border(  if (isSelected) {
+//                2.dp
+//            } else (-1).dp,Color.Black,FinanceHelperTheme.shape.shape10)
+            .background(color,FinanceHelperTheme.shape.shape10)
             .drawBehind {
-                drawRect(color = color)
+
+
                 if (isSelectionMode == CategoryViewModel.SelectionState.ON) {
-                    val offset = Offset(
-                        x = size.width / 4f,
-                        y = size.height - size.height / 5
-                    )
-                    drawRect(
-                        color = Color.Black,
-                        topLeft = offset,
-                        size = Size(width = size.width / 2, height = 10f)
-                    )
+                    val strokeWidth = 4f
                     if (isSelected) {
 
                         drawRect(
-                            color = Color.Cyan,
-                            topLeft = offset,
-                            size = Size(width = size.width / 2, height = 10f)
+                            color = Color.Black,
+                            topLeft = Offset(strokeWidth/2,strokeWidth/2),
+                            size = this.size.copy(this.size.width-strokeWidth,this.size.height-strokeWidth),
+                            style = Stroke(strokeWidth, pathEffect = PathEffect.cornerPathEffect(10.dp.toPx()))
                         )
                     }
                 }
