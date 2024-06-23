@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -25,8 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.focusTarget
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
@@ -70,7 +69,7 @@ fun Search(
     Row(modifier = modifier
         .graphicsLayer {
             this.translationY = offsetY.value
-        }) {
+        }, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
         IconButton(modifier = Modifier
             .width(40.dp)
             .height(40.dp)
@@ -80,52 +79,37 @@ fun Search(
             )
             .zIndex(1f), onClick = {
             scpope.launch {
-
+                state.value = SearchState.EXPANDED
+                delay(200)
                 focusRequester.requestFocus()
-                delay(100)
                 keyboard?.show()
             }
-
-
-            state.value = SearchState.EXPANDED
-
         }) {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
         }
-        CharacterLimitTextField(
-            modifier = modifier
-                .height(40.dp)
-                .width(size.value)
-                .focusTarget()
-                .focusRequester(focusRequester)
-                .onFocusEvent {
-                    if (!it.isFocused) {
-                        // state.value = SearchState.COLLAPSED
-                    }
-                    Log.e(TAG, "Search: is focused ${it.isFocused}")
 
+            CharacterLimitTextField(
+                modifier = modifier
+                    .height(40.dp)
+                    .width(size.value)
+                    .focusRequester(focusRequester),
+                textStyle = FinanceHelperTheme.typography.h3,
+                maxLines = 1,
+                value = text,
+                onValueChange = onValueChange,
+                textLimit = TextLimit.SearchTextLimit(),
+                onError = {
+                    Log.e("TAG", "Search:${it} ")
                 },
-            textStyle = FinanceHelperTheme.typography.h3,
-            maxLines = 1,
-            value = text,
-            onValueChange = onValueChange,
-            textLimit = TextLimit.SearchTextLimit(),
-            onError = {
-                Log.e("TAG", "Search:${it} ")
-            }
-        )
+            )
 
     }
     LaunchedEffect(key1 = keyboardState.value) {
         if (keyboardState.value == KeyboardState.CLOSED) {
+            //focusRequester.captureFocus()
+            Log.e(TAG, "Search: ${size.value}")
             state.value = SearchState.COLLAPSED
-            focusRequester.captureFocus()
-
         }
-
-        Log.e(TAG, "Search: ${keyboardState.value}")
-        Log.e(TAG, "Search: ${state.value}")
-
     }
 }
 

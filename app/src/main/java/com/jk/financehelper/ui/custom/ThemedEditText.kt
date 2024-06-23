@@ -44,7 +44,8 @@ fun CharacterLimitTextField(
     maxLines: Int = 1,
     textLimit: TextLimit,
     onValueChange: (String) -> Unit,
-    onError: (String?) -> Unit
+    onError: (String?) -> Unit,
+    prefix: @Composable (() -> Unit)?=null
 ) {
     val textError = rememberTextError(textLimit = textLimit)
     val error = remember {
@@ -71,6 +72,7 @@ fun CharacterLimitTextField(
         placeHolder = {
             Text(stringResource(id = R.string.search), style = FinanceHelperTheme.typography.h3)
         },
+        prefix = prefix,
         postfix = {
             Text(
                 modifier = Modifier
@@ -163,9 +165,11 @@ fun ThemedTextField(
             ) {
 
                 if (prefix != null)
-                    Box(modifier = Modifier
-                        .weight(1f)
-                        .background(Color.Transparent)) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(Color.Transparent)
+                    ) {
                         prefix()
                     }
 
