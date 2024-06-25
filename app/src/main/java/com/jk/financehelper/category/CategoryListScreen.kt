@@ -57,7 +57,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.category.CategoryViewModel
+import com.jk.category.CategoryListViewModel
 import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
@@ -71,7 +71,7 @@ private const val TAG = "CategoryListScreen"
 
 @SuppressLint("RememberReturnType", "FlowOperatorInvokedInComposition", "RestrictedApi")
 @Composable
-fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavController) {
+fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavController) {
     val categoryList = viewModel.categoryFlow.collectAsLazyPagingItems()
     val searchText = remember {
         mutableStateOf("")
@@ -89,9 +89,9 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
         mutableStateOf(SearchState.COLLAPSED)
     }
 
-    BackHandler(isSelectionMode.value == CategoryViewModel.SelectionState.ON) {
+    BackHandler(isSelectionMode.value == CategoryListViewModel.SelectionState.ON) {
 
-        viewModel.selectionState.value = CategoryViewModel.SelectionState.OFF
+        viewModel.selectionState.value = CategoryListViewModel.SelectionState.OFF
     }
 
     LaunchedEffect(key1 = s) {
@@ -131,7 +131,7 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
                     color = FinanceHelperTheme.colors.primaryText
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (isSelectionMode.value == CategoryViewModel.SelectionState.ON)
+                if (isSelectionMode.value == CategoryListViewModel.SelectionState.ON)
                     SelectAll(modifier = Modifier.weight(1f), isSelected = selectAll.value) {
                         selectAll.value = !selectAll.value
                         if (selectAll.value) {
@@ -171,14 +171,14 @@ fun CategoryListScreen(viewModel: CategoryViewModel, navController: NavControlle
             }
 
             SelectItemsMenu(
-                isSelectionMode.value == CategoryViewModel.SelectionState.ON,
+                isSelectionMode.value == CategoryListViewModel.SelectionState.ON,
                 viewModel = viewModel
             ) {
                 Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
                 viewModel.removeCategoriesById()
                 selectAll.value = false
             }
-            if (isSelectionMode.value != CategoryViewModel.SelectionState.ON) {
+            if (isSelectionMode.value != CategoryListViewModel.SelectionState.ON) {
                 IconButton(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -229,12 +229,9 @@ fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: (
  * Menu for selected items*/
 
 @Composable
-fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onDelete: () -> Unit) {
+fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel, onDelete: () -> Unit) {
     val deleteState = viewModel.categoryDeleteState.collectAsState()
-    val deletedItem = viewModel.selectedCategoryIdList.collectAsState()
-
     viewModel.observeCategoryDeleteState()
-
     when (deleteState.value) {
         is com.jk.common_data.State.Loading -> {
             Box(
@@ -295,7 +292,7 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryViewModel, onD
 fun ColumnScope.CategoryGrid(
     categoryPagingList: LazyPagingItems<TransactionCategory>,
     onItemClick: (TransactionCategory) -> Unit,
-    viewModel: CategoryViewModel
+    viewModel: CategoryListViewModel
 ) {
 
     val selectionState = viewModel.selectionState.collectAsState()
@@ -338,7 +335,7 @@ fun ColumnScope.CategoryGrid(
                                     modifier = Modifier
                                         .combinedClickable(
                                             onClick = {
-                                                if (selectionState.value == CategoryViewModel.SelectionState.ON) {
+                                                if (selectionState.value == CategoryListViewModel.SelectionState.ON) {
                                                     isSelected = !isSelected
 
                                                     if (isSelected) {
@@ -356,14 +353,14 @@ fun ColumnScope.CategoryGrid(
 
                                                 viewModel.selectionState.value =
                                                     if (viewModel.selectionState.value ==
-                                                        CategoryViewModel.SelectionState.OFF
+                                                        CategoryListViewModel.SelectionState.OFF
                                                     ) {
                                                         viewModel.selectedCategoryIdList.value += category.id
-                                                        CategoryViewModel.SelectionState.ON
+                                                        CategoryListViewModel.SelectionState.ON
                                                     } else {
                                                         viewModel.selectedCategoryIdList.value =
                                                             listOf()
-                                                        CategoryViewModel.SelectionState.OFF
+                                                        CategoryListViewModel.SelectionState.OFF
                                                     }
                                             }),
                                     category = category,
@@ -409,7 +406,7 @@ fun CategoryItem(
     modifier: Modifier,
     category: TransactionCategory,
     color: Color,
-    isSelectionMode: CategoryViewModel.SelectionState,
+    isSelectionMode: CategoryListViewModel.SelectionState,
     isSelected: Boolean
 ) {
     Box(
@@ -417,9 +414,7 @@ fun CategoryItem(
             .height(100.dp)
             .background(color,FinanceHelperTheme.shape.shape10)
             .drawBehind {
-
-
-                if (isSelectionMode == CategoryViewModel.SelectionState.ON) {
+                if (isSelectionMode == CategoryListViewModel.SelectionState.ON) {
                     val strokeWidth = 4f
                     if (isSelected) {
 

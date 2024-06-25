@@ -4,7 +4,6 @@ import com.jk.category_data.TransactionCategory
 import com.jk.financehelper.domain.model.Currency
 import com.jk.financehelper.domain.model.Operation
 import com.jk.financehelper.domain.model.Transaction
-
 import com.jk.financehelper.domain.model.TransactionMoney
 import com.jk.financehelper.domain.model.TransactionType
 import com.jk.financehelper.domain.model.preview.OperationPreview
@@ -62,7 +61,7 @@ class DataUtils {
                             amount = 123.0,
                             currency = Currency("1", "BYN")
                         ),
-                        name = "Euroopt"
+                        name = "Euroopt LCC WAIKIKI PYATSOT DENEG"
                     ),
                     date = LocalDateTime.now(),
                     type = TransactionType("tp1", "online")

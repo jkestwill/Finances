@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,12 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
@@ -43,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
-import com.jk.category.CategoryListViewModel
+import com.jk.category.CategoryViewModel
 import com.jk.financehelper.R
 import com.jk.financehelper.category.CategoryHeader
 import com.jk.financehelper.domain.model.preview.TransactionPreview
@@ -57,7 +51,7 @@ import com.jk.financehelper.utils.DataUtils
 
 @Composable
 fun CategoryScreen(
-    viewModel: CategoryListViewModel,
+    viewModel: CategoryViewModel,
     navController: NavController,
     categoryId: String?,
     colorInt: Long?
@@ -119,7 +113,7 @@ fun CategoryScreen(
                 ButtonWithDropdownMenu(modifier = Modifier
                     .shadow(4.dp, RoundedCornerShape(20))
                     .background(
-                        color = color.value,shape= FinanceHelperTheme.shape.shape10
+                        color = color.value, shape = FinanceHelperTheme.shape.shape10
                     )
                     .weight(0.2f),
                     list = listOf("Date", "Name", "Amount"),
@@ -178,41 +172,31 @@ fun TransactionList(transactionList: List<TransactionPreview>, color: Color, lig
 fun TransactionPreviewItem(item: TransactionPreview, color: Color, lightColor: Color) {
     Row(
         Modifier
-            .clip(RoundedCornerShape(20))
-            .padding(end = 5.dp)
-            .drawBehind {
-                drawRoundRect(
-                    topLeft = Offset(50f, 0f),
-                    size = Size(width = size.width, height = size.height),
-                    color = lightColor,
-                    alpha = 0.6f,
-                    cornerRadius = CornerRadius(10f),
-                )
-
-
-            }
+            .background(lightColor, FinanceHelperTheme.shape.shape20)
+            .padding(start = 10.dp,end = 10.dp)
             .height(60.dp)
+            .padding(5.dp)
 
     ) {
-        Spacer(modifier = Modifier.weight(0.1f))
+
         Column(
             modifier = Modifier
                 .weight(0.5f)
-                .padding(10.dp)
+                .padding(5.dp)
                 .align(Alignment.CenterVertically)
         ) {
             AutoSizeText(
                 modifier = Modifier.weight(1f),
                 text = item.operation.name,
-                minTextSize = 20.sp,
-                maxTextSize = 25.sp,
+                minTextSize = (FinanceHelperTheme.typography.h3.fontSize.value - 5).sp,
+                maxTextSize = FinanceHelperTheme.typography.h1.fontSize,
                 maxLines = 1,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 modifier = Modifier.weight(1f),
                 text = "${item.date.hour}:${item.date.minute}",
-                fontSize = 14.sp,
+                style = FinanceHelperTheme.typography.h4,
                 textAlign = TextAlign.Start
             )
         }
@@ -222,15 +206,15 @@ fun TransactionPreviewItem(item: TransactionPreview, color: Color, lightColor: C
                 .align(Alignment.CenterVertically)
                 .height(40.dp)
                 .background(
-                    color, shape = RoundedCornerShape(20)
+                    color = color, shape = FinanceHelperTheme.shape.shape20
                 )
 
         ) {
             AutoSizeText(
                 modifier = Modifier.align(Alignment.Center),
                 text = "${item.operation.money.amount} ${item.operation.money.currency.name}",
-                minTextSize = 15.sp,
-                maxTextSize = 20.sp,
+                minTextSize = (FinanceHelperTheme.typography.h3.fontSize.value - 15).sp,
+                maxTextSize = FinanceHelperTheme.typography.h3.fontSize,
                 alignment = Alignment.Center,
                 maxLines = 1
             )

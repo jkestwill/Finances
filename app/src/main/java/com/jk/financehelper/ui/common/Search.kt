@@ -42,6 +42,7 @@ enum class SearchState {
 
 private const val TAG = "Search"
 
+//
 @Composable
 fun Search(
     modifier: Modifier,
@@ -62,14 +63,15 @@ fun Search(
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     val size =
         animateDpAsState(
-            targetValue = if (state.value == SearchState.COLLAPSED) 0.dp else 150.dp,
+            targetValue = if (state.value == SearchState.COLLAPSED) (-100).dp else 150.dp,
             tween(100, if (state.value == SearchState.COLLAPSED) 0 else 300, LinearOutSlowInEasing)
         )
 
     Row(modifier = modifier
         .graphicsLayer {
             this.translationY = offsetY.value
-        }, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        }, horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
         IconButton(modifier = Modifier
             .width(40.dp)
             .height(40.dp)
@@ -88,20 +90,20 @@ fun Search(
             Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
         }
 
-            CharacterLimitTextField(
-                modifier = modifier
-                    .height(40.dp)
-                    .width(size.value)
-                    .focusRequester(focusRequester),
-                textStyle = FinanceHelperTheme.typography.h3,
-                maxLines = 1,
-                value = text,
-                onValueChange = onValueChange,
-                textLimit = TextLimit.SearchTextLimit(),
-                onError = {
-                    Log.e("TAG", "Search:${it} ")
-                },
-            )
+        CharacterLimitTextField(
+            modifier = modifier
+                .height(40.dp)
+                .width(size.value)
+                .focusRequester(focusRequester),
+            textStyle = FinanceHelperTheme.typography.h3,
+            maxLines = 1,
+            value = text,
+            onValueChange = onValueChange,
+            textLimit = TextLimit.SearchTextLimit(),
+            onError = {
+                Log.e("TAG", "Search:${it} ")
+            },
+        )
 
     }
     LaunchedEffect(key1 = keyboardState.value) {

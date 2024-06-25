@@ -1,6 +1,7 @@
 package com.jk.category
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category_data.CategoryRepository
@@ -23,14 +24,16 @@ import kotlin.random.Random
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val colorList:List<Color>
 ) : ViewModel() {
 
-    companion object{
+    companion object {
         private const val TAG = "AddCategoryViewModel"
     }
 
-    private var _addCategoryError = MutableSharedFlow<String>(1, onBufferOverflow =  BufferOverflow.DROP_LATEST)
+    private var _addCategoryError =
+        MutableSharedFlow<String>(1, onBufferOverflow = BufferOverflow.DROP_LATEST)
     val addCategoryError: SharedFlow<String> get() = _addCategoryError
 
     private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None())
@@ -47,19 +50,14 @@ class AddCategoryViewModel @Inject constructor(
                     _addCategoryError.emit("Name must not be empty")
                 }
 
-                color == null -> {
-                    Log.e(TAG, "addCategory:color is null ")
-                    _addCategoryError.emit("Choose a color")
-                }
-
                 else -> {
                     Log.e(TAG, "addCategory:${color} ")
-                    _addCategoryError.emit( "")
+                    _addCategoryError.emit("")
                     addCategory(
                         TransactionCategory(
                             "$name $color $isExpenses".sha256(),
                             name,
-                            color,
+                            color ?: colorList.random().value,
                             isExpenses
                         )
                     )
