@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import com.jk.financehelper.R
 import com.jk.financehelper.ui.custom.AutoSizeText
+import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import com.jk.financehelper.ui.theme.Red
 
 @Composable
@@ -50,7 +51,6 @@ fun CategoryHeader(
 
     Row(
         modifier = modifier
-            .background(color = lightColor, shape = RoundedCornerShape(20))
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -59,7 +59,6 @@ fun CategoryHeader(
                 .background(color = color, shape = RoundedCornerShape(20))
                 .fillMaxHeight()
                 .width(50.dp)
-            //  .shadow(2.dp, shape = RoundedCornerShape(20))
 
         ) {
             Icon(
@@ -92,9 +91,9 @@ fun CategoryHeader(
 
         Box(
             modifier = Modifier
-                .shadow(2.dp, shape = RoundedCornerShape(20))
+                .shadow(2.dp, shape = FinanceHelperTheme.shape.shape20)
                 .height(20.dp)
-                .background(color = color, shape = RoundedCornerShape(20))
+                .background(color = color, shape = FinanceHelperTheme.shape.shape20)
                 .align(Alignment.Top)
                 .weight(2f)
         ) {
@@ -111,16 +110,18 @@ fun CategoryHeader(
 }
 
 @Composable
-@Preview
+@Preview(backgroundColor = 0xFFFFFFFF)
 fun Preview() {
-    CategoryHeader(
-        modifier = Modifier
-            .width(400.dp)
-            .height(100.dp),
-        categoryName = "Taxi",
-        description = "All Transactions",
-        icon = painterResource(id = R.drawable.ic_sort_down),
-        color = Red,
-        lightColor = Red
-    )
+    FinanceHelperTheme {
+        CategoryHeader(
+            modifier = Modifier
+                .width(400.dp)
+                .height(100.dp),
+            categoryName = "Taxi",
+            description = "All Transactions",
+            icon = painterResource(id = R.drawable.ic_sort_down),
+            color = Red,
+            lightColor = Red
+        )
+    }
 }

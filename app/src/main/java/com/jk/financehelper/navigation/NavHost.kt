@@ -11,7 +11,7 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.jk.financehelper.category.CategoryListScreen
 import com.jk.financehelper.category.new_category.CategoryDialog
-import com.jk.financehelper.category.new_category.CategoryScreen
+import com.jk.financehelper.category.CategoryScreen
 import com.jk.financehelper.currency.ExchangeRate
 import com.jk.financehelper.main.HomeScreen
 import com.jk.financehelper.ui.theme.Celadon
@@ -39,7 +39,7 @@ fun MainNavGraph(
                 viewModel = hiltViewModel(),
                 navController = navController,
                 it.arguments?.getString("categoryId"),
-                Celadon.toArgb().toLong()
+                Celadon.toArgb().toULong()
             )
         }
 

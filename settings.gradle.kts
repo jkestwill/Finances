@@ -17,18 +17,19 @@ dependencyResolutionManagement {
 
 rootProject.name = "FinanceHelper"
 include(":app")
-include(":currencyExchangeApiBy")
-include(":transaction-database")
-include(":exchange-rate-data")
-include(":currency-exchange")
-include(":category-data")
+include(":core:transaction-database")
+include(":core:currency:currencyExchangeApiBy")
+include(":core:currency:exchange-rate-data")
+include(":core:currency:currency-exchange")
+include(":core:category:category-data")
 
 //currency
-project(":currencyExchangeApiBy").projectDir=File(rootDir,"currency/currencyExchangeApiBy")
-project(":currency-exchange").projectDir=File(rootDir,"currency/currency-exchange")
-project(":exchange-rate-data").projectDir=File(rootDir,"currency/exchange-rate-data")
-//category
-project(":category-data").projectDir=File(rootDir,"category/category-data")
+//project(":currencyExchangeApiBy").projectDir=File(rootDir,"currency/currencyExchangeApiBy")
+//project(":currency-exchange").projectDir=File(rootDir,"currency/currency-exchange")
+//project(":exchange-rate-data").projectDir=File(rootDir,"currency/exchange-rate-data")
+////category
+//project("core:category:category-data").projectDir=File(rootDir,"core/category/category-data")
 
-include(":common-data")
-include(":category-main")
+include(":core:common-data")
+include(":features:category:category-main")
+include(":core:transaction:transaction-data")

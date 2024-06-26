@@ -4,12 +4,11 @@ import androidx.room.Transaction
 
 import com.jk.financehelper.utils.Response
 import com.jk.financehelper.utils.apiRequest
-import com.jk.financehelper.utils.toOperationCategoryList
 import com.jk.financehelper.utils.toTransactionGoodsList
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
-import com.jk.transaction_database.transaction.preview.TransactionPreviewDatabase
+import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 import com.jk.transaction_database.transaction.relations.TransactionRelation
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -46,7 +45,7 @@ class TransactionLocalDataSource @Inject constructor(
         categoryId: String,
         sortBy: String,
         isAsc: Boolean
-    ): Response<List<TransactionPreviewDatabase>> {
+    ): Response<List<TransactionPreviewEntity>> {
         return apiRequest {
             transactionDao.getTransactionPreviewListByCategoryId(
                 categoryId,

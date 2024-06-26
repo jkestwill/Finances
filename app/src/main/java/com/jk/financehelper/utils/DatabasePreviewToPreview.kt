@@ -3,10 +3,10 @@ package com.jk.financehelper.utils
 
 import com.jk.financehelper.domain.model.preview.OperationPreview
 import com.jk.financehelper.domain.model.preview.TransactionPreview
-import com.jk.transaction_database.transaction.preview.OperationPreviewDatabase
-import com.jk.transaction_database.transaction.preview.TransactionPreviewDatabase
+import com.jk.transaction_database.transaction.preview.OperationPreviewEntity
+import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 
-fun TransactionPreviewDatabase.toPreview(): TransactionPreview {
+fun TransactionPreviewEntity.toPreview(): TransactionPreview {
     return TransactionPreview(
         id=transaction.id,
         operation=this.operation.toPreview(),
@@ -15,7 +15,7 @@ fun TransactionPreviewDatabase.toPreview(): TransactionPreview {
     )
 }
 
-fun OperationPreviewDatabase.toPreview(): OperationPreview {
+fun OperationPreviewEntity.toPreview(): OperationPreview {
     return OperationPreview(
         id=operation.id,
         money = this.moneyRelation.toMoney(),

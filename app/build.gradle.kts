@@ -1,5 +1,3 @@
-
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -25,19 +23,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField( "String","NBRB_API_BASE_URL","\"https://api.nbrb.by/exrates/\"")
+        buildConfigField("String", "NBRB_API_BASE_URL", "\"https://api.nbrb.by/exrates/\"")
 
     }
 
     buildTypes {
 
         debug {
-            buildConfigField("String","NBRB_API_BASE_URL","\"https://api.nbrb.by/exrates/\"")
+            buildConfigField("String", "NBRB_API_BASE_URL", "\"https://api.nbrb.by/exrates/\"")
 
         }
 
         release {
-            buildConfigField("String","NBRB_API_BASE_URL","\"https://api.nbrb.by/exrates/\"")
+            buildConfigField("String", "NBRB_API_BASE_URL", "\"https://api.nbrb.by/exrates/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -93,29 +91,29 @@ dependencies {
 
     //dagger hilt
     implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     //navigation
     implementation(libs.androidx.navigation.compose)
 
-    implementation (libs.calendar.compose)
+    implementation(libs.calendar.compose)
     //pagination
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
-    implementation(project(":exchange-rate-data"))
-    implementation(project(":currencyExchangeApiBy"))
-    implementation(project(":currency-exchange"))
-    implementation(project(":transaction-database"))
-    implementation(project(":category-data"))
-    implementation(project(":category-main"))
-    implementation(project(":common-data"))
+    implementation(project(":core:currency:exchange-rate-data"))
+    implementation(project(":core:currency:currencyExchangeApiBy"))
+    implementation(project(":core::currency:currency-exchange"))
+    implementation(project(":core:transaction-database"))
+    implementation(project(":core:category:category-data"))
+    implementation(project(":features:category:category-main"))
+    implementation(project(":core:common-data"))
 
     implementation(libs.skydoves.colorpicker)
 
     testImplementation(libs.junit)
-    testImplementation (libs.truth)
+    testImplementation(libs.truth)
     //androidx test
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.core)
@@ -124,12 +122,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.truth)
 
-    androidTestImplementation( libs.androidx.espresso.core)
-    androidTestImplementation( libs.androidx.espresso.contrib)
-    androidTestImplementation( libs.androidx.espresso.intents)
-    androidTestImplementation( libs.androidx.espresso.accessibility)
-    androidTestImplementation( libs.androidx.espresso.web)
-    androidTestImplementation( libs.androidx.idling.concurrent)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.espresso.accessibility)
+    androidTestImplementation(libs.androidx.espresso.web)
+    androidTestImplementation(libs.androidx.idling.concurrent)
 
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
