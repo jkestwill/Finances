@@ -1,4 +1,7 @@
 package com.jk.category_data
+
+import javax.annotation.concurrent.Immutable
+
 /**
  * Business logic layer transaction*/
 data class TransactionCategory(
@@ -6,5 +9,6 @@ data class TransactionCategory(
     val name:String,
     val color:ULong,
     val isExpenses:Boolean
-) {
-}
+)
+
+

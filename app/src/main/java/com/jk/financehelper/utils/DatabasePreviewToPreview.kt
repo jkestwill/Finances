@@ -9,9 +9,9 @@ import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 fun TransactionPreviewEntity.toPreview(): TransactionPreview {
     return TransactionPreview(
         id=transaction.id,
-        operation=this.operation.toPreview(),
+        operation=this.operationRelation.toPreview(),
         date = this.transaction.date,
-        type=this.type.toType()
+        type=this.typeRelation.toType()
     )
 }
 

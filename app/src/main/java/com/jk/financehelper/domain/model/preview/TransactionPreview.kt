@@ -7,5 +7,4 @@ data class TransactionPreview(
     val operation:OperationPreview,
     val date: LocalDateTime,
     val type:TransactionType
-) {
-}
+)

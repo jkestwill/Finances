@@ -10,12 +10,12 @@ class TransactionPreviewEntity(
     @Embedded
     val transaction: TransactionDatabaseEntity,
     @Relation(entity = OperationDatabaseEntity::class,entityColumn = "id", parentColumn = "id")
-    val operation: OperationPreviewEntity,
+    val operationRelation: OperationPreviewEntity,
     @Relation(
         entityColumn = "id",
         parentColumn = "type_id"
     )
-    val type: TransactionTypeDatabaseEntity
+    val typeRelation: TransactionTypeDatabaseEntity
 
 ) {
 }
