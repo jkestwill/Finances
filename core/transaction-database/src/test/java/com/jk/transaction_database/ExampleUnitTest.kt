@@ -20,50 +20,7 @@ import org.junit.runner.RunWith
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@RunWith(AndroidJUnit4::class)
+
 class ExampleUnitTest {
 
-    private var db: TransactionDatabase? = null
-
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-
-    @Before
-    fun goodsDataSource() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, TransactionDatabase::class.java).build()
-        if (db != null)
-            checkNotNull(db)
-
-    }
-
-    @Test
-    fun test() {
-        val dao = GoodsLocalDataSource(
-            db!!.getMeasureDao(),
-            db!!.getLanguageDao(),
-            db!!.getLanguageMeasureListDao()
-        )
-        println(db!!.getLanguageMeasureListDao().getMeasureRelation())
-        assertEquals(dao.insert(testDataMeasure[0], testDataLang[0]), testDataLang[0])
-
-
-    }
-
-
-    companion object {
-        val testDataMeasure = listOf(
-            MeasureEntity("zxc", "qwe"),
-            MeasureEntity("zxc", "qwe"),
-        )
-
-        val testDataLang = listOf(
-            LanguageEntity("qq", "english", "eng", "huuui"),
-            LanguageEntity("qq", "english", "eng", "huuui"),
-        )
-
-
-    }
 }

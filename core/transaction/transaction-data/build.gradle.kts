@@ -48,7 +48,18 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+
+
+    androidTestImplementation(libs.androidx.core)
+    androidTestImplementation(libs.core.ktx)
+    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.androidx.truth)
+
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.espresso.accessibility)
+    androidTestImplementation(libs.androidx.espresso.web)
+    androidTestImplementation(libs.androidx.idling.concurrent)
+
 }

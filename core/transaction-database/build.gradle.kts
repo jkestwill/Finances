@@ -42,8 +42,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.junit.ktx)
-    testImplementation("org.testng:testng:6.9.6")
     ksp(libs.androidx.room.compiler)
 
+    androidTestImplementation( "androidx.test:runner:1.6.1")
     implementation(project(":core:common-data"))
 }

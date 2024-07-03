@@ -12,11 +12,11 @@ class TransactionRepository @Inject constructor(
     private var transactionLocalDataCourse: TransactionLocalDataSource,
     private var transactionRemoteDataSource: com.jk.transaction_data.datasource.TransactionRemoteDataSource
 ) {
-    suspend fun getExpensesSum(
+    fun getExpensesSum(
         dateStart: LocalDateTime,
         dateEnd: LocalDateTime,
         currency: String
-    ): Flow<Response<Double>> {
+    ): Flow<Double> {
         return flowOf(
             transactionLocalDataCourse.getExpensesSum(
                 dateStart = dateStart,

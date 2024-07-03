@@ -9,9 +9,11 @@ import com.jk.transaction_database.transaction.LanguageEntity
 @Dao
 interface LanguageDao {
     @Insert(entity = LanguageEntity::class)
-    fun insert(languageEntity: LanguageEntity)
+   suspend fun insert(languageEntity: LanguageEntity)
 
 
     @Query("SELECT * FROM language WHERE language.id==:id")
-    fun getById(id: String):LanguageEntity
+   suspend fun getById(id: String):LanguageEntity
+    @Query("SELECT * FROM language ORDER BY id ASC")
+   suspend fun getAll():List<LanguageEntity>
 }

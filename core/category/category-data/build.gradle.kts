@@ -40,7 +40,6 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.androidx.paging.runtime)
@@ -48,6 +47,7 @@ dependencies {
 
     implementation(project(":core:transaction-database"))
     implementation(project(":core:common-data"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

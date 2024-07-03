@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
@@ -37,6 +38,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
     implementation(project(":core:transaction-database"))
     testImplementation(libs.junit)

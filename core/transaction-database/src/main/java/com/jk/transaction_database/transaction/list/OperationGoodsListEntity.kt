@@ -6,12 +6,12 @@ import androidx.room.Entity
 // add ledger
 @Entity(
     tableName="goods_list",
-    primaryKeys = ["transaction_id","goods_id"]
+    primaryKeys = ["operation_id","goods_id"]
 
 )
 data class OperationGoodsListEntity(
-    @ColumnInfo(name = "transaction_id")
-    val transactionId: String,
+    @ColumnInfo(name = "operation_id")
+    val operationId: String,
     @ColumnInfo(name = "goods_id")
     val goodsId: String
 )

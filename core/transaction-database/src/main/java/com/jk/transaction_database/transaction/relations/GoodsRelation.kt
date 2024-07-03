@@ -20,7 +20,7 @@ data class GoodsRelation(
             entityColumn = "specifications_id"
         )
     )
-    val specificationList: List<SpecificationsEntity>,
+    val specificationList: List<SpecificationRelation>,
 
     @Relation(
         parentColumn = "cost_id",

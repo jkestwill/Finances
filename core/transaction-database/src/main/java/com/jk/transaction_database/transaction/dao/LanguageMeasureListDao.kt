@@ -12,9 +12,9 @@ interface LanguageMeasureListDao {
                 "INNER JOIN measure ON measure.id == measure_id " +
                 "INNER JOIN language ON language.id == language.id"
     )
-    fun getMeasureRelation():MeasureRelation
+   suspend fun getMeasureRelation():MeasureRelation
 
 @Query("INSERT INTO lang_measure_list VALUES(:measureId,:languageId)")
-    fun insert(measureId:String,languageId:String)
+   suspend fun insert(measureId:String,languageId:String)
 
 }

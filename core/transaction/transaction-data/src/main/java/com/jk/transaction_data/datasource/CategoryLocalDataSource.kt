@@ -7,14 +7,14 @@ import javax.inject.Inject
 
 class CategoryLocalDataSource @Inject constructor(
     private var categoryDao: CategoryDao
-) : LocalDataSource<TransactionCategoryDatabaseEntity, TransactionCategoryDatabaseEntity> {
+) {
 
-    override suspend fun getById(id: String): TransactionCategoryDatabaseEntity? {
+    suspend fun getById(id: String): TransactionCategoryDatabaseEntity? {
         return categoryDao.getById(id)
 
     }
 
-    override suspend fun getAllItems(
+     suspend fun getAllItems(
         q:String,
         sortBy: String,
         isAsc: Boolean
@@ -28,7 +28,7 @@ class CategoryLocalDataSource @Inject constructor(
 
     }
 
-    override suspend fun add(t: TransactionCategoryDatabaseEntity):Long {
+     suspend fun add(t: TransactionCategoryDatabaseEntity):Long {
         return categoryDao.insert(t)
 
     }

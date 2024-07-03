@@ -2,6 +2,9 @@ package com.jk.financehelper.di
 
 
 import com.jk.transaction_database.transaction.dao.GoodsDao
+import com.jk.transaction_database.transaction.dao.LanguageDao
+import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
+import com.jk.transaction_database.transaction.dao.MeasureDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import dagger.Module
@@ -23,6 +26,23 @@ class GoodsModule {
     @Singleton
     fun provideTransactionGoods(db:TransactionDatabase): TransactionGoodsListDao {
         return db.getTransactionGoodsListDao()
-
     }
+    @Provides
+    @Singleton
+    fun provideMeasureDao(db:TransactionDatabase): MeasureDao {
+        return db.getMeasureDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLanguageDao(db:TransactionDatabase): LanguageDao {
+        return db.getLanguageDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLanguageMeasureDao(db:TransactionDatabase): LanguageMeasureListDao {
+        return db.getLanguageMeasureListDao()
+    }
+
 }

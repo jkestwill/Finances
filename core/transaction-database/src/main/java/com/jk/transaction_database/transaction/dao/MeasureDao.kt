@@ -7,5 +7,5 @@ import com.jk.transaction_database.transaction.MeasureEntity
 @Dao
 interface MeasureDao {
     @Insert(MeasureEntity::class)
-    fun insert(measureEntity: MeasureEntity)
+   suspend fun insert(measureEntity: MeasureEntity)
 }

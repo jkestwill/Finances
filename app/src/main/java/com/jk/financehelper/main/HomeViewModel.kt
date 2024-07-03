@@ -34,11 +34,12 @@ class HomeViewModel @Inject constructor(
 
     private var _errorFlow = MutableStateFlow<Throwable?>(null)
     val errorFlow: SharedFlow<Throwable?> get() = _errorFlow
+
     // брать из конфига
     // при первом запуске спрашивается основная валюта
-    val currentCurrency=MutableStateFlow<String>("BYN")
+    val currentCurrency = MutableStateFlow<String>("BYN")
 
-    val categoryFlow = categoryRepository.getList(" ","id", true).stateIn(
+    val categoryFlow = categoryRepository.getList(" ", "id", true).stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = PagingData.empty()
@@ -51,20 +52,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getIncomeSumByDatePeriod(dateStart: LocalDateTime, dateEnd: LocalDateTime){
+    fun getIncomeSumByDatePeriod(dateStart: LocalDateTime, dateEnd: LocalDateTime) {
         viewModelScope.launch {}
 
     }
 
     fun getExpensesSumByDatePeriod(dateStart: LocalDateTime, dateEnd: LocalDateTime) {
         viewModelScope.launch {
-            transactionRepository.getExpensesSum(dateStart, dateEnd, currentCurrency.value).collect { resp ->
-                resp.onSuccess {
-                    _expensesFlow.emit(it)
-                }.onFailure {
-                    _errorFlow.emit(it)
+            transactionRepository.getExpensesSum(dateStart, dateEnd, currentCurrency.value)
+                .collect { resp ->
+                    _expensesFlow.emit(resp)
                 }
-            }
         }
     }
 

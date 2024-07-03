@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 @Entity("goods_specifications_list", primaryKeys = ["goods_id","specifications_id"])
-class GoodsSpecificationsListEntity(
+data class GoodsSpecificationsListEntity(
     @ColumnInfo("goods_id")
     val goodsId:String,
     @ColumnInfo("specifications_id")
