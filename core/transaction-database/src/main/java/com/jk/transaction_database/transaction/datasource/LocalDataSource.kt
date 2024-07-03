@@ -1,6 +1,6 @@
-package com.jk.financehelper.datasource
+package com.jk.transaction_database.transaction.datasource
 
-import com.jk.financehelper.utils.Response
+import com.jk.common_data.Response
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 
 interface LocalDataSource<G, I> {

@@ -15,7 +15,7 @@ interface ScheduleDao {
 
 
     @Insert(entity = TransactionScheduleDatabaseEntity::class)
-    suspend fun insert(t: TransactionScheduleDatabaseEntity)
+    suspend fun insert(t: List<TransactionScheduleDatabaseEntity>)
 
 
     @Delete(entity = TransactionScheduleDatabaseEntity::class)

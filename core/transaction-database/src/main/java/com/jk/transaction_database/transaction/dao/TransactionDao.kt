@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.OperationDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionDatabaseEntity
+import com.jk.transaction_database.transaction.OperationEntity
+import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 import com.jk.transaction_database.transaction.relations.TransactionRelation
 import java.time.LocalDateTime
@@ -18,20 +18,20 @@ interface TransactionDao {
 
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
-    suspend fun getAll(): List<TransactionDatabaseEntity>
+    suspend fun getAll(): List<TransactionEntity>
 
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
     suspend fun getRelation(): List<TransactionRelation>
 
-    @Insert(entity = TransactionDatabaseEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(transaction: TransactionDatabaseEntity)
+    @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(transaction: TransactionEntity)
 
-    @Update(entity = TransactionDatabaseEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun update(transaction: TransactionDatabaseEntity)
+    @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
+    suspend fun update(transaction: TransactionEntity)
 
-    @Delete(entity = OperationDatabaseEntity::class)
-    suspend fun delete(operation: OperationDatabaseEntity)
+    @Delete(entity = OperationEntity::class)
+    suspend fun delete(operation: OperationEntity)
 
     @Transaction
     @Query(

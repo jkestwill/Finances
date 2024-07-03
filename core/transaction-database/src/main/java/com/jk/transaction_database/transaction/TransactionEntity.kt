@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
 @Entity(tableName = "transaction")
-data class TransactionDatabaseEntity(
+data class TransactionEntity(
     @PrimaryKey()
     val id: String,
     val date: LocalDateTime,

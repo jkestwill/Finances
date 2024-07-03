@@ -31,7 +31,7 @@ class TransactionDaoTest {
     fun readTransactionPreview():Unit= runBlocking{
         dbTest.writeReadTransactionRelation()
 
-        println(transactionDao.getTransactionPreviewListByCategoryId("1", "id", true))
+        println(transactionDao.getTransactionPreviewListByCategoryId("1", "","id", true,0,0))
     }
 
     @After

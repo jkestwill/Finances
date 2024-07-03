@@ -3,14 +3,14 @@ package com.jk.transaction_data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.jk.transaction_database.transaction.dao.TransactionDao
+import com.jk.transaction_database.transaction.datasource.TransactionLocalDataSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
-    val transactionDao: TransactionDao,
+    val transactionDao: TransactionLocalDataSource,
     val transactionPagingSource: TransactionPagingSourceFactory
 ) {
     fun getTransactionPreviewByCategoryId(
@@ -26,7 +26,7 @@ class TransactionRepository @Inject constructor(
 
 
     suspend fun addTransaction(transaction:Transaction){
-
+        //transactionDao.addTransaction()
     }
 }
 

@@ -34,11 +34,16 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:transaction-database"))
+
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
+    implementation(project(":core:category:category-data"))
+    implementation(project(":core:transaction-database"))
+    implementation(project(":core:category:category-data"))
+    implementation(project(":core:goods:goods-data"))
+
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)

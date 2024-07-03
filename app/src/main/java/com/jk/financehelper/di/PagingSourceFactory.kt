@@ -1,6 +1,6 @@
 package com.jk.financehelper.di
 
-import com.jk.financehelper.datasource.TransactionPagingLocalSource
+import com.jk.transaction_data.datasource.TransactionPagingLocalSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 
@@ -11,7 +11,7 @@ interface TransactionPreviewPagingSourceFactory {
         @Assisted("sortBy") sortBy: String,
         @Assisted("isAsc") isAsc: Boolean,
         @Assisted("categoryId") categoryId:String
-    ):TransactionPagingLocalSource
+    ): TransactionPagingLocalSource
 
 }
 

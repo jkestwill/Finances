@@ -5,22 +5,22 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.jk.transaction_database.transaction.list.TransactionGoodsList
+import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 
 @Dao
 interface TransactionGoodsListDao {
-    @Delete(entity = TransactionGoodsList::class)
-    suspend fun delete(t: TransactionGoodsList)
+    @Delete(entity = OperationGoodsListEntity::class)
+    suspend fun delete(t: OperationGoodsListEntity)
 
-    @Insert(entity = TransactionGoodsList::class)
-    suspend fun insert(t: TransactionGoodsList)
+    @Insert(entity = OperationGoodsListEntity::class)
+    suspend fun insert(t: OperationGoodsListEntity)
 
-    @Insert(entity = TransactionGoodsList::class)
-    suspend fun insert(t: List<TransactionGoodsList>)
+    @Insert(entity = OperationGoodsListEntity::class)
+    suspend fun insert(t: List<OperationGoodsListEntity>)
 
-    @Update(entity = TransactionGoodsList::class)
-    suspend fun update(t: TransactionGoodsList)
+    @Update(entity = OperationGoodsListEntity::class)
+    suspend fun update(t: OperationGoodsListEntity)
 
     @Query(value = "SELECT * FROM goods_list")
-    suspend fun getAll(): List<TransactionGoodsList>
+    suspend fun getAll(): List<OperationGoodsListEntity>
 }

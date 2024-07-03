@@ -2,7 +2,7 @@ package com.jk.financehelper.di
 
 
 import androidx.compose.ui.graphics.Color
-import com.jk.financehelper.datasource.CategoryLocalDataSource
+import com.jk.transaction_data.datasource.CategoryLocalDataSource
 import com.jk.financehelper.ui.theme.colorPickList
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
@@ -18,8 +18,8 @@ class CategoryModule {
 
     @Provides
     @Singleton
-    fun provideCategoryLocalDataSource(categoryDao:CategoryDao):CategoryLocalDataSource{
-        return CategoryLocalDataSource(categoryDao)
+    fun provideCategoryLocalDataSource(categoryDao:CategoryDao): com.jk.transaction_data.datasource.CategoryLocalDataSource {
+        return com.jk.transaction_data.datasource.CategoryLocalDataSource(categoryDao)
     }
     @Provides
     @Singleton

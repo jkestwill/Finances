@@ -1,31 +1,18 @@
 package com.jk.transaction_database.transaction.relations
 
 import androidx.room.Embedded
-import androidx.room.Junction
 import androidx.room.Relation
-import com.jk.transaction_database.transaction.OperationDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
+import com.jk.transaction_database.transaction.OperationEntity
+import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
-import com.jk.transaction_database.transaction.list.TransactionGoodsList
 
 data class TransactionRelation(
     @Embedded
-    val transaction: TransactionDatabaseEntity,
+    val transaction: TransactionEntity,
 
-    @Relation(entityColumn = "id", parentColumn = "operation_id", entity = OperationDatabaseEntity::class)
+    @Relation(entityColumn = "id", parentColumn = "operation_id", entity = OperationEntity::class)
     val operation: OperationRelation,
-    @Relation(
-        parentColumn  = "id",
-        entityColumn = "id",
-        associateBy = Junction(
-            parentColumn  = "transaction_id",
-            entityColumn = "goods_id",
-          value=  TransactionGoodsList::class,
 
-        )
-    )
-    val goodsList: List<TransactionGoodsDatabaseEntity>,
     @Relation(
         entityColumn = "id",
         parentColumn = "type_id"

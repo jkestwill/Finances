@@ -1,4 +1,4 @@
-package com.jk.financehelper.datasource
+package com.jk.transaction_data.datasource
 
 import javax.inject.Inject
 

@@ -18,6 +18,8 @@
             <option value="$PROJECT_DIR$/core/currency/currency-exchange" />
             <option value="$PROJECT_DIR$/core/currency/currencyExchangeApiBy" />
             <option value="$PROJECT_DIR$/core/currency/exchange-rate-data" />
+            <option value="$PROJECT_DIR$/core/goods" />
+            <option value="$PROJECT_DIR$/core/goods/goods-data" />
             <option value="$PROJECT_DIR$/core/transaction" />
             <option value="$PROJECT_DIR$/core/transaction-database" />
             <option value="$PROJECT_DIR$/core/transaction/transaction-data" />

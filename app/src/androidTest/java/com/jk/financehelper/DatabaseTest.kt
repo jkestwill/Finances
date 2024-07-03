@@ -6,10 +6,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.jk.transaction_database.transaction.LedgerEntity
-import com.jk.transaction_database.transaction.OperationDatabaseEntity
+import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
@@ -29,7 +29,7 @@ import com.jk.transaction_database.transaction.dao.TypeDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.list.LedgerTransactionList
 import com.jk.transaction_database.transaction.list.OperationCategoryList
-import com.jk.transaction_database.transaction.list.TransactionGoodsList
+import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -112,7 +112,7 @@ class DatabaseTest {
     @Test
     fun writeReadScheduleTest(): Unit = runBlocking() {
         writeReadTest(dbData = { scheduleDao.getAll() }, checkDataList = testScheduleList()) {
-            scheduleDao.insert(it)
+            scheduleDao.insert(listOf(it))
         }
     }
 
@@ -253,15 +253,15 @@ class DatabaseTest {
 
     companion object {
 
-        fun testTransactionList(): List<TransactionDatabaseEntity> {
+        fun testTransactionList(): List<TransactionEntity> {
             return listOf(
-                TransactionDatabaseEntity(
+                TransactionEntity(
                     id = "t1",
                     date = LocalDateTime.of(2011, 5, 9, 17, 4),
                     operationId = "1",
                     typeId = "11"
                 ),
-                TransactionDatabaseEntity(
+                TransactionEntity(
                     id = "t2",
                     date = LocalDateTime.of(2021, 7, 9, 9, 4),
                     operationId = "2",
@@ -294,15 +294,15 @@ class DatabaseTest {
             )
         }
 
-        fun testOperationList(): List<OperationDatabaseEntity> {
+        fun testOperationList(): List<OperationEntity> {
             return listOf(
-                OperationDatabaseEntity(
+                OperationEntity(
                     id = "1", name = "Evroopt", scheduleId = "zxc1", "c1"
                 ),
-                OperationDatabaseEntity(
+                OperationEntity(
                     id = "2", name = "Dionis", scheduleId = "zxc2", "c2"
                 ),
-                OperationDatabaseEntity(
+                OperationEntity(
                     id = "3", name = "A1", scheduleId = "zxc1", "c3"
                 )
             )
@@ -342,18 +342,18 @@ class DatabaseTest {
             )
         }
 
-        fun testTransactionGoodsList(): List<TransactionGoodsList> {
+        fun testTransactionGoodsList(): List<OperationGoodsListEntity> {
             return listOf(
-                TransactionGoodsList(
+                OperationGoodsListEntity(
                     transactionId = "t1", goodsId = "111"
                 ),
-                TransactionGoodsList(
+                OperationGoodsListEntity(
                     transactionId = "t1", goodsId = "122"
                 ),
-                TransactionGoodsList(
+                OperationGoodsListEntity(
                     transactionId = "t1", goodsId = "133"
                 ),
-                TransactionGoodsList(
+                OperationGoodsListEntity(
                     transactionId = "t1", goodsId = "144"
                 ),
             )

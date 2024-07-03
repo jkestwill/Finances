@@ -9,7 +9,7 @@ import androidx.room.Entity
     primaryKeys = ["transaction_id","goods_id"]
 
 )
-data class TransactionGoodsList(
+data class OperationGoodsListEntity(
     @ColumnInfo(name = "transaction_id")
     val transactionId: String,
     @ColumnInfo(name = "goods_id")

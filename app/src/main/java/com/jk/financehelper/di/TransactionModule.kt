@@ -1,13 +1,13 @@
 package com.jk.financehelper.di
 
 import com.jk.financehelper.main.TransactionRepository
-import com.jk.financehelper.datasource.OperationLocalDataSource
-import com.jk.financehelper.datasource.TransactionRemoteDataSource
-import com.jk.financehelper.datasource.TransactionLocalDataSource
+import com.jk.transaction_data.datasource.TransactionRemoteDataSource
+import com.jk.transaction_database.transaction.datasource.TransactionLocalDataSource
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.datasource.OperationLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

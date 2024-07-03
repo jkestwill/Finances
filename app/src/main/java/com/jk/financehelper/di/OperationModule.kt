@@ -1,7 +1,5 @@
 package com.jk.financehelper.di
 
-
-import com.jk.financehelper.datasource.OperationLocalDataSource
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
@@ -9,6 +7,7 @@ import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
 import com.jk.transaction_database.transaction.dao.ScheduleDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.datasource.OperationLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,7 +39,7 @@ class OperationModule {
         operationDao: OperationDao,
         scheduleDao: ScheduleDao
     ): OperationLocalDataSource {
-        return OperationLocalDataSource(
+        return OperationLocalDataSource  (
             categoryDao = categoryDao,
             moneyDao = moneyDao,
             currencyDao = currencyDao,

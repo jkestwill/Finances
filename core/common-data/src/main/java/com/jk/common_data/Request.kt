@@ -1,4 +1,4 @@
-package com.jk.financehelper.utils
+package com.jk.common_data
 
 inline fun <reified T> apiRequest(block: () -> T): Response<T> = try {
     Response.success(block())

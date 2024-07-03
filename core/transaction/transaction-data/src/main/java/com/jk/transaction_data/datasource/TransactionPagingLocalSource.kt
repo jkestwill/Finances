@@ -1,15 +1,16 @@
-package com.jk.financehelper.datasource
+package com.jk.transaction_data.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.jk.financehelper.domain.model.preview.TransactionPreview
-import com.jk.financehelper.utils.toPreview
+import com.jk.transaction_data.TransactionPreview
+import com.jk.transaction_data.toPreview
+import com.jk.transaction_database.transaction.datasource.TransactionLocalDataSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class TransactionPagingLocalSource @AssistedInject constructor (
-    private val transactionLocalDataSource:TransactionLocalDataSource,
+    private val transactionLocalDataSource: TransactionLocalDataSource,
     @Assisted("sortBy")
     val sortBy:String,
     @Assisted("isAsc")
@@ -31,13 +32,11 @@ class TransactionPagingLocalSource @AssistedInject constructor (
         val page = params.key ?: 1
         val pageSize = params.loadSize.coerceAtMost(20)
 
-        return if (response.isSuccess()) {
-            response.onSuccess {
-               transactionFlow.emit(it.map { s -> s.toPreview() })
-            }
-            val nextKey = if (transactionFlow.value.size < pageSize) null else page + 1
+        return if (response.isNotEmpty()) {
+            val data= response.map { s -> s.toPreview() }
+
+            val nextKey = if (data.size < pageSize) null else page + 1
             val prevKey = if (page == 1) null else page - 1
-            val data = checkNotNull(transactionFlow.value)
 
             LoadResult.Page(data = data, prevKey = prevKey, nextKey = nextKey)
         } else {

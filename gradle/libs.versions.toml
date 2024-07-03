@@ -35,6 +35,8 @@ appcompat = "1.6.1"
 material = "1.11.0"
 
 colorpicker="1.0.7"
+roomCommon = "2.6.1"
+junitKtx = "1.2.1"
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -80,6 +82,8 @@ retrofit-adapters-result={module="com.github.skydoves:retrofit-adapters-result",
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 skydoves-colorpicker = {module="com.github.skydoves:colorpicker-compose", version.ref="colorpicker"}
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application={id="com.android.application",version.ref="android-application"}

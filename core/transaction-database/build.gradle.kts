@@ -41,6 +41,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.junit.ktx)
+    testImplementation("org.testng:testng:6.9.6")
     ksp(libs.androidx.room.compiler)
 
     implementation(project(":core:common-data"))
