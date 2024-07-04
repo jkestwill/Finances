@@ -1,13 +1,28 @@
 package com.jk.transaction_database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
+import com.jk.transaction_database.transaction.SpecificationsEntity
+import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.datasource.GoodsLocalDataSource
+import com.jk.transaction_database.transaction.relations.GoodsRelation
+import com.jk.transaction_database.transaction.relations.MeasureRelation
+import com.jk.transaction_database.transaction.relations.MoneyRelation
+import com.jk.transaction_database.transaction.relations.SpecificationRelation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -31,37 +46,60 @@ class GoodsTest {
             checkNotNull(db)
 
     }
+
     @Test
-    fun sql_transaction_test_with_error(){
+    fun sql_transaction_test_with_error() = runBlocking {
+        val scope = CoroutineScope(Job())
         val langDao = db!!.getLanguageDao()
         val dao = GoodsLocalDataSource(
             db!!.getMeasureDao(),
             db!!.getLanguageDao(),
-            db!!.getLanguageMeasureListDao()
+            db!!.getLanguageMeasureListDao(),
+            db!!.getMoneyDao(),
+            db!!.getGoodsDao(),
+            db!!.getCurrencyDao()
         )
-        try {
-            for (i in testDataLang.indices) {
-                dao.insert(testDataMeasure[i], testDataLang[i])
+        scope.launch {
+            try {
+                for (i in goodsRelation.indices) {
+                    dao.insert(goodsRelation = goodsRelation[0])
+                }
+                Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+            } catch (e: Throwable) {
+                // println(db!!.getGoodsDao().getAll())
+            } finally {
+
+                Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+
             }
-        }catch (e:Throwable){
-            println(langDao.getAll())
-        }
-        Assert.assertEquals(4, 2 + 2)
+
+
+            Assert.assertEquals(4, 2 + 2)
+        }.join()
+        Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+        println(db!!.getGoodsDao().getAll())
 
     }
+
     @Test
     fun test() {
+        val scope = CoroutineScope(Job())
         val dao = GoodsLocalDataSource(
             db!!.getMeasureDao(),
             db!!.getLanguageDao(),
-            db!!.getLanguageMeasureListDao()
+            db!!.getLanguageMeasureListDao(),
+            db!!.getMoneyDao(),
+            db!!.getGoodsDao(),
+            db!!.getCurrencyDao()
         )
-        try {
-            for (i in testDataLang.indices) {
-                dao.insert(testDataMeasure[i], testDataLang[i])
+        scope.launch {
+            try {
+                for (i in goodsRelation.indices) {
+                    dao.insert(goodsRelation = goodsRelation[0])
+                }
+            } catch (e: Throwable) {
+                println(db!!.getLanguageMeasureListDao().getMeasureRelation())
             }
-        }catch (e:Throwable){
-            println(db!!.getLanguageMeasureListDao().getMeasureRelation())
         }
 
     }
@@ -77,7 +115,24 @@ class GoodsTest {
             LanguageEntity("qq", "english", "eng", "huuui"),
             LanguageEntity("qq2", "english", "eng", "huuui"),
         )
-
+        val goodsRelation = listOf(
+            GoodsRelation(
+                goodsEntity = TransactionGoodsDatabaseEntity("qq", "bread", "mo"),
+                specificationList = listOf(
+                    SpecificationRelation(
+                        specificationEntity = SpecificationsEntity("ss", "weight", 10f, "mm"),
+                        measure = MeasureRelation(
+                            MeasureEntity("mm", "ll"),
+                            lang = LanguageEntity("ll", "english", "ENG", "kg")
+                        )
+                    )
+                ),
+                cost = MoneyRelation(
+                    money = TransactionMoneyDatabaseEntity("mo", 2.0, "cc"),
+                    currency = TransactionCurrencyDatabaseEntity("cc", "BYN")
+                )
+            )
+        )
 
     }
 }

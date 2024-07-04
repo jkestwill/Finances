@@ -14,6 +14,7 @@ data class GoodsRelation(
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
+        entity=SpecificationsEntity::class,
         associateBy = Junction(
             value = GoodsSpecificationsListEntity::class,
             parentColumn = "goods_id",

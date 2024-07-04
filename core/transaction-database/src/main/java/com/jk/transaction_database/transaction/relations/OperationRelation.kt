@@ -31,7 +31,7 @@ data class OperationRelation(
         parentColumn  = "id",
         entityColumn = "id",
         associateBy = Junction(
-            parentColumn  = "transaction_id",
+            parentColumn  = "operation_id",
             entityColumn = "goods_id",
             value=  OperationGoodsListEntity::class,
             )

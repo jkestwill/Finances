@@ -103,9 +103,9 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
-    implementation(project(":core:currency:exchange-rate-data"))
-    implementation(project(":core:currency:currencyExchangeApiBy"))
-    implementation(project(":core::currency:currency-exchange"))
+    implementation(project(":core:money:exchange-rate-data"))
+    implementation(project(":core:money:currencyExchangeApiBy"))
+    implementation(project(":core::money:currency-exchange"))
     implementation(project(":core:transaction-database"))
     implementation(project(":core:category:category-data"))
     implementation(project(":features:category:category-main"))

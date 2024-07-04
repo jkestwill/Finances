@@ -1,9 +1,12 @@
 package com.jk.goods
 
+import com.jk.money_data.Money
+
 data class Goods(
     val id: String,
     val name: String,
-    val specifications:List<Specification>
+    val specifications:List<Specification>,
+    val cost: Money
 ) {
 }
 /**
