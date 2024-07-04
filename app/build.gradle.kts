@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(project(":core:transaction:transaction-data"))
+    implementation(project(":core:goods:goods-data"))
     ksp(libs.androidx.room.compiler)
 
     //dagger hilt
@@ -110,6 +111,7 @@ dependencies {
     implementation(project(":core:category:category-data"))
     implementation(project(":features:category:category-main"))
     implementation(project(":core:common-data"))
+    implementation(project(":features:goods:goods"))
 
     implementation(libs.skydoves.colorpicker)
 

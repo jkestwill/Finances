@@ -31,6 +31,7 @@ import com.jk.transaction_database.transaction.dao.MoneyDao
 import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
 import com.jk.transaction_database.transaction.dao.ScheduleDao
+import com.jk.transaction_database.transaction.dao.SpecificationDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.dao.TypeDao
@@ -38,8 +39,8 @@ import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntit
 import com.jk.transaction_database.transaction.list.LangMeasureListEntity
 import com.jk.transaction_database.transaction.list.LedgerTransactionList
 import com.jk.transaction_database.transaction.list.OperationCategoryList
-import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
+import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
 
@@ -65,7 +66,7 @@ import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConver
         LanguageEntity::class,
         LangMeasureListEntity::class,
         GoodsSpecificationsListEntity::class
-    ], version = 13, exportSchema = false
+    ], version = 16, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {
@@ -92,7 +93,7 @@ abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getOperationCategoryDao(): OperationCategoryDao
 
     abstract fun getTransactionGoodsListDao(): TransactionGoodsListDao
-
+    abstract fun getSpecificationDao(): SpecificationDao
     abstract fun getLedgerDao(): LedgerDao
 
     abstract fun getLedgerTransactionListDao(): LedgerTransactionListDao

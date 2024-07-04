@@ -15,6 +15,7 @@ import com.jk.financehelper.category.CategoryScreen
 import com.jk.financehelper.currency.ExchangeRate
 import com.jk.financehelper.main.HomeScreen
 import com.jk.financehelper.ui.theme.Celadon
+import com.jk.goods.GoodsList
 
 
 @SuppressLint("RestrictedApi")
@@ -23,7 +24,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
+    NavHost(navController = navController, startDestination = Routes.GOODS) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)
         }
@@ -41,6 +42,10 @@ fun MainNavGraph(
                 it.arguments?.getString("categoryId"),
                 Celadon.toArgb().toULong()
             )
+        }
+
+        composable(Routes.GOODS){
+            GoodsList(goodsViewModel = hiltViewModel())
         }
 
         dialog(Routes.NEW_CATEGORY){

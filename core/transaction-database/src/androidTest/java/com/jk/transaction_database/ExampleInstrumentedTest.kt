@@ -57,27 +57,28 @@ class GoodsTest {
             db!!.getLanguageMeasureListDao(),
             db!!.getMoneyDao(),
             db!!.getGoodsDao(),
-            db!!.getCurrencyDao()
+            db!!.getCurrencyDao(),
+            db!!.getSpecificationDao()
         )
         scope.launch {
             try {
                 for (i in goodsRelation.indices) {
                     dao.insert(goodsRelation = goodsRelation[0])
                 }
-                Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+              //  Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
             } catch (e: Throwable) {
                 // println(db!!.getGoodsDao().getAll())
             } finally {
 
-                Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+             //   Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
 
             }
 
 
             Assert.assertEquals(4, 2 + 2)
         }.join()
-        Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
-        println(db!!.getGoodsDao().getAll())
+       // Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
+      //  println(db!!.getGoodsDao().getAll())
 
     }
 
@@ -90,7 +91,8 @@ class GoodsTest {
             db!!.getLanguageMeasureListDao(),
             db!!.getMoneyDao(),
             db!!.getGoodsDao(),
-            db!!.getCurrencyDao()
+            db!!.getCurrencyDao(),
+            db!!.getSpecificationDao()
         )
         scope.launch {
             try {

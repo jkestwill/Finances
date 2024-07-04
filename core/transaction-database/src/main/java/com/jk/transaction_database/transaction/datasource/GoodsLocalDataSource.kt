@@ -7,6 +7,7 @@ import com.jk.transaction_database.transaction.dao.LanguageDao
 import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
 import com.jk.transaction_database.transaction.dao.MeasureDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
+import com.jk.transaction_database.transaction.dao.SpecificationDao
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 
 class GoodsLocalDataSource(
@@ -15,7 +16,8 @@ class GoodsLocalDataSource(
     private val languageMeasureListDao: LanguageMeasureListDao,
     private val moneyDao: MoneyDao,
     private val goodsDao: GoodsDao,
-    private val currencyDao: CurrencyDao
+    private val currencyDao: CurrencyDao,
+    private val specificationDao: SpecificationDao
 ) {
     @Transaction
     suspend fun insert(goodsRelation: GoodsRelation) {
@@ -25,7 +27,9 @@ class GoodsLocalDataSource(
             measureDao.insert(measure)
             languageDao.insert(lang)
             languageMeasureListDao.insert(measure.id, lang.id)
+            specificationDao.insert(i.specificationEntity)
         }
+
         currencyDao.insert(goodsRelation.cost.currency)
         moneyDao.insert(goodsRelation.cost.money)
         goodsDao.insert(goodsRelation.goodsEntity)
@@ -38,6 +42,6 @@ class GoodsLocalDataSource(
         offset: Int,
         limit: Int
     ): List<GoodsRelation> {
-       return goodsDao.getAll(q, sortBy, isAsc, limit, offset)
+        return goodsDao.getAll(q, sortBy, isAsc, limit, offset)
     }
 }

@@ -42,8 +42,5 @@ class GoodsRepository @Inject constructor(
         return merge(startFlow, dbRequest).map { request ->
             request.map { s -> s.map { it.toGoods() } }
         }
-
-
     }
-
 }
