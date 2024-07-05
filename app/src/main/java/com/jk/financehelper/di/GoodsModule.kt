@@ -8,7 +8,6 @@ import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
 import com.jk.transaction_database.transaction.dao.MeasureDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.datasource.GoodsLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,20 +50,7 @@ class GoodsModule {
 
     @Provides
     @Singleton
-    fun provideGoodsLocalDataSource(db: TransactionDatabase): GoodsLocalDataSource {
-        return GoodsLocalDataSource(
-            measureDao = db.getMeasureDao(),
-            languageDao = db.getLanguageDao(),
-            languageMeasureListDao = db.getLanguageMeasureListDao(),
-            moneyDao = db.getMoneyDao(),
-            goodsDao = db.getGoodsDao(),
-            currencyDao = db.getCurrencyDao(),
-            specificationDao = db.getSpecificationDao()
-        )
-    }
-    @Provides
-    @Singleton
-    fun provideGoodsRepository(goodsLocalDataSource: GoodsLocalDataSource): GoodsRepository {
-        return GoodsRepository(goodsLocalDataSource)
+    fun provideGoodsRepository(goodsDao: GoodsDao): GoodsRepository {
+        return GoodsRepository(goodsDao)
     }
 }

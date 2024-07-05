@@ -22,6 +22,7 @@ import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
 import com.jk.transaction_database.transaction.dao.GoodsDao
+import com.jk.transaction_database.transaction.dao.GoodsSpecificationDao
 import com.jk.transaction_database.transaction.dao.LanguageDao
 import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
 import com.jk.transaction_database.transaction.dao.LedgerDao
@@ -66,7 +67,7 @@ import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConver
         LanguageEntity::class,
         LangMeasureListEntity::class,
         GoodsSpecificationsListEntity::class
-    ], version = 16, exportSchema = false
+    ], version = 20, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {
@@ -100,6 +101,7 @@ abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getExchangeRateDao(): ExchangeRateDao
 
+    abstract fun getGoodsSpecificationDao(): GoodsSpecificationDao
 }
 
 fun transactionDatabase(context: Context): TransactionDatabase {

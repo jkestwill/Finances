@@ -2,7 +2,7 @@ package com.jk.goods
 
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.map
-import com.jk.transaction_database.transaction.datasource.GoodsLocalDataSource
+import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 class GoodsRepository @Inject constructor(
-    private val goodsLocalDataSource: GoodsLocalDataSource
+    private val goodsLocalDataSource: GoodsDao
 ) {
 
 

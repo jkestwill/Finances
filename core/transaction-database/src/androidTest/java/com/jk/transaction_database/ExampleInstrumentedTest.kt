@@ -12,7 +12,7 @@ import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.datasource.GoodsLocalDataSource
+
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 import com.jk.transaction_database.transaction.relations.MeasureRelation
 import com.jk.transaction_database.transaction.relations.MoneyRelation
@@ -51,15 +51,7 @@ class GoodsTest {
     fun sql_transaction_test_with_error() = runBlocking {
         val scope = CoroutineScope(Job())
         val langDao = db!!.getLanguageDao()
-        val dao = GoodsLocalDataSource(
-            db!!.getMeasureDao(),
-            db!!.getLanguageDao(),
-            db!!.getLanguageMeasureListDao(),
-            db!!.getMoneyDao(),
-            db!!.getGoodsDao(),
-            db!!.getCurrencyDao(),
-            db!!.getSpecificationDao()
-        )
+        val dao =db!!.getGoodsDao()
         scope.launch {
             try {
                 for (i in goodsRelation.indices) {
@@ -85,15 +77,8 @@ class GoodsTest {
     @Test
     fun test() {
         val scope = CoroutineScope(Job())
-        val dao = GoodsLocalDataSource(
-            db!!.getMeasureDao(),
-            db!!.getLanguageDao(),
-            db!!.getLanguageMeasureListDao(),
-            db!!.getMoneyDao(),
-            db!!.getGoodsDao(),
-            db!!.getCurrencyDao(),
-            db!!.getSpecificationDao()
-        )
+        val dao =db!!.getGoodsDao()
+
         scope.launch {
             try {
                 for (i in goodsRelation.indices) {

@@ -9,6 +9,7 @@ data class TransactionGoodsDatabaseEntity(
     @PrimaryKey
     val id: String,
     val name: String,
+    val amount: Int,
     @ColumnInfo("cost_id")
     val costId: String
 )

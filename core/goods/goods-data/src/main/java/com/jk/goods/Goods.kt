@@ -5,6 +5,7 @@ import com.jk.money_data.Money
 data class Goods(
     val id: String,
     val name: String,
+    val amount:Int,
     val specifications:List<Specification>,
     val cost: Money
 ) {

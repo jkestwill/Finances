@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category_data.CategoryRepository
 import com.jk.category_data.TransactionCategory
-import com.jk.common_data.State
 import com.jk.common_data.sha256
-import com.jk.common_data.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -21,6 +19,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
+import  com.jk.common.State
+import com.jk.common.toState
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
@@ -36,7 +36,7 @@ class AddCategoryViewModel @Inject constructor(
         MutableSharedFlow<String>(1, onBufferOverflow = BufferOverflow.DROP_LATEST)
     val addCategoryError: SharedFlow<String> get() = _addCategoryError
 
-    private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None())
+    private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None)
     val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
 
     val random = Random(213123)

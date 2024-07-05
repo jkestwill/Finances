@@ -8,8 +8,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.jk.category_data.CategoryRepository
 import com.jk.category_data.TransactionCategory
-import com.jk.common_data.State
-import com.jk.common_data.toState
+import com.jk.common.State
+import com.jk.common.toState
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,7 +38,7 @@ class CategoryListViewModel @Inject constructor(
         MutableStateFlow<PagingData<TransactionCategory>>(PagingData.empty())
     val categoryFlow: StateFlow<PagingData<TransactionCategory>> get() = _categoryFLow
 
-    val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None())
+    val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None)
 
     var selectedCategoryIdList = MutableStateFlow(listOf<String>())
 
@@ -57,7 +58,7 @@ class CategoryListViewModel @Inject constructor(
         viewModelScope.launch {
             categoryDeleteState.collect {
                 if(it is State.Success){
-                    categoryDeleteState.value=State.None()
+                    categoryDeleteState.value=State.None
                     selectedCategoryIdList.value= listOf()
                 }
             }

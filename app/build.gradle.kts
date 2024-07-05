@@ -112,6 +112,7 @@ dependencies {
     implementation(project(":features:category:category-main"))
     implementation(project(":core:common-data"))
     implementation(project(":features:goods:goods"))
+    implementation(project(":features:common"))
 
     implementation(libs.skydoves.colorpicker)
 

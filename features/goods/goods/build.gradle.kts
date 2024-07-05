@@ -41,27 +41,27 @@ android {
 }
 
 dependencies {
-
-
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.hilt.android)
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.foundation.android)
     implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    kapt(libs.hilt.android.compiler)
+
     implementation(project(":core:money:money-data"))
     implementation(project(":core:goods:goods-data"))
     implementation(project(":core:common-data"))
     implementation(project(":features:common"))
+    implementation(project(":features:currency:currency"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

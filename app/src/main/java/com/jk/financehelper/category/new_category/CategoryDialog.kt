@@ -40,7 +40,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.jk.category.AddCategoryViewModel
-import com.jk.common_data.State
+import com.jk.common.State
+
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
 import com.jk.financehelper.ui.common.Error

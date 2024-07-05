@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
-    namespace = "com.jk.category"
+    namespace = "com.jk.currency"
     compileSdk = 34
 
     defaultConfig {
@@ -38,18 +37,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-
-    implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.paging.runtime)
-    implementation(project(":core:category:category-data"))
-    implementation(project(":core:common-data"))
-    implementation(project(":features:common"))
+    implementation(project(":core:money:money-data"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
 }

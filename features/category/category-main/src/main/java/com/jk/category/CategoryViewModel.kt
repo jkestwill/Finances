@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.map
 import com.jk.category_data.CategoryRepository
-import com.jk.common_data.State
+import com.jk.common.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ class CategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
-    private var _categoryList = MutableStateFlow<State<Category>>(State.None())
+    private var _categoryList = MutableStateFlow<State<Category>>(State.None)
     val categoryList: StateFlow<State<Category>> get() = _categoryList
 
     companion object {

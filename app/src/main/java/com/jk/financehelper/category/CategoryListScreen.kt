@@ -233,7 +233,7 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel,
     val deleteState = viewModel.categoryDeleteState.collectAsState()
     viewModel.observeCategoryDeleteState()
     when (deleteState.value) {
-        is com.jk.common_data.State.Loading -> {
+        is com.jk.common.State.Loading -> {
             Box(
                 modifier = Modifier
                     .background(
@@ -246,11 +246,11 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel,
             }
         }
 
-        is com.jk.common_data.State.Success -> {
+        is com.jk.common.State.Success -> {
 
         }
 
-        is com.jk.common_data.State.Error -> {
+        is com.jk.common.State.Error -> {
             // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
             Error(
                 modifier = Modifier.align(Alignment.TopStart),

@@ -16,7 +16,12 @@ import com.jk.transaction_database.transaction.relations.SpecificationRelation
 
 fun Goods.toGoodsRelation(): GoodsRelation {
     return GoodsRelation(
-        goodsEntity = TransactionGoodsDatabaseEntity(id = id, name = name, costId = cost.id),
+        goodsEntity = TransactionGoodsDatabaseEntity(
+            id = id,
+            name = name,
+            costId = cost.id,
+            amount = amount
+        ),
         specificationList = specifications.map { it.toSpecificationRelation() },
         cost = MoneyRelation(
             money = TransactionMoneyDatabaseEntity(
@@ -61,6 +66,7 @@ fun GoodsRelation.toGoods(): Goods {
     return Goods(
         id = this.goodsEntity.id,
         name = goodsEntity.name,
+        amount = goodsEntity.amount,
         specifications = this.specificationList.map { it.toSpecification() },
         cost = Money(
             cost.money.id,
