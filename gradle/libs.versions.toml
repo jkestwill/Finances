@@ -38,6 +38,7 @@ colorpicker="1.0.7"
 roomCommon = "2.6.1"
 junitKtx = "1.2.1"
 foundationAndroid = "1.6.8"
+uiTooling = "1.6.8"
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -86,6 +87,7 @@ skydoves-colorpicker = {module="com.github.skydoves:colorpicker-compose", versio
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [plugins]
 android-application={id="com.android.application",version.ref="android-application"}
@@ -96,3 +98,4 @@ android-library={id="com.android.library",version.ref="android-application"}
 jetbrains-kotlin-jvm={id="org.jetbrains.kotlin.jvm",version.ref="jetbrains-kotlin-android"}
 kotilinx-serialization={id="org.jetbrains.kotlin.plugin.serialization",version.ref="jetbrains-kotlin-android"}
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "jetbrains-kotlin-android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrains-kotlin-android" }

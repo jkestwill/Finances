@@ -4,7 +4,7 @@ import com.jk.currency.toUI
 
 fun Goods.toUI(): GoodsUI {
     return GoodsUI(
-        id, name, specifications = specifications.map { it.toUI() }, cost = cost.toUI()
+        id, name, specifications = specifications.map { it.toUI() }, cost = cost.toUI(), amount = amount
     )
 }
 

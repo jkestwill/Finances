@@ -30,8 +30,10 @@ val Aero = Color(0xFF14BDEB)
 val Tomato = Color(0xFFFE654F)
 val Grape = Color(0xFF743EB6)
 
-val colorPickList = listOf(SendyBrown, Melon, Aero, Tomato, Grape, LightBrown, Brown, Parchment,
-    BrownPurple, MidnightGreen)
+val colorPickList = listOf(
+    SendyBrown, Melon, Aero, Tomato, Grape, LightBrown, Brown, Parchment,
+    BrownPurple, MidnightGreen
+)
 
 val lightPalette = FinanceHelperColors(
     primaryText = MidnightGreen,

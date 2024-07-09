@@ -1,8 +1,9 @@
 package com.jk.category
 
-data class Category(
+data class CategoryUI(
     val id: String,
     val name: String,
-    val color: Long,
+    val color: ULong,
     val isExpenses: Boolean
 )
+

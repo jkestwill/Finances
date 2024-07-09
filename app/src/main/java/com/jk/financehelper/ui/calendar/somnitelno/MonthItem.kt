@@ -32,8 +32,8 @@ fun MonthItem(currentMonth: Int, year: Int, onDayClick: (LocalDate) -> Unit) {
     val firstDayOfWeek = currentLocalDate.dayOfWeek.value - 1
     val daysOfWeekList = daysOfWeekArray.toMutableList()
     val prevMonthDayCount = month.minusMonths(1).lengthOfMonth()
-    var daysShiftCount by remember { mutableStateOf(firstDayOfWeek) }
-    var dayOnClick by remember {
+    val daysShiftCount by remember { mutableStateOf(firstDayOfWeek) }
+    val dayOnClick by remember {
         mutableStateOf(currentLocalDate)
     }
 

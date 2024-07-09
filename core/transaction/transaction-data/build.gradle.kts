@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":core:transaction-database"))
     implementation(project(":core:category:category-data"))
     implementation(project(":core:goods:goods-data"))
+    implementation(project(":core:money:money-data"))
 
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)

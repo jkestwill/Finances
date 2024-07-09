@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
-    namespace = "com.jk.category"
+    namespace = "com.jk.transaction"
     compileSdk = 34
 
     defaultConfig {
@@ -38,19 +37,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-
-    implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
-    implementation(project(":features:transaction"))
     implementation(project(":core:transaction:transaction-data"))
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.paging.runtime)
-    implementation(project(":core:category:category-data"))
-    implementation(project(":core:common-data"))
-    implementation(project(":features:common"))
+    implementation(project(":features:category:category-main"))
+    implementation(project(":features:goods:goods"))
+    implementation(project(":features:currency:currency"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
 }

@@ -40,4 +40,11 @@
     <string name="minLengthError">Use %1$d characters or more</string>
     <string name="allowedCharacters">Allowed characters: %1$S</string>
     <string name="error">Error</string>
+
+    <string-array name="goods_list_header">
+        <item name="goods_name">Name</item>
+        <item name="goods_amount">Amount</item>
+        <item name="goods_cost">Cost</item>
+        <item name="goods_currency">Currency</item>
+    </string-array>
 </resources>

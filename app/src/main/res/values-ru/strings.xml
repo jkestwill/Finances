@@ -37,7 +37,14 @@
     <string name="maxLengthError">Используйте %d символов или меньше</string>
     <string name="minLengthError">Используйте %d символов или больше</string>
     <string name="allowedCharacters">Разрешенные символы: %s</string>
-
     <string name="error">Ошибка</string>
+
+
+    <string-array name="goods_list_header">
+        <item name="goods_name">Название</item>
+        <item name="goods_amount">Количество</item>
+        <item name="goods_cost">Цена</item>
+        <item name="goods_currency">Валюта</item>
+    </string-array>
 
 </resources>

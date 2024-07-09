@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.map
 import com.jk.category_data.CategoryRepository
 import com.jk.common.State
+import com.jk.transaction.TransactionUI
+import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +18,14 @@ import javax.inject.Inject
 // вывести пагинацию в compose
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
 
-    private var _categoryList = MutableStateFlow<State<Category>>(State.None)
-    val categoryList: StateFlow<State<Category>> get() = _categoryList
+    private var _categoryList = MutableStateFlow<State<CategoryUI>>(State.None)
+    val categoryList: StateFlow<State<CategoryUI>> get() = _categoryList
 
+    private val _transactionList = MutableStateFlow<State<List<TransactionUI>>>(State.None)
     companion object {
         const val NAME_LENGTH_VISIBILITY = 20
     }
@@ -32,6 +36,10 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
+
+    fun getAllTransactions(categoryId:String){
+        transactionRepository.getTransactionPreviewByCategoryId(categoryId)
+    }
 
     fun getAll(q: String, sortBy: String, isAsc: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -12,7 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 
-
 }
 
 rootProject.name = "FinanceHelper"
@@ -31,3 +30,4 @@ include(":core:money:money-data")
 include(":features:goods:goods")
 include(":features:common")
 include(":features:currency:currency")
+include(":features:transaction")

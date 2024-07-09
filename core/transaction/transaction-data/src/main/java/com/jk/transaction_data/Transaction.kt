@@ -2,6 +2,7 @@ package com.jk.transaction_data
 
 import com.jk.category_data.TransactionCategory
 import com.jk.goods.Goods
+import com.jk.money_data.Money
 import java.time.LocalDateTime
 
 data class Transaction(
@@ -18,7 +19,7 @@ data class Operation(
     val categoryList:List<TransactionCategory>,
     val scheduleList:List<Schedule>,
     val goodsList:List<Goods>,
-    val money:Money
+    val money: Money
 )
 
 
@@ -27,11 +28,5 @@ data class Schedule(
     val dateStart:LocalDateTime,
     val countLeft:String,
     val repeatPeriodMillis:Long
-)
-
-data class Money(
-    val id:String,
-    val amount:Double,
-    val currency:String
 )
 

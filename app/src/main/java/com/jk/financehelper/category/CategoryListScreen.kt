@@ -412,7 +412,7 @@ fun CategoryItem(
     Box(
         modifier = modifier
             .height(100.dp)
-            .background(color,FinanceHelperTheme.shape.shape10)
+            .background(color, FinanceHelperTheme.shape.shape10)
             .drawBehind {
                 if (isSelectionMode == CategoryListViewModel.SelectionState.ON) {
                     val strokeWidth = 4f

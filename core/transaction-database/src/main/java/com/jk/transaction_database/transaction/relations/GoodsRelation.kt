@@ -28,6 +28,6 @@ data class GoodsRelation(
         entityColumn = "id",
         entity = TransactionMoneyDatabaseEntity::class
     )
-    val cost: MoneyRelation
+    val cost: MoneyRelation,
 ) {
 }

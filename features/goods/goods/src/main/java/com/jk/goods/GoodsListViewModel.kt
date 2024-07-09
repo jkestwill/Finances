@@ -64,7 +64,8 @@ class GoodsListViewModel @Inject constructor(
                         measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
                     )
                 ),
-                cost = com.jk.money_data.Money("qq", 20.0, Currency("zxc", "BYN"))
+                cost = com.jk.money_data.Money("qq", 20.0, Currency("zxc", "BYN")),
+                amount=1
             )
         )
     }

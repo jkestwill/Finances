@@ -1,6 +1,5 @@
 package com.jk.goods
 
-import android.widget.GridLayout.Spec
 import com.jk.money_data.Currency
 import com.jk.money_data.Money
 import com.jk.transaction_database.transaction.LanguageEntity
@@ -30,7 +29,7 @@ fun Goods.toGoodsRelation(): GoodsRelation {
                 cost.currency.id
             ),
             currency = TransactionCurrencyDatabaseEntity(id = cost.currency.id, cost.currency.name)
-        )
+        ),
     )
 }
 

@@ -1,6 +1,7 @@
 package com.jk.financehelper.ui.theme
 
 import android.app.Activity
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -98,9 +99,9 @@ fun FinanceHelperTheme(
     val typography = FinanceHelperTypography(
         label = TextStyle(
             fontSize = when(textSize){
-                FinanceHelperSize.LARGE->24.sp
-                FinanceHelperSize.MEDIUM->20.sp
-                FinanceHelperSize.SMALL-> 16.sp
+                FinanceHelperSize.LARGE ->24.sp
+                FinanceHelperSize.MEDIUM ->20.sp
+                FinanceHelperSize.SMALL -> 16.sp
                 else-> error("No such typography style $textSize")
             },
             fontWeight = FontWeight.Bold,
@@ -108,9 +109,9 @@ fun FinanceHelperTheme(
         ),
         body =TextStyle(
             fontSize = when(textSize){
-                FinanceHelperSize.LARGE->20.sp
-                FinanceHelperSize.MEDIUM->16.sp
-                FinanceHelperSize.SMALL-> 12.sp
+                FinanceHelperSize.LARGE ->20.sp
+                FinanceHelperSize.MEDIUM ->16.sp
+                FinanceHelperSize.SMALL -> 12.sp
                 else-> error("No such typography style $textSize")
             },
             fontWeight = FontWeight.Bold,
