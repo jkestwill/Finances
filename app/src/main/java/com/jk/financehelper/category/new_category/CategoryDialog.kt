@@ -40,7 +40,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import com.jk.category.AddCategoryViewModel
-import com.jk.common.State
+import com.jk.`common-ui`.State
 
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
@@ -267,15 +267,15 @@ fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
     val context = LocalContext.current
 
     when (state.value) {
-        is State.None -> {
+        is com.jk.`common-ui`.State.None -> {
             Log.e(TAG, "AddCategory:NONE")
         }
 
-        is State.Loading -> {
+        is com.jk.`common-ui`.State.Loading -> {
             Log.e(TAG, "AddCategory:LOADING")
         }
 
-        is State.Success -> {
+        is com.jk.`common-ui`.State.Success -> {
             Log.e(TAG, "AddCategory:Success")
             navController.popBackStack(
                 route = Routes.CATEGORY_LIST,
@@ -289,11 +289,11 @@ fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
             )
         }
 
-        is State.Error -> {
+        is com.jk.`common-ui`.State.Error -> {
             Log.e(TAG, "AddCategory:ERROR")
             Toast.makeText(
                 context,
-                (state.value as State.Error<Long>).message,
+                (state.value as com.jk.`common-ui`.State.Error<Long>).message,
                 Toast.LENGTH_LONG
             ).show()
         }

@@ -2,6 +2,7 @@ package com.jk.exchange_rate_data
 
 import com.jk.common_data.ApiRequest
 
+
 interface MergeStrategy<T> {
 
     fun merge(right: T, left: T): T

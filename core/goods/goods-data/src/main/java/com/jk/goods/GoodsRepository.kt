@@ -16,7 +16,7 @@ class GoodsRepository @Inject constructor(
 ) {
 
 
-    suspend fun add(goodsList: List<Goods>) {
+    suspend fun add(goodsList: List<com.jk.common_goods_data.Goods>) {
         for (i in goodsList) {
             goodsLocalDataSource.insert(i.toGoodsRelation())
         }
@@ -28,7 +28,7 @@ class GoodsRepository @Inject constructor(
         isAsc: Boolean = true,
         offset: Int = 0,
         limit: Int = 10
-    ): Flow<ApiRequest<List<Goods>>> {
+    ): Flow<ApiRequest<List<com.jk.common_goods_data.Goods>>> {
         val startFlow: Flow<ApiRequest<List<GoodsRelation>>> =
             flowOf(ApiRequest.Loading())
 

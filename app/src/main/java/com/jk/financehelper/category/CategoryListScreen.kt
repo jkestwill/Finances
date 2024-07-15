@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -58,12 +57,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category.CategoryListViewModel
-import com.jk.category_data.TransactionCategory
+import com.jk.category_common_ui.CategoryUI
+import com.jk.`common-ui`.State
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
 import com.jk.financehelper.ui.common.Error
 import com.jk.financehelper.ui.common.Search
-import com.jk.financehelper.ui.common.SearchState
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -83,10 +82,6 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
     }
     var searchPositionY by remember {
         mutableStateOf(0f)
-    }
-
-    val searchState = remember {
-        mutableStateOf(SearchState.COLLAPSED)
     }
 
     BackHandler(isSelectionMode.value == CategoryListViewModel.SelectionState.ON) {
@@ -162,6 +157,7 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
             ) {
 
                 CategoryGrid(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     categoryPagingList = categoryList,
                     onItemClick = {
                         navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
@@ -204,9 +200,10 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
             }
         }
     }
-
-
 }
+
+
+
 
 @Composable
 fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: () -> Unit) {
@@ -229,11 +226,15 @@ fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: (
  * Menu for selected items*/
 
 @Composable
-fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel, onDelete: () -> Unit) {
+fun BoxScope.SelectItemsMenu(
+    visible: Boolean,
+    viewModel: CategoryListViewModel,
+    onDelete: () -> Unit
+) {
     val deleteState = viewModel.categoryDeleteState.collectAsState()
     viewModel.observeCategoryDeleteState()
     when (deleteState.value) {
-        is com.jk.common.State.Loading -> {
+        is com.jk.`common-ui`.State.Loading -> {
             Box(
                 modifier = Modifier
                     .background(
@@ -246,11 +247,11 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel,
             }
         }
 
-        is com.jk.common.State.Success -> {
+        is com.jk.`common-ui`.State.Success -> {
 
         }
 
-        is com.jk.common.State.Error -> {
+        is com.jk.`common-ui`.State.Error -> {
             // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
             Error(
                 modifier = Modifier.align(Alignment.TopStart),
@@ -260,7 +261,6 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel,
         }
 
         else -> {
-            Log.e("TAG", "None")
             if (visible)
                 IconButton(
                     modifier = Modifier
@@ -289,29 +289,30 @@ fun BoxScope.SelectItemsMenu(visible: Boolean, viewModel: CategoryListViewModel,
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ColumnScope.CategoryGrid(
-    categoryPagingList: LazyPagingItems<TransactionCategory>,
-    onItemClick: (TransactionCategory) -> Unit,
+fun CategoryGrid(
+    modifier: Modifier = Modifier,
+    categoryPagingList: LazyPagingItems<com.jk.category_common_ui.CategoryUI>,
+    onItemClick: (com.jk.category_common_ui.CategoryUI) -> Unit,
     viewModel: CategoryListViewModel
 ) {
-
-    val selectionState = viewModel.selectionState.collectAsState()
-
     Crossfade(
         targetState = categoryPagingList.loadState.refresh, animationSpec = tween(),
     ) { state ->
         when (state) {
             is LoadState.Loading -> {
                 CircularProgressIndicator(
-                    modifier = Modifier
+                    modifier = modifier
                         .width(100.dp)
                         .height(100.dp)
-                        .align(Alignment.CenterHorizontally)
                 )
             }
 
             is LoadState.Error -> {
-                ErrorCategory()
+                ErrorCategory(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                )
                 Log.e(
                     "qq",
                     "CategoryGrid: ${state.error.message}",
@@ -335,7 +336,7 @@ fun ColumnScope.CategoryGrid(
                                     modifier = Modifier
                                         .combinedClickable(
                                             onClick = {
-                                                if (selectionState.value == CategoryListViewModel.SelectionState.ON) {
+                                                if (viewModel.selectionState.value == CategoryListViewModel.SelectionState.ON) {
                                                     isSelected = !isSelected
 
                                                     if (isSelected) {
@@ -365,7 +366,7 @@ fun ColumnScope.CategoryGrid(
                                             }),
                                     category = category,
                                     color = Color(category.color),
-                                    isSelectionMode = selectionState.value,
+                                    isSelectionMode = viewModel.selectionState.value,
                                     isSelected = isSelected
                                 )
                             }
@@ -383,13 +384,11 @@ fun ColumnScope.CategoryGrid(
 
 
 @Composable
-fun ColumnScope.ErrorCategory() {
+fun ErrorCategory(modifier: Modifier = Modifier) {
     val text = stringResource(id = R.string.list_empty)
     Box(
-        modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth()
-            .fillMaxHeight()
+        modifier = modifier
+
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
@@ -404,7 +403,7 @@ fun ColumnScope.ErrorCategory() {
 @Composable
 fun CategoryItem(
     modifier: Modifier,
-    category: TransactionCategory,
+    category: com.jk.category_common_ui.CategoryUI,
     color: Color,
     isSelectionMode: CategoryListViewModel.SelectionState,
     isSelected: Boolean
@@ -417,12 +416,17 @@ fun CategoryItem(
                 if (isSelectionMode == CategoryListViewModel.SelectionState.ON) {
                     val strokeWidth = 4f
                     if (isSelected) {
-
                         drawRect(
                             color = Color.Black,
-                            topLeft = Offset(strokeWidth/2,strokeWidth/2),
-                            size = this.size.copy(this.size.width-strokeWidth,this.size.height-strokeWidth),
-                            style = Stroke(strokeWidth, pathEffect = PathEffect.cornerPathEffect(10.dp.toPx()))
+                            topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
+                            size = this.size.copy(
+                                this.size.width - strokeWidth,
+                                this.size.height - strokeWidth
+                            ),
+                            style = Stroke(
+                                strokeWidth,
+                                pathEffect = PathEffect.cornerPathEffect(10.dp.toPx())
+                            )
                         )
                     }
                 }

@@ -14,8 +14,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +24,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.LanguageUI
+import com.jk.goods_common_ui.MeasureUI
+import com.jk.goods_common_ui.SpecificationsUI
+import com.jk.money_common_ui.CurrencyUI
+import com.jk.money_common_ui.MoneyUI
 import com.jk.money_data.Currency
+import com.jk.money_data.Money
 
 // сделать просто списком в параметры передать лист убрать viewmodel
 
@@ -148,7 +153,7 @@ fun GoodsListPreview() {
         GoodsList(
             modifier = Modifier
                 .fillMaxWidth(),
-            goodsList = test.map { it.toUI() },
+            goodsList = test,
             headerTextStyle = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -165,64 +170,34 @@ fun GoodsListPreview() {
 }
 
 val test = listOf(
-    Goods(
+    GoodsUI(
         id = "gg",
         name = "fimojhgjhgjhgjhghjz",
         specifications = listOf(
-            Specification(
+            SpecificationsUI(
                 id = "sp", text = "weight", amount = 2f,
-                measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
+                measure = MeasureUI(
+                    "mm",
+                    LanguageUI("ll", text = "kg", "english", "eng")
+                )
             )
         ),
-        cost = com.jk.money_data.Money("qq", 200000.0, Currency("zxc", "BYN")),
+        cost = MoneyUI("qq", 200000.0, CurrencyUI("zxc", "BYN")),
         amount = 1
     ),
-    Goods(
+    GoodsUI(
         id = "gg",
         name = "fimojhgjhgjhgjhghjz",
         specifications = listOf(
-            Specification(
+            SpecificationsUI(
                 id = "sp", text = "weight", amount = 2f,
-                measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
+                measure = MeasureUI(
+                    "mm",
+                    LanguageUI("ll", text = "kg", "english", "eng")
+                )
             )
         ),
-        cost = com.jk.money_data.Money("qq", 200000.0, Currency("zxc", "BYN")),
-        amount = 1
-    ),
-    Goods(
-        id = "gg",
-        name = "fimojhgjhgjhgjhghjz",
-        specifications = listOf(
-            Specification(
-                id = "sp", text = "weight", amount = 2f,
-                measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
-            )
-        ),
-        cost = com.jk.money_data.Money("qq", 200000.0, Currency("zxc", "BYN")),
-        amount = 1
-    ),
-    Goods(
-        id = "gg",
-        name = "fimojhgjhgjhgjhghjz",
-        specifications = listOf(
-            Specification(
-                id = "sp", text = "weight", amount = 2f,
-                measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
-            )
-        ),
-        cost = com.jk.money_data.Money("qq", 200000.0, Currency("zxc", "BYN")),
-        amount = 1
-    ),
-    Goods(
-        id = "gg",
-        name = "fimojhgjhgjhgjhghjz",
-        specifications = listOf(
-            Specification(
-                id = "sp", text = "weight", amount = 2f,
-                measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
-            )
-        ),
-        cost = com.jk.money_data.Money("qq", 200000.0, Currency("zxc", "BYN")),
+        cost = MoneyUI("qq", 200000.0, CurrencyUI("zxc", "BYN")),
         amount = 1
     ),
 )

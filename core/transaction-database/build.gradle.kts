@@ -45,5 +45,5 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     androidTestImplementation( "androidx.test:runner:1.6.1")
-    implementation(project(":core:common-data"))
+
 }

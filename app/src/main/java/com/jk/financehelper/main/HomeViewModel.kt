@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.jk.category_data.CategoryRepository
-import com.jk.category_data.TransactionCategory
+import com.jk.transaction.TransactionCategory
+import com.jk.common_data.SearchParams
 import com.jk.financehelper.domain.model.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,14 +40,14 @@ class HomeViewModel @Inject constructor(
     // при первом запуске спрашивается основная валюта
     val currentCurrency = MutableStateFlow<String>("BYN")
 
-    val categoryFlow = categoryRepository.getList(" ", "id", true).stateIn(
+    val categoryFlow = categoryRepository.getList(SearchParams.getDefault()).stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = PagingData.empty()
     )
     val transactionErrors = MutableSharedFlow<Throwable>(1)
 
-    fun addCategory(category: TransactionCategory) {
+    fun addCategory(category: com.jk.transaction.TransactionCategory) {
         viewModelScope.launch(Dispatchers.IO) {
             categoryRepository.add(category)
         }

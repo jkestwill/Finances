@@ -1,6 +1,10 @@
 package com.jk.transaction_data
 
-import com.jk.goods.Goods
+import com.jk.transaction_common_data.Operation
+import com.jk.transaction_common_data.OperationPreview
+import com.jk.transaction_common_data.Transaction
+import com.jk.transaction_common_data.TransactionMoney
+import com.jk.transaction_common_data.TransactionPreview
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.preview.OperationPreviewEntity

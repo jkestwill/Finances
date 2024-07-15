@@ -54,7 +54,7 @@ fun Search(
     val state = remember {
         mutableStateOf(SearchState.COLLAPSED)
     }
-    val scpope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     val offsetY = animateFloatAsState(
         targetValue = if (state.value == SearchState.COLLAPSED) 0f else 100f,
         tween(100, if (state.value == SearchState.COLLAPSED) 300 else 0, LinearOutSlowInEasing)
@@ -80,7 +80,7 @@ fun Search(
                 FinanceHelperTheme.shape.shape20
             )
             .zIndex(1f), onClick = {
-            scpope.launch {
+            coroutineScope.launch {
                 state.value = SearchState.EXPANDED
                 delay(200)
                 focusRequester.requestFocus()

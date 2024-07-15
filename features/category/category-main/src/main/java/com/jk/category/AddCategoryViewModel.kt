@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
-import com.jk.category_data.TransactionCategory
+import com.jk.transaction.TransactionCategory
 import com.jk.common_data.sha256
+import com.jk.common_ui.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -19,8 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
-import  com.jk.common.State
-import com.jk.common.toState
+import com.jk.common_ui.toState
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
@@ -39,7 +40,6 @@ class AddCategoryViewModel @Inject constructor(
     private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None)
     val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
 
-    val random = Random(213123)
 
     fun addCategory(name: String, color: ULong?, isExpenses: Boolean) {
         Log.e(TAG, "addCategory:${name} ${color} ${isExpenses} ")
@@ -54,7 +54,7 @@ class AddCategoryViewModel @Inject constructor(
                     Log.e(TAG, "addCategory:${color} ")
                     _addCategoryError.emit("")
                     addCategory(
-                        TransactionCategory(
+                        CategoryUI(
                             "$name $color $isExpenses".sha256(),
                             name,
                             color ?: colorList.random().value,
@@ -66,7 +66,7 @@ class AddCategoryViewModel @Inject constructor(
         }
     }
 
-    private fun addCategory(category: TransactionCategory) {
+    private fun addCategory(category: CategoryUI) {
         viewModelScope.launch(Dispatchers.IO) {
             _addCategoryResponse.emitAll(categoryRepository.add(category).map { apiRequest ->
                 apiRequest.toState()

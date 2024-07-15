@@ -40,11 +40,12 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
+    implementation(project(":common:common-data:goods"))
+    implementation(project(":common:common-data:money"))
+    implementation(project(":core:transaction-database"))
+    implementation(project(":common:common-utils"))
     kapt(libs.hilt.android.compiler)
 
-    implementation(project(":core:transaction-database"))
-    implementation(project(":core:money:money-data"))
-    implementation(project(":core:common-data"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

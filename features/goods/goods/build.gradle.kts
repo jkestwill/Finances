@@ -53,14 +53,15 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation(project(":common:common-ui:goods"))
+    implementation(project(":common:common-ui:money"))
     debugImplementation(libs.androidx.ui.tooling)
 
     kapt(libs.hilt.android.compiler)
 
     implementation(project(":core:money:money-data"))
     implementation(project(":core:goods:goods-data"))
-    implementation(project(":core:common-data"))
-    implementation(project(":features:common"))
+    implementation(project(":common:common-utils-ui"))
     implementation(project(":features:currency:currency"))
 
     testImplementation(libs.junit)

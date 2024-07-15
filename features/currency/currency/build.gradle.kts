@@ -38,6 +38,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(project(":core:money:money-data"))
+    implementation(project(":common:common-ui:money"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

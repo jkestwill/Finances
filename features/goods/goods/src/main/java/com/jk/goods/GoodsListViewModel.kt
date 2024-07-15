@@ -3,10 +3,8 @@ package com.jk.goods
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jk.common.State
-import com.jk.common.toState
-import com.jk.common_data.map
-import com.jk.money_data.Currency
+import com.jk.common_ui.State
+import com.jk.goods_common_ui.GoodsUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,27 +44,12 @@ class GoodsListViewModel @Inject constructor(
         }
     }
 
-    fun add(goodsList: List<Goods>) {
+    fun add(goodsList: List<GoodsUI>) {
         viewModelScope.launch {
-            goodsRepository.add(goodsList)
+            goodsRepository.add(goodsList.map { it.toApiRequest() })
         }
 
     }
 
-    companion object {
-        val test = listOf(
-            Goods(
-                id = "gg",
-                name = "fimoz",
-                specifications = listOf(
-                    Specification(
-                        id = "sp", text = "weight", amount = 2f,
-                        measure = Measure("mm", Language("ll", text = "kg", "english", "eng"))
-                    )
-                ),
-                cost = com.jk.money_data.Money("qq", 20.0, Currency("zxc", "BYN")),
-                amount=1
-            )
-        )
-    }
+
 }

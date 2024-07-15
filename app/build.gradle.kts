@@ -104,13 +104,11 @@ dependencies {
 
     implementation(project(":core:money:exchange-rate-data"))
     implementation(project(":core:money:currencyExchangeApiBy"))
-    implementation(project(":core::money:currency-exchange"))
+    implementation(project(":features:currency:currency-exchange"))
     implementation(project(":core:transaction-database"))
     implementation(project(":core:category:category-data"))
     implementation(project(":features:category:category-main"))
-    implementation(project(":core:common-data"))
     implementation(project(":features:goods:goods"))
-    implementation(project(":features:common"))
 
     implementation(libs.skydoves.colorpicker)
 

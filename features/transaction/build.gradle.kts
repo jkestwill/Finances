@@ -40,7 +40,6 @@ dependencies {
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":features:category:category-main"))
     implementation(project(":features:goods:goods"))
-    implementation(project(":features:currency:currency"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

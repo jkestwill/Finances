@@ -4,13 +4,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.jk.category_common_data.TransactionCategory
 import com.jk.common_data.ApiRequest
+import com.jk.common_data.SearchParams
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -21,27 +22,33 @@ class CategoryRepository @Inject constructor(
     private val categoryDao: CategoryDao,
     private val categoryPagingSource: CategoryPagingSourceFactory
 ) {
-    fun getList(q: String, sortBy: String, isAsc: Boolean): Flow<PagingData<TransactionCategory>> {
+    fun getList(
+        searchParams: SearchParams
+    ): Flow<PagingData<TransactionCategory>> {
         return Pager(PagingConfig(20)) {
-            categoryPagingSource.create(sortBy = sortBy, isAsc = isAsc, q = q)
+            categoryPagingSource.create(
+                sortBy = searchParams.sortBy,
+                isAsc = searchParams.isAsc,
+                q = searchParams.q
+            )
         }.flow
     }
 
     fun removeByIdList(categoryIdList: List<String>): Flow<ApiRequest<Unit>> {
-        val startFlow: Flow<ApiRequest<Unit>> = flowOf(ApiRequest.Loading<Unit>())
-        val result: Flow<ApiRequest<Unit>> = flow<ApiRequest<Unit>> {
+        val startFlow: Flow<ApiRequest<Unit>> = flowOf(ApiRequest.Loading())
+        val result: Flow<ApiRequest<Unit>> = flow {
             try {
                 emit(ApiRequest.Success(categoryDao.delete(categoryIdList)))
             } catch (e: Exception) {
-                ApiRequest.Error<Unit>(data = null, error = e)
+                emit(ApiRequest.Error<Unit>(data = null, error = e))
             }
         }
         return merge(startFlow, result)
     }
 
-    fun add(category: TransactionCategory): Flow<ApiRequest<Long>> {
+    fun add(category:TransactionCategory): Flow<ApiRequest<Long>> {
         val startFlow = flowOf(ApiRequest.Loading<Long>())
-        val result: Flow<ApiRequest<Long>> = flow {
+        val result: Flow<ApiRequest<Long>> = flow<Long> {
             emit(categoryDao.insert(category.toEntity()))
         }.map { result ->
             if (result > 0) {
@@ -65,7 +72,7 @@ class CategoryRepository @Inject constructor(
             emit(categoryDao.getById(categoryId))
         }.map {
             if (it != null) {
-                ApiRequest.Success<TransactionCategory>(it.toCategory())
+                ApiRequest.Success(it.toCategory())
             } else {
                 ApiRequest.Error<TransactionCategory>(
                     it,

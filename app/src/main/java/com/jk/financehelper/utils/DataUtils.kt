@@ -1,6 +1,6 @@
 package com.jk.financehelper.utils
 
-import com.jk.category_data.TransactionCategory
+import com.jk.transaction.TransactionCategory
 import com.jk.financehelper.domain.model.Currency
 import com.jk.financehelper.domain.model.Operation
 import com.jk.financehelper.domain.model.Transaction
@@ -24,7 +24,14 @@ class DataUtils {
                         amount = 200.0,
                         currency = Currency(id = "qwe", name = "BYN")
                     ),
-                    category = listOf(TransactionCategory(id = "x1", "Sport",color=0xFF0094C6U,true)),
+                    category = listOf(
+                        com.jk.transaction.TransactionCategory(
+                            id = "x1",
+                            "Sport",
+                            color = 0xFF0094C6U,
+                            true
+                        )
+                    ),
                     schedule = null
                 ),
                 date = LocalDateTime.now(),
@@ -41,7 +48,14 @@ class DataUtils {
                         amount = 300.0,
                         currency = Currency(id = "qwe", name = "BYN")
                     ),
-                    category = listOf(TransactionCategory(id = "xx", "Sport",0xFF0094C6U,false)),
+                    category = listOf(
+                        com.jk.transaction.TransactionCategory(
+                            id = "xx",
+                            "Sport",
+                            0xFF0094C6U,
+                            false
+                        )
+                    ),
                     schedule = null
                 ),
                 date = LocalDateTime.of(2021, 2, 1, 3, 2),

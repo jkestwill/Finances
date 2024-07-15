@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.category_data.TransactionCategory
+import com.jk.transaction.TransactionCategory
 import com.jk.financehelper.ui.calendar.data.rememberYearState
 import java.time.LocalDate
 import java.time.Year
@@ -42,7 +42,7 @@ fun HomeScreen(
         )
         val data = viewModel.transactionsFlow.collectAsState(initial = listOf())
         val err = viewModel.transactionErrors.collectAsState(initial = null)
-        val category: LazyPagingItems<TransactionCategory> =
+        val category: LazyPagingItems<com.jk.transaction.TransactionCategory> =
             viewModel.categoryFlow.collectAsLazyPagingItems()
         Bank(modifier = Modifier, amount = 200f, viewModel = viewModel)
 //        YearCalendar(

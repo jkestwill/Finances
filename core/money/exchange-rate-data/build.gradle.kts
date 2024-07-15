@@ -40,8 +40,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
     implementation(libs.hilt.android)
+    implementation(project(":common:common-utils"))
     kapt(libs.hilt.android.compiler)
-    implementation(project(":core:common-data"))
     implementation(project(":core:transaction-database"))
     implementation(project(":core:money:currencyExchangeApiBy"))
 }

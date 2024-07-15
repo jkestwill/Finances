@@ -1,7 +1,7 @@
 package com.jk.financehelper.utils
 
 
-import com.jk.category_data.TransactionCategory
+import com.jk.transaction.TransactionCategory
 import com.jk.financehelper.domain.model.Currency
 
 import com.jk.financehelper.domain.model.TransactionMoney
@@ -12,8 +12,8 @@ import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.relations.MoneyRelation
 
 
-fun TransactionCategoryDatabaseEntity.toCategory(): TransactionCategory {
-    return TransactionCategory(id,name, color.toULong(),isExpenses)
+fun TransactionCategoryDatabaseEntity.toCategory(): com.jk.transaction.TransactionCategory {
+    return com.jk.transaction.TransactionCategory(id, name, color.toULong(), isExpenses)
 }
 
 fun MoneyRelation.toMoney():TransactionMoney{

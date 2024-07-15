@@ -2,7 +2,7 @@ package com.jk.transaction_data.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.jk.transaction_data.TransactionPreview
+import com.jk.transaction_common_data.TransactionPreview
 import com.jk.transaction_data.toPreview
 import com.jk.transaction_database.transaction.datasource.TransactionLocalDataSource
 import dagger.assisted.Assisted

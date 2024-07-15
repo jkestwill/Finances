@@ -1,7 +1,11 @@
 package com.jk.goods
 
-import com.jk.money_data.Currency
-import com.jk.money_data.Money
+import com.jk.common_goods_data.Goods
+import com.jk.common_goods_data.Language
+import com.jk.common_goods_data.Measure
+import com.jk.common_goods_data.Specification
+import com.jk.money_common_data.Currency
+import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
@@ -80,11 +84,19 @@ fun SpecificationRelation.toSpecification(): Specification {
         id = specificationEntity.id,
         text = specificationEntity.text,
         amount = specificationEntity.amount,
-        measure = Measure(measure.measureEntity.id, language = measure.lang.toLanguage())
+        measure = Measure(
+            measure.measureEntity.id,
+            language = measure.lang.toLanguage()
+        )
     )
 }
 
-fun LanguageEntity.toLanguage(): Language {
-    return Language(id = id, lanName = langName, lanShortName = langShortName, text = text)
+fun LanguageEntity.toLanguage():Language {
+    return Language(
+        id = id,
+        lanName = langName,
+        lanShortName = langShortName,
+        text = text
+    )
 }
 
