@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.common_ui.State
 import com.jk.goods_common_ui.GoodsUI
+import com.jk.common_data.*
+import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +48,9 @@ class GoodsListViewModel @Inject constructor(
 
     fun add(goodsList: List<GoodsUI>) {
         viewModelScope.launch {
-            goodsRepository.add(goodsList.map { it.toApiRequest() })
+            goodsRepository.add(goodsList.map {
+                it.toGoods()
+            })
         }
 
     }

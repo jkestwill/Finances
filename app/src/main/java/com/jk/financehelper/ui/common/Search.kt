@@ -31,7 +31,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.jk.financehelper.ui.custom.CharacterLimitTextField
+import com.jk.common_ui.CharacterLimitTextField
+import com.jk.common_ui.TextLimit
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -90,7 +91,7 @@ fun Search(
             Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
         }
 
-        CharacterLimitTextField(
+       CharacterLimitTextField(
             modifier = modifier
                 .height(40.dp)
                 .width(size.value)

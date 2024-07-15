@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -125,7 +126,7 @@ fun CategoryScreen(
                     color = Red,
                     icon = sortIcon,
                     onClick = {
-                        println(it)
+                        println(i)
                     })
             }
         }
@@ -142,7 +143,7 @@ fun CategoryScreen(
             ), verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             TransactionList(
-                transactionList = DataUtils.getTransactionPreview(), color.value, lightColor.value
+                transactionList = listOf(), color.value, lightColor.value
             )
         }
     }

@@ -44,9 +44,8 @@ import com.jk.`common-ui`.State
 
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
-import com.jk.financehelper.ui.common.Error
+import com.jk.common_ui.Error
 import com.jk.financehelper.ui.common.clickAnimation
-import com.jk.financehelper.ui.custom.ThemedTextField
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import com.jk.financehelper.ui.theme.colorPickList
 
@@ -105,7 +104,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                         text = stringResource(id = R.string.add_new_category),
                         style = FinanceHelperTheme.typography.label
                     )
-                    ThemedTextField(
+                    com.jk.common_ui.ThemedTextField(
                         modifier = Modifier.padding(FinanceHelperTheme.shape.padding),
                         value = name.value,
                         onValueChange = {

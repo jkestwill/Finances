@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jk.financehelper.ui.custom.VerticalGrid
+import com.jk.common_ui.VerticalGrid
 import com.jk.financehelper.ui.daysOfWeekArray
 import com.jk.financehelper.ui.theme.Red
 import com.kizitonwose.calendar.core.atStartOfMonth

@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.common
+package com.jk.common_ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,8 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jk.financehelper.ui.custom.AutoSizeText
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 

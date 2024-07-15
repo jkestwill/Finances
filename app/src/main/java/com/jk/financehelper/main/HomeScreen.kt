@@ -77,7 +77,7 @@ fun Bank(modifier: Modifier, amount: Float, viewModel: HomeViewModel) {
 
     Row(modifier) {
         Text(text = expenses.value.toString())
-        com.jk.financehelper.ui.custom.TransparentTextField(
+        com.jk.common_ui.TransparentTextField(
             modifier = Modifier, value = editableAmount, onValueChange = {
                 Log.e("qq", "Bank: ${pattern.matches(it)} ")
                 if (it.isNotEmpty() && pattern.matches(it)) editableAmount = it

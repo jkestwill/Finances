@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.custom
+package com.jk.common_ui
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -28,13 +28,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.jk.financehelper.R
-import com.jk.financehelper.ui.common.Limit
-import com.jk.financehelper.ui.common.TextError
-import com.jk.financehelper.ui.common.TextLimit
-import com.jk.financehelper.ui.common.rememberTextError
-import com.jk.financehelper.ui.common.shake
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
+
 
 @Composable
 fun CharacterLimitTextField(
@@ -45,7 +39,8 @@ fun CharacterLimitTextField(
     textLimit: TextLimit,
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit,
-    prefix: @Composable (() -> Unit)?=null
+    prefix: @Composable (() -> Unit)?=null,
+    placeHolder: @Composable (() -> Unit)? = null
 ) {
     val textError = rememberTextError(textLimit = textLimit)
     val error = remember {
@@ -69,8 +64,8 @@ fun CharacterLimitTextField(
             if (errorMatcher?.second?.isTypingAllowed == true || error.value == null)
                 onValueChange(it)
         },
-        placeHolder = {
-            Text(stringResource(id = R.string.search), style = FinanceHelperTheme.typography.h3)
+        placeHolder = { 
+            placeHolder?.invoke()
         },
         prefix = prefix,
         postfix = {

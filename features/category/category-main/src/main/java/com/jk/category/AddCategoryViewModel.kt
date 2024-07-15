@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
-import com.jk.transaction.TransactionCategory
 import com.jk.common_data.sha256
 import com.jk.common_ui.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,7 +67,7 @@ class AddCategoryViewModel @Inject constructor(
 
     private fun addCategory(category: CategoryUI) {
         viewModelScope.launch(Dispatchers.IO) {
-            _addCategoryResponse.emitAll(categoryRepository.add(category).map { apiRequest ->
+            _addCategoryResponse.emitAll(categoryRepository.add(category.toCategory()).map { apiRequest ->
                 apiRequest.toState()
             })
         }

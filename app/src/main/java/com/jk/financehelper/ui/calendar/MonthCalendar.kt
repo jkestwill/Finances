@@ -29,7 +29,7 @@ import com.jk.financehelper.ui.chart.ChartData
 import com.jk.financehelper.main.HomeViewModel
 import com.jk.financehelper.ui.chart.VicoGraph
 import com.jk.financehelper.ui.custom.AutoSizeText
-import com.jk.financehelper.ui.custom.SwipeableText
+import com.jk.common_ui.SwipeableText
 import com.jk.financehelper.ui.monthsArray
 import com.jk.financehelper.ui.theme.SeaGreen
 import com.jk.financehelper.utils.DataUtils

@@ -25,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
@@ -39,12 +39,9 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.hilt.android)
     implementation (libs.androidx.hilt.navigation.compose)
-    implementation(project(":core:category:category-data"))
     implementation(project(":core:transaction-database"))
-    implementation(project(":core:category:category-data"))
-    implementation(project(":core:goods:goods-data"))
-    implementation(project(":core:money:money-data"))
     implementation(project(":common:common-data:transaction"))
+    implementation(project(":common:common-data:money"))
     implementation(project(":common:common-utils"))
 
 

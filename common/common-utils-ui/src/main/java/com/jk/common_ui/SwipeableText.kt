@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.custom
+package com.jk.common_ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
-import com.jk.financehelper.R
+
 
 @Composable
 fun SwipeableText(

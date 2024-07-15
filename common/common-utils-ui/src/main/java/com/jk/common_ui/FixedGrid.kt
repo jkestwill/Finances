@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.custom
+package com.jk.common_ui
 
 
 import androidx.compose.runtime.Composable

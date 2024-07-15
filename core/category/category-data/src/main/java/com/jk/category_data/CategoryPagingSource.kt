@@ -2,6 +2,7 @@ package com.jk.category_data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.jk.category_common_data.TransactionCategory
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -11,16 +12,16 @@ class CategoryPagingSource @AssistedInject constructor(
     @Assisted("q") private val q: String,
     @Assisted("sortBy") private var sortBy: String,
     @Assisted("isAsc") private var isAsc: Boolean
-) : PagingSource<Int, com.jk.transaction.TransactionCategory>() {
+) : PagingSource<Int, TransactionCategory>() {
 
-    override fun getRefreshKey(state: PagingState<Int, com.jk.transaction.TransactionCategory>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, TransactionCategory>): Int? {
         val anchorPos = state.anchorPosition ?: return null
         val page = state.closestPageToPosition(anchorPos) ?: return null
         return page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
     }
 
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, com.jk.transaction.TransactionCategory> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TransactionCategory> {
         val pageSize = params.loadSize.coerceAtMost(20)
         val page = params.key ?: 0
         val response = categoryDao.getAll(

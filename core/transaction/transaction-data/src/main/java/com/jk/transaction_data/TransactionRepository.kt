@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
     val transactionDao: TransactionLocalDataSource,
-    val transactionPagingSource: TransactionPagingSourceFactory
+    private val transactionPagingSource: TransactionPagingSourceFactory
 ) {
     fun getTransactionPreviewByCategoryId(
         categoryId: String,

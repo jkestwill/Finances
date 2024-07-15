@@ -61,7 +61,7 @@ import com.jk.category_common_ui.CategoryUI
 import com.jk.`common-ui`.State
 import com.jk.financehelper.R
 import com.jk.financehelper.navigation.Routes
-import com.jk.financehelper.ui.common.Error
+import com.jk.common_ui.Error
 import com.jk.financehelper.ui.common.Search
 import com.jk.financehelper.ui.theme.FinanceHelperTheme
 import kotlinx.coroutines.flow.MutableStateFlow

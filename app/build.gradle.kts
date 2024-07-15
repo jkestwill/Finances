@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":core:goods:goods-data"))
+    implementation(project(":common:common-utils-ui"))
     ksp(libs.androidx.room.compiler)
 
     //dagger hilt
