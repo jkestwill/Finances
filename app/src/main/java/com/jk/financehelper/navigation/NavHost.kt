@@ -11,14 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import com.jk.category.CategoryListScreen
-import com.jk.category.CategoryDialog
+import com.jk.category.list.CategoryListScreen
+import com.jk.category.add_new_category.CategoryDialog
 import com.jk.category.CategoryScreen
+import com.jk.common_ui.Celadon
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
 import com.jk.financehelper.main.HomeScreen
-import com.jk.financehelper.ui.theme.Celadon
-import com.jk.goods.GoodsList
 
 
 @SuppressLint("RestrictedApi")
@@ -27,7 +26,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.GOODS) {
+    NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)
         }

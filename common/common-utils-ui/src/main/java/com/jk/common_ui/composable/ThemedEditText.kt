@@ -128,7 +128,7 @@ private fun matchTextLimit(
     return try {
         checkText(text, textLimit)
     } catch (e: Throwable) {
-        e.printStackTrace()
+       // e.printStackTrace()
         null
     }
 }

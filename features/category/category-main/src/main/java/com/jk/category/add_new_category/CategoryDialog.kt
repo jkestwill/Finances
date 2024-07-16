@@ -1,6 +1,5 @@
-package com.jk.category
+package com.jk.category.add_new_category
 
-import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -32,13 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation

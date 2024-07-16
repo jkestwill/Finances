@@ -1,5 +1,6 @@
-package com.jk.category
+package com.jk.category.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -18,6 +19,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,8 +34,8 @@ class CategoryListViewModel @Inject constructor(
         private const val TAG = "CategoryViewModel"
     }
 
-    private var _categoryFLow: StateFlow<PagingData<CategoryUI>> =
-        MutableStateFlow<PagingData<CategoryUI>>(PagingData.empty())
+    private var _categoryFLow: MutableStateFlow<PagingData<CategoryUI>> =
+        MutableStateFlow(PagingData.empty())
     val categoryFlow: StateFlow<PagingData<CategoryUI>> get() = _categoryFLow
 
     val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None)
@@ -45,7 +48,6 @@ class CategoryListViewModel @Inject constructor(
         viewModelScope.launch {
             categoryDeleteState.collect {
                 if (it is State.Success) {
-
                     categoryDeleteState.value = State.None
                     selectedCategoryIdList.value = listOf()
                 }
@@ -64,24 +66,27 @@ class CategoryListViewModel @Inject constructor(
 
     fun getAllCategories(search: String) {
         viewModelScope.launch {
-            _categoryFLow =
+            _categoryFLow .emitAll(
                 categoryRepository.getList(
                     SearchParams(
                         q = search,
-                        sortBy = CategorySortBy.ID.fieldName,
+                        sortBy = "name",
                         isAsc = true
                     )
                 )
                     .map { pagingData ->
                         pagingData.map { category ->
+                            Log.e(TAG, "getAllCategories: ${category}")
                             category.toUI()
                         }
-                    }.cachedIn(viewModelScope)
+                    }
+                    .cachedIn(viewModelScope)
                     .stateIn(
                         scope = viewModelScope,
                         started = SharingStarted.Lazily,
                         initialValue = PagingData.empty()
                     )
+            )
 
         }
     }

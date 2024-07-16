@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -29,9 +30,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.jk.common_ui.FinanceHelperTheme
+import com.jk.ui.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -104,6 +107,9 @@ fun Search(
             onError = {
                 Log.e("TAG", "Search:${it} ")
             },
+            placeHolder = {
+                Text(text= stringResource(id = androidx.appcompat.R.string.search_menu_title), style = FinanceHelperTheme.typography.h3)
+            }
         )
 
     }

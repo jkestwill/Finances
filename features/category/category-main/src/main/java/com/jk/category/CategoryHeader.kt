@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.Red
 import com.jk.common_ui.composable.AutoSizeText
 
 
@@ -62,15 +64,15 @@ fun CategoryHeader(
 @Composable
 @Preview(backgroundColor = 0xFFFFFFFF)
 fun Preview() {
-    com.jk.common_ui.FinanceHelperTheme {
+    FinanceHelperTheme {
         CategoryHeader(
             modifier = Modifier
                 .width(400.dp)
                 .height(100.dp),
             categoryName = "Taxi",
             description = "All Transactions",
-            color = com.jk.common_ui.Red,
-            lightColor = com.jk.common_ui.Red
+            color = Red,
+            lightColor = Red
         )
     }
 }

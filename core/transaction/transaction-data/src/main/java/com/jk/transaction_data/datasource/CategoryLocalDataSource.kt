@@ -2,7 +2,6 @@ package com.jk.transaction_data.datasource
 
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CategoryDao
-import com.jk.transaction_database.transaction.datasource.LocalDataSource
 import javax.inject.Inject
 
 class CategoryLocalDataSource @Inject constructor(
@@ -19,7 +18,7 @@ class CategoryLocalDataSource @Inject constructor(
         sortBy: String,
         isAsc: Boolean
     ): List<TransactionCategoryDatabaseEntity> {
-        return categoryDao.getAll(q,sortBy, isAsc,0,0)
+        return categoryDao.getAll(q,sortBy, isAsc,0,20)
 
     }
 

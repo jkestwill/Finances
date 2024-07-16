@@ -36,7 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.jk.common_ui.Celadon
 import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.colorPickList
 import com.jk.common_ui.composable.AutoSizeText
 import com.jk.transaction_common_ui.TransactionPreviewUI
 
@@ -52,7 +54,7 @@ fun CategoryScreen(
         viewModel?.getById(it)
     }
     val color = remember(colorValue) {
-        mutableStateOf(Color(colorValue ?: com.jk.common_ui.Celadon.toArgb().toULong()))
+        mutableStateOf(Color(colorValue ?: Celadon.toArgb().toULong()))
     }
     val lightColor = remember(color) {
         mutableStateOf(
@@ -185,7 +187,7 @@ fun CategoryScreenPreview() {
         CategoryScreen(
             navController = rememberNavController(),
             categoryId = "zxc",
-            colorValue = com.jk.common_ui.colorPickList[3].value
+            colorValue = colorPickList[3].value
         )
     }
 }

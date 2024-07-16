@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.jk.financehelper.ui.theme.Celadon
-import com.jk.financehelper.ui.theme.SeaGreen
+import com.jk.common_ui.Celadon
+import com.jk.common_ui.SeaGreen
 import com.jk.transaction_common_ui.TransactionUI
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis

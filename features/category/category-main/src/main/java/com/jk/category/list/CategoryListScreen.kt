@@ -1,4 +1,4 @@
-package com.jk.category
+package com.jk.category.list
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -35,9 +35,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,14 +53,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.jk.category.R
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.composable.Limit
 import com.jk.common_ui.composable.Search
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.jk.common_ui.composable.TextError
+import com.jk.common_ui.composable.TextLimit
+import com.jk.common_ui.composable.TextLimitConfig
 
 private const val TAG = "CategoryListScreen"
 
@@ -76,24 +79,23 @@ fun CategoryListScreen(
         mutableStateOf("")
     }
     val s by viewModel.selectedCategoryIdList.collectAsState()
-    val isSelectionMode = viewModel.selectionState.collectAsState()
+    val isSelectionMode by viewModel.selectionState.collectAsState()
     val selectAll = remember {
         mutableStateOf(false)
     }
     var searchPositionY by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
-    BackHandler(isSelectionMode.value == CategoryListViewModel.SelectionState.ON) {
+    BackHandler(isSelectionMode == CategoryListViewModel.SelectionState.ON) {
 
         viewModel.selectionState.value = CategoryListViewModel.SelectionState.OFF
     }
 
     LaunchedEffect(key1 = s) {
         viewModel.selectedCategoryIdList.collect {
-            println(it)
+            Log.e(TAG, "CategoryListScreen: $it")
             selectAll.value = it.size == categoryList.itemSnapshotList.items.size
-
         }
     }
 
@@ -111,7 +113,11 @@ fun CategoryListScreen(
                 onValueChange = {
                     searchText.value = it
                     viewModel.getAllCategories(it)
-                }
+                },
+                textLimit = TextLimitConfig(
+                    TextLimit(minLength = Limit(0, true), maxLength = Limit(32, false)),
+                    error = TextError(maxTextLengthError = "Err")
+                )
             )
             Row(
                 modifier = Modifier.padding(start = 5.dp, end = 5.dp),
@@ -126,7 +132,7 @@ fun CategoryListScreen(
                     color = FinanceHelperTheme.colors.primaryText
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (isSelectionMode.value == CategoryListViewModel.SelectionState.ON)
+                if (isSelectionMode == CategoryListViewModel.SelectionState.ON)
                     SelectAll(modifier = Modifier.weight(1f), isSelected = selectAll.value) {
                         selectAll.value = !selectAll.value
                         if (selectAll.value) {
@@ -160,7 +166,6 @@ fun CategoryListScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     categoryPagingList = categoryList,
                     onItemClick = { category ->
-
                         onCategoryItemClick(category)
                     },
                     viewModel = viewModel
@@ -168,14 +173,14 @@ fun CategoryListScreen(
             }
 
             SelectItemsMenu(
-                isSelectionMode.value == CategoryListViewModel.SelectionState.ON,
+                isSelectionMode == CategoryListViewModel.SelectionState.ON,
                 viewModel = viewModel
             ) {
                 Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
                 viewModel.removeCategoriesById()
                 selectAll.value = false
             }
-            if (isSelectionMode.value != CategoryListViewModel.SelectionState.ON) {
+            if (isSelectionMode != CategoryListViewModel.SelectionState.ON) {
                 IconButton(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -187,7 +192,7 @@ fun CategoryListScreen(
                             shape = FinanceHelperTheme.shape.shape20
                         ),
                     onClick = {
-                        //navController.navigate(Routes.NEW_CATEGORY)\
+                        //navController.navigate(Routes.NEW_CATEGORY)
                         onNewCategoryClick()
                     }
                 ) {
@@ -312,7 +317,7 @@ fun CategoryGrid(
                     modifier = modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                    ""
+                    "Error"
                 )
                 Log.e(
                     "qq",
@@ -374,7 +379,7 @@ fun CategoryGrid(
                         }
                     }
                 else {
-                    ErrorCategory(errorText = stringResource(id = R.string.error))
+                    ErrorCategory(errorText = stringResource(id = R.string.empty_list))
                 }
             }
         }

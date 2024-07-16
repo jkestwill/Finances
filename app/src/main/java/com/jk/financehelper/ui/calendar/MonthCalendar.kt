@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.common_ui.SeaGreen
 import com.jk.financehelper.ui.chart.ChartData
 import com.jk.financehelper.main.HomeViewModel
 import com.jk.financehelper.ui.chart.VicoGraph
@@ -34,7 +35,6 @@ import com.jk.common_ui.SwipeableText
 import com.jk.common_ui.composable.AutoSizeText
 import com.jk.financehelper.R
 import com.jk.financehelper.ui.monthsArray
-import com.jk.financehelper.ui.theme.SeaGreen
 import com.jk.financehelper.utils.DataUtils
 import com.jk.transaction_common_ui.TransactionUI
 import com.kizitonwose.calendar.compose.HorizontalCalendar

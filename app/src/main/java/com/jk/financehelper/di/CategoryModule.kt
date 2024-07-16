@@ -2,8 +2,7 @@ package com.jk.financehelper.di
 
 
 import androidx.compose.ui.graphics.Color
-import com.jk.transaction_data.datasource.CategoryLocalDataSource
-import com.jk.financehelper.ui.theme.colorPickList
+import com.jk.common_ui.colorPickList
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import dagger.Module

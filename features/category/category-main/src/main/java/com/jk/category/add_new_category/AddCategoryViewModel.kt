@@ -1,4 +1,4 @@
-package com.jk.category
+package com.jk.category.add_new_category
 
 import android.util.Log
 import androidx.compose.ui.graphics.Color

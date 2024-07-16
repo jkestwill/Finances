@@ -16,14 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.jk.common_ui.Celadon
 import com.jk.financehelper.ui.calendar.data.YearCalendarState
 import com.jk.financehelper.ui.calendar.data.pagedFlingBehavior
-import com.jk.financehelper.ui.calendar.data.rememberYearState
-import com.jk.financehelper.ui.theme.Celadon
-import com.jk.financehelper.ui.theme.Red
 import java.time.LocalDate
 import java.time.Year
 import java.time.YearMonth
