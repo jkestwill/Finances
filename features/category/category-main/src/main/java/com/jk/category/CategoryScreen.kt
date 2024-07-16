@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -30,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.jk.transaction.TransactionPreviewUI
+import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.composable.AutoSizeText
 import com.jk.transaction_common_ui.TransactionPreviewUI
 
 
@@ -56,7 +54,6 @@ fun CategoryScreen(
     val color = remember(colorValue) {
         mutableStateOf(Color(colorValue ?: com.jk.common_ui.Celadon.toArgb().toULong()))
     }
-    val sortIcon = painterResource(id = R.drawable.ic_sort_down)
     val lightColor = remember(color) {
         mutableStateOf(
             Color(
@@ -88,47 +85,13 @@ fun CategoryScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
                     .weight(0.6f)
-                    .shadow(2.dp, shape = com.jk.common_ui.FinanceHelperTheme.shape.shape10),
+                    .shadow(2.dp, shape = FinanceHelperTheme.shape.shape10),
                 categoryName = "Taxi",
                 description = "All Transactions",
-                icon = painterResource(id = R.drawable.ic_sort_down),
                 color = color.value,
                 lightColor = lightColor.value
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .shadow(2.dp, com.jk.common_ui.FinanceHelperTheme.shape.shape10)
-                    .background(
-                        color = lightColor.value, com.jk.common_ui.FinanceHelperTheme.shape.shape10
-                    )
-                    .padding(10.dp), verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                ButtonWithDropdownMenu(modifier = Modifier
-                    .shadow(4.dp, RoundedCornerShape(20))
-                    .background(
-                        color = color.value, shape = com.jk.common_ui.FinanceHelperTheme.shape.shape10
-                    )
-                    .weight(0.2f),
-                    list = listOf("Date", "Name", "Amount"),
-                    color = Red,
-                    icon = sortIcon,
-                    onClick = {
-                        println(it)
-                    })
-                ButtonWithDropdownMenu(modifier = Modifier
-                    .weight(0.2f)
-                    .shadow(4.dp, RoundedCornerShape(20))
-                    .background(
-                        color = color.value, com.jk.common_ui.FinanceHelperTheme.shape.shape10
-                    ),
-                    list = listOf("Date", "Name", "Amount"),
-                    color = Red,
-                    icon = sortIcon,
-                    onClick = {
-                        println(i)
-                    })
-            }
+
         }
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
@@ -165,7 +128,7 @@ fun TransactionList(transactionList: List<TransactionPreviewUI>, color: Color, l
 fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color, lightColor: Color) {
     Row(
         Modifier
-            .background(lightColor, com.jk.common_ui.FinanceHelperTheme.shape.shape20)
+            .background(lightColor, FinanceHelperTheme.shape.shape20)
             .padding(start = 10.dp, end = 10.dp)
             .height(60.dp)
             .padding(5.dp)
@@ -178,18 +141,18 @@ fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color, lightColor:
                 .padding(5.dp)
                 .align(Alignment.CenterVertically)
         ) {
-            com.jk.common_ui.AutoSizeText(
+            AutoSizeText(
                 modifier = Modifier.weight(1f),
                 text = item.operation.name,
-                minTextSize = (com.jk.common_ui.FinanceHelperTheme.typography.h3.fontSize.value - 5).sp,
-                maxTextSize = com.jk.common_ui.FinanceHelperTheme.typography.h1.fontSize,
+                minTextSize = (FinanceHelperTheme.typography.h3.fontSize.value - 5).sp,
+                maxTextSize = FinanceHelperTheme.typography.h1.fontSize,
                 maxLines = 1,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 modifier = Modifier.weight(1f),
                 text = "${item.date.hour}:${item.date.minute}",
-                style = com.jk.common_ui.FinanceHelperTheme.typography.h4,
+                style = FinanceHelperTheme.typography.h4,
                 textAlign = TextAlign.Start
             )
         }
@@ -199,15 +162,15 @@ fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color, lightColor:
                 .align(Alignment.CenterVertically)
                 .height(40.dp)
                 .background(
-                    color = color, shape = com.jk.common_ui.FinanceHelperTheme.shape.shape20
+                    color = color, shape = FinanceHelperTheme.shape.shape20
                 )
 
         ) {
-            com.jk.common_ui.AutoSizeText(
+            AutoSizeText(
                 modifier = Modifier.align(Alignment.Center),
                 text = "${item.operation.money.amount} ${item.operation.money.currency}",
-                minTextSize = (com.jk.common_ui.FinanceHelperTheme.typography.h3.fontSize.value - 15).sp,
-                maxTextSize = com.jk.common_ui.FinanceHelperTheme.typography.h3.fontSize,
+                minTextSize = (FinanceHelperTheme.typography.h3.fontSize.value - 15).sp,
+                maxTextSize = FinanceHelperTheme.typography.h3.fontSize,
                 alignment = Alignment.Center,
                 maxLines = 1
             )
@@ -218,7 +181,7 @@ fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color, lightColor:
 @Composable
 @Preview
 fun CategoryScreenPreview() {
-    com.jk.common_ui.FinanceHelperTheme {
+    FinanceHelperTheme {
         CategoryScreen(
             navController = rememberNavController(),
             categoryId = "zxc",

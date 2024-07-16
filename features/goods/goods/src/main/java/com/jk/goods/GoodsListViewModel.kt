@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.common_ui.State
 import com.jk.goods_common_ui.GoodsUI
-import com.jk.common_data.*
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +13,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.jk.common_data.map
+import com.jk.goods_common_ui.toGoods
+import com.jk.goods_common_ui.toUI
 
 @HiltViewModel
 class GoodsListViewModel @Inject constructor(

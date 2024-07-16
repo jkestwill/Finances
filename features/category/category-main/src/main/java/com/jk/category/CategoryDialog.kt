@@ -1,4 +1,4 @@
-package com.jk.financehelper.category.new_category
+package com.jk.category
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -39,21 +39,26 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import com.jk.category.AddCategoryViewModel
-import com.jk.`common-ui`.State
-
-import com.jk.financehelper.R
-import com.jk.financehelper.navigation.Routes
-import com.jk.common_ui.Error
-import com.jk.financehelper.ui.common.clickAnimation
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
-import com.jk.financehelper.ui.theme.colorPickList
+import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.State
+import com.jk.common_ui.clickAnimation
+import com.jk.common_ui.colorPickList
+import com.jk.common_ui.composable.Error
+import com.jk.common_ui.composable.ThemedTextField
 
 private const val TAG = "CategoryDialog"
 
-@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
-fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController) {
+fun CategoryDialog(
+    viewModel: AddCategoryViewModel,
+    categoryLabel: String,
+    categoryNamePlaceholder: String,
+    expensesLabel: String,
+    buttonCreateLabel: String,
+    buttonCancelLabel: String,
+    onDismiss: () -> Unit,
+    onNewCategoryCreated: () -> Unit
+) {
     val name = remember {
         mutableStateOf("")
     }
@@ -64,17 +69,13 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
     val isExpensesSwitch = remember {
         mutableStateOf(false)
     }
-    AddCategory(viewModel = viewModel, navController = navController)
-    val addCategoryErrorVisibility = remember {
-        mutableStateOf(false)
-    }
+    AddCategory(viewModel = viewModel, onNewCategoryCreated = onNewCategoryCreated)
 
 
-    Log.e("zxc", "CategoryDialog: $addCategoryErrorVisibility")
-
-    Dialog(properties = DialogProperties(usePlatformDefaultWidth = false), onDismissRequest = {
-        navController.popBackStack()
-    }) {
+    Dialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        onDismissRequest = onDismiss
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -101,10 +102,10 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(id = R.string.add_new_category),
+                        text = categoryLabel,
                         style = FinanceHelperTheme.typography.label
                     )
-                    com.jk.common_ui.ThemedTextField(
+                    ThemedTextField(
                         modifier = Modifier.padding(FinanceHelperTheme.shape.padding),
                         value = name.value,
                         onValueChange = {
@@ -113,7 +114,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                         placeHolder = {
                             Text(
                                 modifier = Modifier.alpha(0.5f),
-                                text = stringResource(id = R.string.create),
+                                text = categoryNamePlaceholder,
                                 style = FinanceHelperTheme.typography.body
                             )
                         },
@@ -144,7 +145,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                         Text(
                             modifier = Modifier
                                 .padding(FinanceHelperTheme.shape.padding),
-                            text = stringResource(id = R.string.expenses),
+                            text = expensesLabel,
                             style = FinanceHelperTheme.typography.body,
                         )
                         Switch(
@@ -178,7 +179,7 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                                 modifier = Modifier
                                     .align(Alignment.Center)
                                     .padding(5.dp),
-                                text = stringResource(id = R.string.create),
+                                text = buttonCreateLabel,
                                 style = FinanceHelperTheme.typography.h2,
                                 textAlign = TextAlign.Center
                             )
@@ -186,17 +187,18 @@ fun CategoryDialog(viewModel: AddCategoryViewModel, navController: NavController
                         Box(modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                navController.popBackStack(
-                                    route = Routes.NEW_CATEGORY,
-                                    inclusive = true,
-                                    saveState = false
-                                )
+//                                navController.popBackStack(
+//                                    route = Routes.NEW_CATEGORY,
+//                                    inclusive = true,
+//                                    saveState = false
+//                                )
+                                onDismiss()
                             }) {
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.Center)
                                     .padding(5.dp),
-                                text = stringResource(id = R.string.cancel),
+                                text = buttonCancelLabel,
                                 style = FinanceHelperTheme.typography.h2,
                                 textAlign = TextAlign.Center
                             )
@@ -261,38 +263,29 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
 }
 
 @Composable
-fun AddCategory(viewModel: AddCategoryViewModel, navController: NavController) {
+fun AddCategory(viewModel: AddCategoryViewModel, onNewCategoryCreated: () -> Unit) {
     val state = viewModel.addCategoryResponse.collectAsState()
     val context = LocalContext.current
 
     when (state.value) {
-        is com.jk.`common-ui`.State.None -> {
+        is State.None -> {
             Log.e(TAG, "AddCategory:NONE")
         }
 
-        is com.jk.`common-ui`.State.Loading -> {
+        is State.Loading -> {
             Log.e(TAG, "AddCategory:LOADING")
         }
 
-        is com.jk.`common-ui`.State.Success -> {
+        is State.Success -> {
             Log.e(TAG, "AddCategory:Success")
-            navController.popBackStack(
-                route = Routes.CATEGORY_LIST,
-                inclusive = false,
-                saveState = false
-            )
-            navController.navigate(
-                Routes.CATEGORY_LIST,
-                navOptions = NavOptions.Builder().setLaunchSingleTop(true)
-                    .setPopUpTo(route = Routes.CATEGORY_LIST, true).build()
-            )
+            onNewCategoryCreated()
         }
 
-        is com.jk.`common-ui`.State.Error -> {
+        is State.Error -> {
             Log.e(TAG, "AddCategory:ERROR")
             Toast.makeText(
                 context,
-                (state.value as com.jk.`common-ui`.State.Error<Long>).message,
+                (state.value as State.Error<Long>).message,
                 Toast.LENGTH_LONG
             ).show()
         }

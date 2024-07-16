@@ -1,100 +1,67 @@
 package com.jk.financehelper.utils
 
-import com.jk.transaction.TransactionCategory
-import com.jk.financehelper.domain.model.Currency
-import com.jk.financehelper.domain.model.Operation
-import com.jk.financehelper.domain.model.Transaction
-import com.jk.financehelper.domain.model.TransactionMoney
-import com.jk.financehelper.domain.model.TransactionType
-import com.jk.financehelper.domain.model.preview.OperationPreview
-import com.jk.financehelper.domain.model.preview.TransactionPreview
+import com.jk.category_common_ui.CategoryUI
+import com.jk.money_common_ui.CurrencyUI
+import com.jk.money_common_ui.MoneyUI
+import com.jk.transaction_common_ui.OperationUI
+import com.jk.transaction_common_ui.TransactionTypeUI
+import com.jk.transaction_common_ui.TransactionUI
 import java.time.LocalDateTime
 
 class DataUtils {
 
     companion object {
-        fun getBarChartData() = listOf<Transaction>(
-            Transaction(
+        fun getBarChartData() = listOf<TransactionUI>(
+            TransactionUI(
                 id = "qq",
-                operation = Operation(
+                operation = OperationUI(
                     id = "zxc",
                     name = "qq",
-                    money = TransactionMoney(
+                    money = MoneyUI(
                         id = "zxc2",
                         amount = 200.0,
-                        currency = Currency(id = "qwe", name = "BYN")
+                        currency = CurrencyUI(id = "qwe", name = "BYN")
                     ),
-                    category = listOf(
-                        com.jk.transaction.TransactionCategory(
+                    categoryList = listOf(
+                        CategoryUI(
                             id = "x1",
                             "Sport",
                             color = 0xFF0094C6U,
                             true
                         )
                     ),
-                    schedule = null
+                    scheduleList = listOf(),
+                    goodsList = listOf()
                 ),
                 date = LocalDateTime.now(),
-                goods = null,
-                type = TransactionType(id = "ww", "online")
+                type = TransactionTypeUI(id = "ww", "online")
             ),
-            Transaction(
-                id = "qq2",
-                operation = Operation(
-                    id = "zxc13",
-                    name = "qqa",
-                    money = TransactionMoney(
-                        id = "zxc3",
-                        amount = 300.0,
-                        currency = Currency(id = "qwe", name = "BYN")
+            TransactionUI(
+                id = "qq",
+                operation = OperationUI(
+                    id = "zxc",
+                    name = "qq",
+                    money = MoneyUI(
+                        id = "zxc2",
+                        amount = 200.0,
+                        currency = CurrencyUI(id = "qwe", name = "BYN")
                     ),
-                    category = listOf(
-                        com.jk.transaction.TransactionCategory(
-                            id = "xx",
+                    categoryList = listOf(
+                        CategoryUI(
+                            id = "x1",
                             "Sport",
-                            0xFF0094C6U,
-                            false
+                            color = 0xFF0094C6U,
+                            true
                         )
                     ),
-                    schedule = null
+                    scheduleList = listOf(),
+                    goodsList = listOf()
                 ),
-                date = LocalDateTime.of(2021, 2, 1, 3, 2),
-                goods = null,
-                type = TransactionType(id = "ww", "online")
-            )
+                date = LocalDateTime.now(),
+                type = TransactionTypeUI(id = "ww", "online")
+            ),
         )
 
-        fun getTransactionPreview(): List<TransactionPreview> {
-            return listOf<TransactionPreview>(
-                TransactionPreview(
-                    "t1",
-                    operation = OperationPreview(
-                        "1",
-                        TransactionMoney(
-                            "m1",
-                            amount = 123.0,
-                            currency = Currency("1", "BYN")
-                        ),
-                        name = "Euroopt LCC WAIKIKI PYATSOT DENEG"
-                    ),
-                    date = LocalDateTime.now(),
-                    type = TransactionType("tp1", "online")
-                ),
-                TransactionPreview(
-                    "t2",
-                    operation = OperationPreview(
-                        "2",
-                        TransactionMoney(
-                            "m2",
-                            amount = 1993.0,
-                            currency = Currency("1", "BYN")
-                        ),
-                        name = "Dionis"
-                    ),
-                    date = LocalDateTime.of(2023,1,2,13,24),
-                    type = TransactionType("tp1", "online")
-                )
-            )
-        }
+
     }
 }

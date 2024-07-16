@@ -3,10 +3,12 @@ package com.jk.financehelper.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.map
+import com.jk.category_common_ui.toUI
+import com.jk.category_common_data.TransactionCategory
 import com.jk.category_data.CategoryRepository
-import com.jk.transaction.TransactionCategory
 import com.jk.common_data.SearchParams
-import com.jk.financehelper.domain.model.Transaction
+import com.jk.transaction_common_ui.TransactionUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -27,8 +30,8 @@ class HomeViewModel @Inject constructor(
 
     val count = MutableStateFlow<Int>(5)
 
-    private var _transactionsFlow = MutableSharedFlow<List<Transaction>>(1)
-    val transactionsFlow: SharedFlow<List<Transaction>> get() = _transactionsFlow
+    private var _transactionsFlow = MutableSharedFlow<List<TransactionUI>>(1)
+    val transactionsFlow: SharedFlow<List<TransactionUI>> get() = _transactionsFlow
 
     private var _expensesFlow = MutableStateFlow(0.0)
     val expensesFLow: StateFlow<Double> get() = _expensesFlow
@@ -40,14 +43,15 @@ class HomeViewModel @Inject constructor(
     // при первом запуске спрашивается основная валюта
     val currentCurrency = MutableStateFlow<String>("BYN")
 
-    val categoryFlow = categoryRepository.getList(SearchParams.getDefault()).stateIn(
+    val categoryFlow = categoryRepository.getList(SearchParams.getDefault())
+        .map { pagingiData -> pagingiData.map { it.toUI() } }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,
         initialValue = PagingData.empty()
     )
     val transactionErrors = MutableSharedFlow<Throwable>(1)
 
-    fun addCategory(category: com.jk.transaction.TransactionCategory) {
+    fun addCategory(category: TransactionCategory) {
         viewModelScope.launch(Dispatchers.IO) {
             categoryRepository.add(category)
         }

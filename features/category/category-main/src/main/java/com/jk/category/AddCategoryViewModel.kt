@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jk.category_common_ui.toCategory
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.sha256
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 import com.jk.common_ui.toState
 
 @HiltViewModel

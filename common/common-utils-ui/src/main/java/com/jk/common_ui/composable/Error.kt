@@ -1,4 +1,4 @@
-package com.jk.common_ui
+package com.jk.common_ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.common_ui.FinanceHelperTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 

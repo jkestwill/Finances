@@ -17,7 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.transaction.TransactionCategory
+import com.jk.category_common_ui.CategoryUI
+import com.jk.common_ui.TransparentTextField
 import com.jk.financehelper.ui.calendar.data.rememberYearState
 import java.time.LocalDate
 import java.time.Year
@@ -42,7 +43,7 @@ fun HomeScreen(
         )
         val data = viewModel.transactionsFlow.collectAsState(initial = listOf())
         val err = viewModel.transactionErrors.collectAsState(initial = null)
-        val category: LazyPagingItems<com.jk.transaction.TransactionCategory> =
+        val category: LazyPagingItems<CategoryUI> =
             viewModel.categoryFlow.collectAsLazyPagingItems()
         Bank(modifier = Modifier, amount = 200f, viewModel = viewModel)
 //        YearCalendar(
@@ -77,7 +78,7 @@ fun Bank(modifier: Modifier, amount: Float, viewModel: HomeViewModel) {
 
     Row(modifier) {
         Text(text = expenses.value.toString())
-        com.jk.common_ui.TransparentTextField(
+        TransparentTextField(
             modifier = Modifier, value = editableAmount, onValueChange = {
                 Log.e("qq", "Bank: ${pattern.matches(it)} ")
                 if (it.isNotEmpty() && pattern.matches(it)) editableAmount = it

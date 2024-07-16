@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,17 +24,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jk.financehelper.domain.model.Transaction
 import com.jk.financehelper.ui.chart.ChartData
 import com.jk.financehelper.main.HomeViewModel
 import com.jk.financehelper.ui.chart.VicoGraph
-import com.jk.financehelper.ui.custom.AutoSizeText
 import com.jk.common_ui.SwipeableText
+import com.jk.common_ui.composable.AutoSizeText
+import com.jk.financehelper.R
 import com.jk.financehelper.ui.monthsArray
 import com.jk.financehelper.ui.theme.SeaGreen
 import com.jk.financehelper.utils.DataUtils
+import com.jk.transaction_common_ui.TransactionUI
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -66,7 +70,7 @@ fun CalendarPager(
     var selectedDate by remember {
         mutableStateOf(currentDate)
     }
-    val transactionList: List<Transaction> by viewModel.transactionsFlow.collectAsState(initial = listOf())
+    val transactionList: List<TransactionUI> by viewModel.transactionsFlow.collectAsState(initial = listOf())
 
     val dateStyleList: List<ChartData> = remember() {
         mutableListOf(
@@ -91,15 +95,19 @@ fun CalendarPager(
             onTextCLick = {
                 dateStyleList[dateTypeCount % (dateStyleList.size - 1)]
             },
+            onBack ={  scope.launch {
+                state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.minusMonths(1))
+             }
+            },
             onForward = {
                 scope.launch {
                     state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.plusMonths(1))
                 }
-            }) {
-            scope.launch {
-                state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.minusMonths(1))
-            }
-        }
+            }, painterBack = painterResource(id = R.drawable.arrow_l) , painterForward = painterResource(
+                id = R.drawable.arrow_r
+            ))
+
+
 
         HorizontalCalendar(modifier = Modifier.fillMaxWidth(), state = state, dayContent = {
             val color by remember(it.position) {

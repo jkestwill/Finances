@@ -8,8 +8,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import com.jk.common_ui.composable.AutoSizeText
 
 
 @Composable
@@ -17,12 +19,15 @@ fun SwipeableText(
     text: String,
     onTextCLick:()->Unit,
     onForward: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    painterForward:Painter,
+    painterBack:Painter,
+    
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         IconButton(modifier = Modifier.weight(1f), onClick = onBack) {
             Icon(
-                painter = painterResource(id = R.drawable.arrow_l),
+                painter = painterBack,
                 contentDescription = "arrow_left"
             )
         }
@@ -41,7 +46,7 @@ fun SwipeableText(
 
         IconButton(modifier = Modifier.weight(1f), onClick = onForward) {
             Icon(
-                painter = painterResource(id = R.drawable.arrow_r),
+                painter =painterForward,
                 contentDescription = "arrow_right"
             )
         }

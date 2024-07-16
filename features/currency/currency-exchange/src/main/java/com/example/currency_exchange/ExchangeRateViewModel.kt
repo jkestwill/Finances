@@ -1,14 +1,11 @@
 package com.example.currency_exchange
 
 import androidx.lifecycle.ViewModel
+import com.jk.common_data.map
 import com.jk.common_ui.State
-import com.jk.exchange_rate_data.ExchangeRate
-
+import com.jk.common_ui.toState
 import com.jk.exchange_rate_data.NBRBRepository
 import com.jk.money_common_ui.ExchangeRateUI
-import com.jk.common_data.ApiRequest
-import com.jk.common_data.map
-import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

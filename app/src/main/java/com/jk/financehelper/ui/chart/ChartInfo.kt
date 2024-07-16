@@ -1,6 +1,6 @@
 package com.jk.financehelper.ui.chart
 
-import com.jk.financehelper.domain.model.Transaction
+import com.jk.transaction_common_ui.TransactionUI
 import java.time.LocalDateTime
 import java.util.SortedMap
 import java.util.TreeMap
@@ -9,7 +9,7 @@ object ChartInfo {
 
     fun combine(
         dateTypeList: List<LocalDateTime>,
-        transactionList: List<Transaction>,
+        transactionList: List<TransactionUI>,
         chartData: ChartData
     ): SortedMap<Int, Double> {
         val newList: SortedMap<Int, Double> = TreeMap()

@@ -1,4 +1,4 @@
-package com.jk.common_ui
+package com.jk.common_ui.composable
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -23,11 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.shake
 
 
 @Composable
@@ -36,13 +37,12 @@ fun CharacterLimitTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
-    textLimit: TextLimit,
+    textLimitConfig: TextLimitConfig? = null,
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit,
-    prefix: @Composable (() -> Unit)?=null,
+    prefix: @Composable (() -> Unit)? = null,
     placeHolder: @Composable (() -> Unit)? = null
 ) {
-    val textError = rememberTextError(textLimit = textLimit)
     val error = remember {
         mutableStateOf<String?>(null)
     }
@@ -59,25 +59,30 @@ fun CharacterLimitTextField(
             ),
         value = value,
         onValueChange = {
-            val errorMatcher = matchTextLimit(it, textLimit = textLimit, textError)
-            error.value = errorMatcher?.first
-            if (errorMatcher?.second?.isTypingAllowed == true || error.value == null)
+            if (textLimitConfig != null) {
+                val errorMatcher = matchTextLimit(it, textLimit = textLimitConfig)
+                error.value = errorMatcher?.first
+                if (errorMatcher?.second?.isTypingAllowed == true || error.value == null)
+                    onValueChange(it)
+            } else {
                 onValueChange(it)
+            }
         },
-        placeHolder = { 
+        placeHolder = {
             placeHolder?.invoke()
         },
         prefix = prefix,
         postfix = {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Unspecified),
-                text = "${value.length}/${textLimit.maxLength.value}",
-                textAlign = TextAlign.End,
-                style = FinanceHelperTheme.typography.h3,
+            if (textLimitConfig != null)
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Unspecified),
+                    text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
+                    textAlign = TextAlign.End,
+                    style = FinanceHelperTheme.typography.h3,
 
-                )
+                    )
         },
         textStyle = textStyle,
         maxLines = maxLines,
@@ -87,40 +92,41 @@ fun CharacterLimitTextField(
 
 private fun checkText(
     text: String,
-    textLimit: TextLimit,
-    textError: TextError
+    textLimitConfig: TextLimitConfig,
 ): Pair<String, Limit<out Any>?> {
 
     return when {
-        text.length > textLimit.maxLength.value -> {
-            Pair(textError.maxTextLengthError, textLimit.maxLength)
+        text.length > textLimitConfig.textLimit.maxLength.value -> {
+            Pair(textLimitConfig.error.maxTextLengthError, textLimitConfig.textLimit.maxLength)
         }
 
-        text.length < textLimit.minLength.value -> {
-            Pair(textError.minTextLengthError, textLimit.minLength)
+        text.length < textLimitConfig.textLimit.minLength.value -> {
+            Pair(textLimitConfig.error.minTextLengthError, textLimitConfig.textLimit.minLength)
         }
 
         !text.all {
-            it == '\u0000' || it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
+            it == '\u0000' || it.isLetterOrDigit() || textLimitConfig.textLimit.allowedSpecialCharacters?.value?.contains(
                 it
             ) ?: true
         } -> {
-            Pair(textError.allowedCharactersError, textLimit.allowedSpecialCharacters)
+            Pair(
+                textLimitConfig.error.allowedCharactersError,
+                textLimitConfig.textLimit.allowedSpecialCharacters
+            )
         }
 
         else -> {
-            throw IllegalStateException("Wrong textLimit state ${textLimit}")
+            throw IllegalStateException("Wrong textLimit state ${textLimitConfig}")
         }
     }
 }
 
 private fun matchTextLimit(
     text: String,
-    textLimit: TextLimit,
-    textError: TextError
+    textLimit: TextLimitConfig,
 ): Pair<String, Limit<out Any>?>? {
     return try {
-        checkText(text, textLimit, textError)
+        checkText(text, textLimit)
     } catch (e: Throwable) {
         e.printStackTrace()
         null

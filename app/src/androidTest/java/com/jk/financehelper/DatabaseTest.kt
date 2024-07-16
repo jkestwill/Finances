@@ -378,14 +378,14 @@ class DatabaseTest {
 
         fun testGoodsList(): List<TransactionGoodsDatabaseEntity> {
             return listOf(
-                TransactionGoodsDatabaseEntity(id = "111", name = "Oil", "c1"),
-                TransactionGoodsDatabaseEntity(id = "122", name = "Bread", "c2"),
-                TransactionGoodsDatabaseEntity(id = "133", name = "Ham", "c2"),
-                TransactionGoodsDatabaseEntity(id = "144", name = "Coffee", "c2"),
-                TransactionGoodsDatabaseEntity(id = "155", name = "Tea", "c3"),
-                TransactionGoodsDatabaseEntity(id = "166", name = "Sugar", "c1"),
-                TransactionGoodsDatabaseEntity(id = "177", name = "RTX 3060 TI", "c4"),
-                TransactionGoodsDatabaseEntity(id = "188", name = "LG Ultragear 27", "c5"),
+                TransactionGoodsDatabaseEntity(id = "111", name = "Oil", amount = 1,"c1"),
+                TransactionGoodsDatabaseEntity(id = "122", name = "Bread", amount = 1,"c2"),
+                TransactionGoodsDatabaseEntity(id = "133", name = "Ham", amount = 1,"c2"),
+                TransactionGoodsDatabaseEntity(id = "144", name = "Coffee", amount = 1,"c2"),
+                TransactionGoodsDatabaseEntity(id = "155", name = "Tea", amount = 1,"c3"),
+                TransactionGoodsDatabaseEntity(id = "166", name = "Sugar", amount = 1,"c1"),
+                TransactionGoodsDatabaseEntity(id = "177", name = "RTX 3060 TI", amount = 1,"c4"),
+                TransactionGoodsDatabaseEntity(id = "188", name = "LG Ultragear 27", amount = 1,"c5"),
             )
         }
 

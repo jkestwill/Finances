@@ -1,4 +1,4 @@
-package com.jk.common_ui
+package com.jk.common_ui.composable
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

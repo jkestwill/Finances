@@ -1,13 +1,9 @@
-package com.jk.goods
+package com.jk.goods_common_ui
 
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.Language
 import com.jk.common_goods_data.Measure
 import com.jk.common_goods_data.Specification
-import com.jk.goods_common_ui.GoodsUI
-import com.jk.goods_common_ui.LanguageUI
-import com.jk.goods_common_ui.MeasureUI
-import com.jk.goods_common_ui.SpecificationsUI
 import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
 import com.jk.money_common_ui.CurrencyUI

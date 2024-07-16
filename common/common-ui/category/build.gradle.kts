@@ -38,6 +38,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation(project(":common:common-data:category"))
+
+    implementation(project(":common:common-ui:money"))
+    implementation(project(":common:common-data:money"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

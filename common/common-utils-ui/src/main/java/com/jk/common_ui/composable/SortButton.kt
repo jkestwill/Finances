@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.common
+package com.jk.common_ui.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,14 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jk.financehelper.R
-import com.jk.financehelper.ui.theme.LightCreamy
+import com.jk.common_ui.LightCreamy
 
 @Composable
 fun ButtonWithDropdownMenu(

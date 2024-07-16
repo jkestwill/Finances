@@ -39,8 +39,13 @@ dependencies {
     implementation(libs.material)
     implementation(project(":common:common-ui:category"))
     implementation(project(":common:common-ui:goods"))
+    implementation(project(":common:common-data:goods"))
     implementation(project(":common:common-ui:money"))
-    implementation(project(":common:common-ui:money"))
+    implementation(project(":common:common-data:money"))
+    implementation(project(":common:common-data:category"))
+    implementation(project(":common:common-data:transaction"))
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

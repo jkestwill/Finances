@@ -1,4 +1,4 @@
-package com.jk.financehelper.ui.common
+package com.jk.common_ui.composable
 
 import android.util.Log
 import android.view.ViewTreeObserver
@@ -31,9 +31,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.jk.common_ui.CharacterLimitTextField
-import com.jk.common_ui.TextLimit
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
+import com.jk.common_ui.FinanceHelperTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -43,11 +41,12 @@ enum class SearchState {
 
 private const val TAG = "Search"
 
-//
+
 @Composable
 fun Search(
     modifier: Modifier,
     text: String,
+    textLimit: TextLimitConfig?=null,
     onValueChange: (String) -> Unit,
     // onClick: (SearchState) -> Unit
 ) {
@@ -68,10 +67,11 @@ fun Search(
             tween(100, if (state.value == SearchState.COLLAPSED) 0 else 300, LinearOutSlowInEasing)
         )
 
-    Row(modifier = modifier
-        .graphicsLayer {
-            this.translationY = offsetY.value
-        }, horizontalArrangement = Arrangement.spacedBy(5.dp)
+    Row(
+        modifier = modifier
+            .graphicsLayer {
+                this.translationY = offsetY.value
+            }, horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         IconButton(modifier = Modifier
             .width(40.dp)
@@ -91,7 +91,7 @@ fun Search(
             Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
         }
 
-       CharacterLimitTextField(
+        CharacterLimitTextField(
             modifier = modifier
                 .height(40.dp)
                 .width(size.value)
@@ -100,7 +100,7 @@ fun Search(
             maxLines = 1,
             value = text,
             onValueChange = onValueChange,
-            textLimit = TextLimit.SearchTextLimit(),
+            textLimitConfig = textLimit,
             onError = {
                 Log.e("TAG", "Search:${it} ")
             },

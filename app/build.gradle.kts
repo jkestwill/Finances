@@ -85,9 +85,23 @@ dependencies {
     // room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+
+    implementation(project(":common:common-utils-ui"))
+    implementation(project(":common:common-utils"))
+    implementation(project(":common:common-data:category"))
+    implementation(project(":common:common-data:transaction"))
+    implementation(project(":common:common-ui:transaction"))
+    implementation(project(":common:common-ui:category"))
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":core:goods:goods-data"))
-    implementation(project(":common:common-utils-ui"))
+    implementation(project(":core:money:exchange-rate-data"))
+    implementation(project(":core:money:currencyExchangeApiBy"))
+    implementation(project(":core:transaction-database"))
+    implementation(project(":core:category:category-data"))
+    implementation(project(":features:currency:currency-exchange"))
+    implementation(project(":features:category:category-main"))
+    implementation(project(":features:goods:goods"))
+    implementation(project(":common:common-ui:money"))
     ksp(libs.androidx.room.compiler)
 
     //dagger hilt
@@ -103,13 +117,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
-    implementation(project(":core:money:exchange-rate-data"))
-    implementation(project(":core:money:currencyExchangeApiBy"))
-    implementation(project(":features:currency:currency-exchange"))
-    implementation(project(":core:transaction-database"))
-    implementation(project(":core:category:category-data"))
-    implementation(project(":features:category:category-main"))
-    implementation(project(":features:goods:goods"))
+
 
     implementation(libs.skydoves.colorpicker)
 

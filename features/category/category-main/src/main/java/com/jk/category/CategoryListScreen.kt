@@ -1,4 +1,4 @@
-package com.jk.financehelper.category
+package com.jk.category
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,21 +57,20 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.category.CategoryListViewModel
 import com.jk.category_common_ui.CategoryUI
-import com.jk.`common-ui`.State
-import com.jk.financehelper.R
-import com.jk.financehelper.navigation.Routes
-import com.jk.common_ui.Error
-import com.jk.financehelper.ui.common.Search
-import com.jk.financehelper.ui.theme.FinanceHelperTheme
+import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.composable.Search
 import kotlinx.coroutines.flow.MutableStateFlow
 
 private const val TAG = "CategoryListScreen"
 
 @SuppressLint("RememberReturnType", "FlowOperatorInvokedInComposition", "RestrictedApi")
 @Composable
-fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavController) {
+fun CategoryListScreen(
+    viewModel: CategoryListViewModel,
+    onCategoryItemClick: (CategoryUI) -> Unit,
+    onNewCategoryClick: () -> Unit
+) {
     val categoryList = viewModel.categoryFlow.collectAsLazyPagingItems()
     val searchText = remember {
         mutableStateOf("")
@@ -159,8 +159,9 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
                 CategoryGrid(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     categoryPagingList = categoryList,
-                    onItemClick = {
-                        navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}")
+                    onItemClick = { category ->
+
+                        onCategoryItemClick(category)
                     },
                     viewModel = viewModel
                 )
@@ -186,7 +187,8 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
                             shape = FinanceHelperTheme.shape.shape20
                         ),
                     onClick = {
-                        navController.navigate(Routes.NEW_CATEGORY)
+                        //navController.navigate(Routes.NEW_CATEGORY)\
+                        onNewCategoryClick()
                     }
                 ) {
                     Icon(
@@ -201,8 +203,6 @@ fun CategoryListScreen(viewModel: CategoryListViewModel, navController: NavContr
         }
     }
 }
-
-
 
 
 @Composable
@@ -234,7 +234,7 @@ fun BoxScope.SelectItemsMenu(
     val deleteState = viewModel.categoryDeleteState.collectAsState()
     viewModel.observeCategoryDeleteState()
     when (deleteState.value) {
-        is com.jk.`common-ui`.State.Loading -> {
+        is com.jk.common_ui.State.Loading -> {
             Box(
                 modifier = Modifier
                     .background(
@@ -247,15 +247,15 @@ fun BoxScope.SelectItemsMenu(
             }
         }
 
-        is com.jk.`common-ui`.State.Success -> {
+        is com.jk.common_ui.State.Success -> {
 
         }
 
-        is com.jk.`common-ui`.State.Error -> {
+        is com.jk.common_ui.State.Error -> {
             // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
-            Error(
+            ErrorCategory(
                 modifier = Modifier.align(Alignment.TopStart),
-                message = MutableStateFlow("Can't delete category")
+                errorText = stringResource(R.string.error)
             )
 
         }
@@ -291,8 +291,8 @@ fun BoxScope.SelectItemsMenu(
 @Composable
 fun CategoryGrid(
     modifier: Modifier = Modifier,
-    categoryPagingList: LazyPagingItems<com.jk.category_common_ui.CategoryUI>,
-    onItemClick: (com.jk.category_common_ui.CategoryUI) -> Unit,
+    categoryPagingList: LazyPagingItems<CategoryUI>,
+    onItemClick: (CategoryUI) -> Unit,
     viewModel: CategoryListViewModel
 ) {
     Crossfade(
@@ -311,7 +311,8 @@ fun CategoryGrid(
                 ErrorCategory(
                     modifier = modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
+                        .fillMaxHeight(),
+                    ""
                 )
                 Log.e(
                     "qq",
@@ -373,7 +374,7 @@ fun CategoryGrid(
                         }
                     }
                 else {
-                    ErrorCategory()
+                    ErrorCategory(errorText = stringResource(id = R.string.error))
                 }
             }
         }
@@ -384,15 +385,14 @@ fun CategoryGrid(
 
 
 @Composable
-fun ErrorCategory(modifier: Modifier = Modifier) {
-    val text = stringResource(id = R.string.list_empty)
+fun ErrorCategory(modifier: Modifier = Modifier, errorText: String) {
     Box(
         modifier = modifier
 
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
-            text = text,
+            text = errorText,
             style = FinanceHelperTheme.typography.body,
             color = Color.LightGray
         )
@@ -403,7 +403,7 @@ fun ErrorCategory(modifier: Modifier = Modifier) {
 @Composable
 fun CategoryItem(
     modifier: Modifier,
-    category: com.jk.category_common_ui.CategoryUI,
+    category: CategoryUI,
     color: Color,
     isSelectionMode: CategoryListViewModel.SelectionState,
     isSelected: Boolean

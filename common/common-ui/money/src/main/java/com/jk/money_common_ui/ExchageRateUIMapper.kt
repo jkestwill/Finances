@@ -1,9 +1,9 @@
-package com.jk.currency
+package com.jk.money_common_ui
 
-import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.MoneyUI
-import com.jk.money_data.Currency
-import com.jk.money_data.Money
+
+import com.jk.money_common_data.Currency
+import com.jk.money_common_data.Money
+
 
 fun Money.toUI(): MoneyUI {
     return MoneyUI(id = id, amount = amount, currency = currency.toUI())

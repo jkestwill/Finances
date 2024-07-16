@@ -1,4 +1,4 @@
-package com.jk.common_ui
+package com.jk.common_ui.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
-import com.jk.common_ui.SuggestedFontSizesStatus.Companion.rememberSuggestedFontSizesStatus
+import com.jk.common_ui.composable.SuggestedFontSizesStatus.Companion.rememberSuggestedFontSizesStatus
 import java.lang.Math.min
 
 @Composable

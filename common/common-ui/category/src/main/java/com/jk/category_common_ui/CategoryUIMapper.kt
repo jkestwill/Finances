@@ -1,7 +1,7 @@
-package com.jk.category
+package com.jk.category_common_ui
 
 import com.jk.category_common_data.TransactionCategory
-import com.jk.category_common_ui.CategoryUI
+
 
 
 fun TransactionCategory.toUI(): CategoryUI {
