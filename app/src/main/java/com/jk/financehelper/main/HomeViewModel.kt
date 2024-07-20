@@ -9,6 +9,7 @@ import com.jk.category_common_data.TransactionCategory
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.SearchParams
 import com.jk.transaction_common_ui.TransactionUI
+import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -64,10 +65,10 @@ class HomeViewModel @Inject constructor(
 
     fun getExpensesSumByDatePeriod(dateStart: LocalDateTime, dateEnd: LocalDateTime) {
         viewModelScope.launch {
-            transactionRepository.getExpensesSum(dateStart, dateEnd, currentCurrency.value)
-                .collect { resp ->
-                    _expensesFlow.emit(resp)
-                }
+//            transactionRepository.getExpensesSum(dateStart, dateEnd, currentCurrency.value)
+//                .collect { resp ->
+//                    _expensesFlow.emit(resp)
+//                }
         }
     }
 

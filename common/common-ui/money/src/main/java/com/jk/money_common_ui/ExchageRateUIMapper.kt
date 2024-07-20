@@ -12,3 +12,7 @@ fun Money.toUI(): MoneyUI {
 fun Currency.toUI(): CurrencyUI {
     return CurrencyUI(id = id, name = name)
 }
+
+fun MoneyUI.toMoney(): Money {
+    return Money(id=id,amount=amount,currency= Currency(currency.id,currency.name))
+}

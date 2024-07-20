@@ -28,6 +28,6 @@ data class OperationUI(
 data class ScheduleUI(
     val id:String,
     val dateStart: LocalDateTime,
-    val countLeft:String,
+    val countLeft:Int,
     val repeatPeriodMillis:Long
 )

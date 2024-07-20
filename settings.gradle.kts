@@ -39,3 +39,4 @@ include(":common:common-ui:goods")
 include(":common:common-ui:category")
 include(":common:common-ui:money")
 
+include(":common:shared_res")

@@ -2,18 +2,22 @@ package com.jk.financehelper.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jk.category.list.CategoryListScreen
 import com.jk.category.add_new_category.CategoryDialog
 import com.jk.category.CategoryScreen
+import com.jk.common_data.toByteArray
+import com.jk.common_data.ULong
 import com.jk.common_ui.Celadon
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
@@ -33,19 +37,20 @@ fun MainNavGraph(
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(
                 viewModel = hiltViewModel(),
-                onCategoryItemClick = { navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}&colorInt=${it.color}") },
+                onCategoryItemClick = { navController.navigate("${Routes.CATEGORY}?categoryId=${it.id}") },
                 onNewCategoryClick = { navController.navigate(Routes.NEW_CATEGORY) })
         }
         composable(Routes.EXCHANGE_RATE) {
             ExchangeRate(viewModel = hiltViewModel())
         }
 
-        composable("${Routes.CATEGORY}?categoryId={categoryId}&color={colorInt}") {
+        composable(
+            "${Routes.CATEGORY}?categoryId={categoryId}&color={color}"
+        ) {
             CategoryScreen(
                 viewModel = hiltViewModel(),
                 navController = navController,
-                it.arguments?.getString("categoryId"),
-                Celadon.toArgb().toULong()
+                categoryId = it.arguments?.getString("categoryId"),
             )
         }
 

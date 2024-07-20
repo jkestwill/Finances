@@ -19,8 +19,12 @@ interface CategoryDao {
             "WHERE category.id IN (:idList)" +
             "")
     suspend fun delete(idList: List<String>)
-
-
+    @Transaction
+   suspend fun checkIfNoExistNInsert(t:TransactionCategoryDatabaseEntity){
+        if(getByName(t.name)==null){
+            insert(t)
+        }
+    }
 
     @Insert(
         entity = TransactionCategoryDatabaseEntity::class,
@@ -53,4 +57,6 @@ interface CategoryDao {
 
     @Query(value = "SELECT * FROM category WHERE category.id LIKE :id")
     suspend fun getById(id: String): TransactionCategoryDatabaseEntity?
+    @Query(value = "SELECT name FROM category WHERE name==:name")
+    suspend fun getByName(name: String): String?
 }

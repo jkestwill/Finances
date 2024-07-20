@@ -53,10 +53,7 @@ fun CharacterLimitTextField(
     ThemedTextField(
         modifier = modifier
             .shake(error.value != null)
-            .background(
-                FinanceHelperTheme.colors.secondaryBackground,
-                shape = FinanceHelperTheme.shape.shape10
-            ),
+           ,
         value = value,
         onValueChange = {
             if (textLimitConfig != null) {

@@ -120,7 +120,7 @@ fun CategoryListScreen(
                 )
             )
             Row(
-                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
+                modifier = Modifier.padding(start = 5.dp, end = 5.dp) .align(Alignment.Center),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -192,7 +192,6 @@ fun CategoryListScreen(
                             shape = FinanceHelperTheme.shape.shape20
                         ),
                     onClick = {
-                        //navController.navigate(Routes.NEW_CATEGORY)
                         onNewCategoryClick()
                     }
                 ) {
@@ -317,7 +316,7 @@ fun CategoryGrid(
                     modifier = modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                    "Error"
+                    stringResource(id = R.string.empty_list)
                 )
                 Log.e(
                     "qq",

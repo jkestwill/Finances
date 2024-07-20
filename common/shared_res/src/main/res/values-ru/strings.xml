@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string-array name="months">
+        <item name="january">Январь</item>
+        <item name="february">Февраль</item>
+        <item name="march">Март</item>
+        <item name="april">Апрель</item>
+        <item name="may">Май</item>
+        <item name="june">Июнь</item>
+        <item name="july">Июль</item>
+        <item name="august">Август</item>
+        <item name="september">Сентябрь</item>
+        <item name="october">Октябрь</item>
+        <item name="november">Ноябрь</item>
+        <item name="december">Декабрь</item>
+
+    </string-array>
+
+    <string-array name="days_of_week">
+        <item name="monday">Понедельник</item>
+        <item name="tuesday">Вторник</item>
+        <item name="wednesday">Среда</item>
+        <item name="thursday">Четверг</item>
+        <item name="friday">Пятница</item>
+        <item name="saturday">Суббота</item>
+        <item name="sunday">Воскресенье</item>
+    </string-array>
+
+    <string name="list_empty">Список пуст</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="search">Поиск</string>
+    <string name="create">Создать</string>
+    <string name="name">Название</string>
+    <string name="cancel">Отмена</string>
+    <string name="add_new_category">Добавить новую категорию</string>
+    <string name="expenses">Траты</string>
+    <string name="maxLengthError">Используйте %d символов или меньше</string>
+    <string name="minLengthError">Используйте %d символов или больше</string>
+    <string name="allowedCharacters">Разрешенные символы: %s</string>
+    <string name="error">Ошибка</string>
+    <string name="all_transactions">All transactions</string>
+
+    <string-array name="goods_list_header">
+        <item name="goods_name">Название</item>
+        <item name="goods_amount">Количество</item>
+        <item name="goods_cost">Цена</item>
+        <item name="goods_currency">Валюта</item>
+    </string-array>
+
+</resources>

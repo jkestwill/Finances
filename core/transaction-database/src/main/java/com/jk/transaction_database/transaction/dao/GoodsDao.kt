@@ -19,7 +19,6 @@ abstract class GoodsDao(
     private val languageDao: LanguageDao = db.getLanguageDao()
     private val languageMeasureListDao: LanguageMeasureListDao = db.getLanguageMeasureListDao()
     private val moneyDao: MoneyDao = db.getMoneyDao()
-    private val currencyDao: CurrencyDao = db.getCurrencyDao()
     private val specificationDao: SpecificationDao = db.getSpecificationDao()
     private val goodsSpecificationDao: GoodsSpecificationDao = db.getGoodsSpecificationDao()
 
@@ -42,9 +41,7 @@ abstract class GoodsDao(
                 )
             )
         }
-
-        currencyDao.insert(goodsRelation.cost.currency)
-        moneyDao.insert(goodsRelation.cost.money)
+        moneyDao.insert(goodsRelation.cost)
         insert(goodsRelation.goodsEntity)
     }
 

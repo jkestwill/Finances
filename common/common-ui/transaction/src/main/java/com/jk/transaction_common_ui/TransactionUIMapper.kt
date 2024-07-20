@@ -7,21 +7,43 @@ import com.jk.transaction_common_data.Schedule
 import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionType
 import com.jk.goods_common_ui.toUI
+import com.jk.money_common_ui.toUI
+import com.jk.transaction_common_data.OperationPreview
+import com.jk.transaction_common_data.TransactionPreview
 
 
 fun Transaction.toUI(): TransactionUI {
-    return TransactionUI(id=id,operation=operation.toUI(),date=date,type=type.toUI())
+    return TransactionUI(id = id, operation = operation.toUI(), date = date, type = type.toUI())
 }
 
 
 fun Operation.toUI(): OperationUI {
-    return OperationUI(id = id,name=name,categoryList = categoryList.map { it.toUI() }, scheduleList = scheduleList.map { it.toUI() }, goodsList = goodsList.map { it.toUI()}, money = money.toUI())
+    return OperationUI(
+        id = id,
+        name = name,
+        categoryList = categoryList.map { it.toUI() },
+        scheduleList = scheduleList.map { it.toUI() },
+        goodsList = goodsList.map { it.toUI() },
+        money = money.toUI()
+    )
 }
 
 fun Schedule.toUI(): ScheduleUI {
-    return ScheduleUI(id,dateStart, countLeft, repeatPeriodMillis)
+    return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis)
 }
 
 fun TransactionType.toUI(): TransactionTypeUI {
-    return TransactionTypeUI(id=id,name=name)
+    return TransactionTypeUI(id = id, name = name)
+}
+
+fun TransactionPreview.toUI(): TransactionPreviewUI {
+    return TransactionPreviewUI(id, operation = operation.toUI(), date = date, type = type)
+}
+
+fun OperationPreview.toUI(): OperationPreviewUI {
+    return OperationPreviewUI(id = id, money = money.toUI(), name = name)
+}
+
+fun TransactionUI.toTransaction(): TransactionUI {
+    return TransactionUI(id, operation, date, type)
 }

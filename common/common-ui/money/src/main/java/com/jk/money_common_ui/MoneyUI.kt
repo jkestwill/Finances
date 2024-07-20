@@ -10,3 +10,4 @@ data class CurrencyUI(
     val id:String,
     val name:String
 )
+

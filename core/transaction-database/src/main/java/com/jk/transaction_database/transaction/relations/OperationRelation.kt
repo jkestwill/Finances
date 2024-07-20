@@ -30,13 +30,14 @@ data class OperationRelation(
     @Relation(
         parentColumn  = "id",
         entityColumn = "id",
+        entity=TransactionGoodsDatabaseEntity::class,
         associateBy = Junction(
             parentColumn  = "operation_id",
             entityColumn = "goods_id",
             value=  OperationGoodsListEntity::class,
             )
     )
-    val goodsList: List<TransactionGoodsDatabaseEntity>,
+    val goodsList: List<GoodsRelation>,
 
     @Relation(entity = TransactionMoneyDatabaseEntity::class,parentColumn = "money_id", entityColumn = "id")
     val cost: MoneyRelation,

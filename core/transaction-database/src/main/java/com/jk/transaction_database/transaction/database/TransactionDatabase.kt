@@ -67,7 +67,7 @@ import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConver
         LanguageEntity::class,
         LangMeasureListEntity::class,
         GoodsSpecificationsListEntity::class
-    ], version = 20, exportSchema = false
+    ], version = 21, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {

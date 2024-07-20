@@ -9,29 +9,39 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
+import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 import com.jk.transaction_database.transaction.relations.TransactionRelation
 import java.time.LocalDateTime
 
 @Dao
-interface TransactionDao {
+abstract class TransactionDao(
+  private val db:TransactionDatabase,
+) {
+    private val operationDao:OperationDao = db.getOperationDao()
+    private val typeDao:TypeDao = db.getTypeDao()
+    @Transaction
+    @Query(value = "SELECT * FROM `transaction`")
+   abstract suspend fun getAll(): List<TransactionEntity>
 
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
-    suspend fun getAll(): List<TransactionEntity>
-
-    @Transaction
-    @Query(value = "SELECT * FROM `transaction`")
-    suspend fun getRelation(): List<TransactionRelation>
+    abstract suspend fun getRelation(): List<TransactionRelation>
 
     @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(transaction: TransactionEntity)
+    abstract suspend fun insert(transaction: TransactionEntity)
+    @Transaction
+    open suspend fun insert(transaction:TransactionRelation){
+        operationDao.insert(transaction.operation)
+        insert(transaction.transaction)
+        typeDao.insertIfNotExist(transaction.type)
 
+    }
     @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
-    suspend fun update(transaction: TransactionEntity)
+    abstract  suspend fun update(transaction: TransactionEntity)
 
     @Delete(entity = OperationEntity::class)
-    suspend fun delete(operation: OperationEntity)
+    abstract  suspend fun delete(operation: OperationEntity)
 
     @Transaction
     @Query(
@@ -51,7 +61,7 @@ interface TransactionDao {
                 "LIMIT :limit OFFSET :offset "
 
     )
-    suspend fun getTransactionPreviewListByCategoryId(
+    abstract suspend fun getTransactionPreviewListByCategoryId(
         categoryId: String,
         q: String,
         orderBy: String,
@@ -73,7 +83,7 @@ interface TransactionDao {
                 "WHERE `transaction`.date >= :dateFrom AND `transaction`.date <= :dateTo " +
                 "AND category.is_expenses==1 "
     )
-    fun getExpenses(
+    abstract fun getExpenses(
         dateFrom: LocalDateTime,
         dateTo: LocalDateTime,
         currencyTo: String

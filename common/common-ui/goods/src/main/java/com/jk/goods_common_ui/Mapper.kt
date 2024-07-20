@@ -8,6 +8,8 @@ import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
+import com.jk.money_common_ui.toMoney
+import com.jk.money_common_ui.toUI
 
 
 fun Goods.toUI(): GoodsUI {
@@ -18,16 +20,6 @@ fun Goods.toUI(): GoodsUI {
         cost = cost.toUI(),
         amount = amount
     )
-}
-
-fun Money.toUI(): MoneyUI {
-    return MoneyUI(
-        id = id, amount = amount, currency = currency.toUI()
-    )
-}
-
-fun Currency.toUI(): CurrencyUI {
-    return CurrencyUI(id = id, name = name)
 }
 
 fun Specification.toUI(): SpecificationsUI {
@@ -62,6 +54,3 @@ fun LanguageUI.toLanguage(): Language {
     return Language(id, text, lanName, lanShortName)
 }
 
-fun MoneyUI.toMoney(): Money {
-    return Money(id=id,amount=amount,currency=Currency(currency.id,currency.name))
-}

@@ -25,7 +25,7 @@ data class Operation(
 data class Schedule(
     val id:String,
     val dateStart:LocalDateTime,
-    val countLeft:String,
+    val countLeft:Int,
     val repeatPeriodMillis:Long
 )
 

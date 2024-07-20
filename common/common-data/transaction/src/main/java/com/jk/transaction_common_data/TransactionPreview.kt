@@ -1,5 +1,6 @@
 package com.jk.transaction_common_data
 
+import com.jk.money_common_data.Money
 import java.time.LocalDateTime
 
 data class TransactionPreview(
@@ -12,15 +13,9 @@ data class TransactionPreview(
 
 data class OperationPreview(
     val id:String,
-    val money: TransactionMoney,
+    val money: Money,
     val name:String
 )
 
-
-data class TransactionMoney(
-    val id:String,
-    val currency:String,
-    val amount:Double
-)
 
 

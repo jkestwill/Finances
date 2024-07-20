@@ -15,11 +15,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class CategoryModule {
 
-    @Provides
-    @Singleton
-    fun provideCategoryLocalDataSource(categoryDao:CategoryDao): com.jk.transaction_data.datasource.CategoryLocalDataSource {
-        return com.jk.transaction_data.datasource.CategoryLocalDataSource(categoryDao)
-    }
+
     @Provides
     @Singleton
     fun provideCategoryDao(db: TransactionDatabase): CategoryDao {

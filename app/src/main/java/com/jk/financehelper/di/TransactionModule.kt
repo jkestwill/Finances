@@ -1,18 +1,15 @@
 package com.jk.financehelper.di
 
-import com.jk.financehelper.main.TransactionRepository
+import com.jk.transaction_data.TransactionPagingSourceFactory
+import com.jk.transaction_data.TransactionRepository
+import com.jk.transaction_data.datasource.TransactionPagingLocalSource
 import com.jk.transaction_data.datasource.TransactionRemoteDataSource
-import com.jk.transaction_database.transaction.datasource.TransactionLocalDataSource
-import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
-import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.datasource.OperationLocalDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-
 import javax.inject.Singleton
 
 @Module
@@ -30,29 +27,14 @@ class TransactionModule {
         return db.getTransactionDao()
     }
 
-    @Provides
-    @Singleton
-    fun provideTransactionLocalDataSource(
-        transactionDao: TransactionDao,
-        operationLocalDataSource: OperationLocalDataSource,
-        goodsDao: GoodsDao,
-        transactionGoodsListDao: TransactionGoodsListDao
-    ): TransactionLocalDataSource {
-        return TransactionLocalDataSource(
-            operationLocalDataSource = operationLocalDataSource,
-            transactionDao = transactionDao,
-            goodsDao = goodsDao,
-            transactionGoodsListDao = transactionGoodsListDao
-        )
-    }
-
-
-    @Provides
-    @Singleton
+@Provides
+@Singleton
     fun provideTransactionRepository(
-        localDataSource: TransactionLocalDataSource,
-        dataSource: TransactionRemoteDataSource
+        db:TransactionDatabase,
+        transactionPagingSource:TransactionPagingSourceFactory
     ): TransactionRepository {
-        return TransactionRepository(localDataSource, dataSource)
+        return TransactionRepository(transactionDao = db.getTransactionDao(), transactionPagingSource = transactionPagingSource)
     }
+
+
 }

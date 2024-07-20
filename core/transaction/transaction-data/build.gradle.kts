@@ -43,6 +43,8 @@ dependencies {
     implementation(project(":common:common-data:transaction"))
     implementation(project(":common:common-data:money"))
     implementation(project(":common:common-utils"))
+    implementation(project(":common:common-data:category"))
+    implementation(project(":common:common-data:goods"))
 
 
     kapt(libs.hilt.android.compiler)

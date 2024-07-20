@@ -10,12 +10,12 @@ import com.jk.common_data.sha256
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 
 @Dao
-interface CurrencyDao  {
+interface CurrencyDao {
     @Delete(entity = TransactionCurrencyDatabaseEntity::class)
-     suspend fun delete(t: TransactionCurrencyDatabaseEntity)
+    suspend fun delete(t: TransactionCurrencyDatabaseEntity)
 
     @Update(entity = TransactionCurrencyDatabaseEntity::class)
-     suspend fun update(t: TransactionCurrencyDatabaseEntity)
+    suspend fun update(t: TransactionCurrencyDatabaseEntity)
 
     @Insert(entity = TransactionCurrencyDatabaseEntity::class)
     suspend fun insert(t: TransactionCurrencyDatabaseEntity)
@@ -24,12 +24,12 @@ interface CurrencyDao  {
     suspend fun getAll(): List<TransactionCurrencyDatabaseEntity>
 
     @Query("SELECT * FROM currency WHERE currency.name==:name")
-    suspend fun getOrNull(name:String):TransactionCurrencyDatabaseEntity?
+    suspend fun getOrNull(name: String): TransactionCurrencyDatabaseEntity?
 
     @Transaction
-    suspend fun insertIfNotExist(name:String){
-        if(getOrNull(name) == null){
-            insert(TransactionCurrencyDatabaseEntity(id=name.sha256(),name=name ))
+    suspend fun insertIfNotExist(currency: String) {
+        if (getOrNull(currency) == null) {
+            insert(TransactionCurrencyDatabaseEntity(id = currency.sha256(), name = currency))
         }
     }
 }

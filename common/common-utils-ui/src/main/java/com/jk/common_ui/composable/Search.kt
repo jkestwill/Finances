@@ -7,10 +7,12 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -25,8 +27,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
@@ -51,6 +55,7 @@ fun Search(
     text: String,
     textLimit: TextLimitConfig?=null,
     onValueChange: (String) -> Unit,
+    color: Color = FinanceHelperTheme.colors.defaultButtonColor,
     // onClick: (SearchState) -> Unit
 ) {
     val keyboardState = keyboardAsState()
@@ -59,7 +64,7 @@ fun Search(
     }
     val coroutineScope = rememberCoroutineScope()
     val offsetY = animateFloatAsState(
-        targetValue = if (state.value == SearchState.COLLAPSED) 0f else 100f,
+        targetValue = if (state.value == SearchState.COLLAPSED) 0f else 150f,
         tween(100, if (state.value == SearchState.COLLAPSED) 300 else 0, LinearOutSlowInEasing)
     )
     val keyboard = LocalSoftwareKeyboardController.current
@@ -79,9 +84,11 @@ fun Search(
         IconButton(modifier = Modifier
             .width(40.dp)
             .height(40.dp)
+            .border(2.dp,color= Color.Black, shape = RoundedCornerShape(20))
             .background(
-                FinanceHelperTheme.colors.secondaryBackground,
-                FinanceHelperTheme.shape.shape20
+                color = color,
+                shape = FinanceHelperTheme.shape.shape20
+
             )
             .zIndex(1f), onClick = {
             coroutineScope.launch {
@@ -98,6 +105,10 @@ fun Search(
             modifier = modifier
                 .height(40.dp)
                 .width(size.value)
+                .background(
+                    color=color.copy(alpha = 0.5f),
+                    shape = FinanceHelperTheme.shape.shape10
+                )
                 .focusRequester(focusRequester),
             textStyle = FinanceHelperTheme.typography.h3,
             maxLines = 1,
