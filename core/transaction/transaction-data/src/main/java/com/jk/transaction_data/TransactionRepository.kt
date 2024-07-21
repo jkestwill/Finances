@@ -3,6 +3,7 @@ package com.jk.transaction_data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionPreview
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import dagger.assisted.Assisted
@@ -27,7 +28,7 @@ class TransactionRepository @Inject constructor(
     }
 
 
-    suspend fun addTransaction(transaction: com.jk.transaction_common_ui.TransactionUI){
+    suspend fun addTransaction(transaction: Transaction){
         transactionDao.insert(transaction.toRelation())
     }
 }

@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":common:common-ui:goods"))
     implementation(project(":common:common-ui:money"))
     implementation(project(":common:common-data:money"))
+    implementation(project(":common:common-utils-ui"))
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
