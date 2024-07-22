@@ -42,6 +42,7 @@
     <string name="allowedCharacters">Allowed characters: %1$S</string>
     <string name="error">Error</string>
     <string name="all_transactions">All transactions</string>
+    <string name="amount">Amount</string>
 
     <string-array name="goods_list_header">
         <item name="goods_name">Name</item>

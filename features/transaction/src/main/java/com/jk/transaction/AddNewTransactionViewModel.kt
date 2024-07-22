@@ -10,9 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class AddNewTransactionViewModel(
+class AddNewTransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository
 ):ViewModel() {
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())

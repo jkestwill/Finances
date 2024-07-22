@@ -40,6 +40,7 @@
     <string name="allowedCharacters">Разрешенные символы: %s</string>
     <string name="error">Ошибка</string>
     <string name="all_transactions">All transactions</string>
+    <string name="amount">Сумма</string>
 
     <string-array name="goods_list_header">
         <item name="goods_name">Название</item>

@@ -9,5 +9,5 @@ object Routes {
     const val NEW_CATEGORY="new_category"
 
     const val GOODS = "goods_list"
-
+    const val CREATE_TRANSACTION = "create_transaction"
 }

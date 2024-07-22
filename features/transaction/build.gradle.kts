@@ -28,6 +28,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    buildFeatures{
+        compose=true
+        buildConfig = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.9"
+    }
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -55,6 +64,8 @@ dependencies {
     implementation(project(":common:common-ui:money"))
     implementation(project(":common:common-data:money"))
     implementation(project(":common:common-utils-ui"))
+    implementation(project(":common:shared_res"))
+
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)

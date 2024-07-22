@@ -22,6 +22,7 @@ import com.jk.common_ui.Celadon
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
 import com.jk.financehelper.main.HomeScreen
+import com.jk.transaction.TransactionScreen
 
 
 @SuppressLint("RestrictedApi")
@@ -30,7 +31,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
+    NavHost(navController = navController, startDestination = Routes.CREATE_TRANSACTION) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)
         }
@@ -56,6 +57,10 @@ fun MainNavGraph(
 
         composable(Routes.GOODS) {
             // GoodsList()
+        }
+
+        composable("${Routes.CREATE_TRANSACTION}?categoryIdList={categoryIdList}"){
+            TransactionScreen(null)
         }
 
         dialog(Routes.NEW_CATEGORY) {
