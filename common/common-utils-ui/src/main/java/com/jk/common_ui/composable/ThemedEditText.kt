@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -26,11 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.shake
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -39,7 +42,9 @@ fun CharacterLimitTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
+    keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
     textLimitConfig: TextLimitConfig? = null,
+    maxLengthPostfixVisibility:Boolean=true,
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit,
     prefix: @Composable (() -> Unit)? = null,
@@ -50,6 +55,8 @@ fun CharacterLimitTextField(
     }
     LaunchedEffect(error.value) {
         onError(error.value)
+        delay(100)
+        error.value=null
         Log.e("ERROR", "CharacterLimitTextField:${error.value} ")
     }
     ThemedTextField(
@@ -59,7 +66,7 @@ fun CharacterLimitTextField(
         value = value,
         onValueChange = {
             if (textLimitConfig != null) {
-                val errorMatcher = matchTextLimit(it, textLimit = textLimitConfig)
+                val errorMatcher = textLimitConfig.matchTextLimit(it)
                 error.value = errorMatcher?.first
                 if (errorMatcher?.second?.isTypingAllowed == true || error.value == null)
                     onValueChange(it)
@@ -72,7 +79,7 @@ fun CharacterLimitTextField(
         },
         prefix = prefix,
         postfix = {
-            if (textLimitConfig != null)
+            if (textLimitConfig != null && maxLengthPostfixVisibility)
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -85,51 +92,8 @@ fun CharacterLimitTextField(
         },
         textStyle = textStyle,
         maxLines = maxLines,
+        keyboardOptions = keyboardOptions
     )
-}
-
-
-private fun checkText(
-    text: String,
-    textLimitConfig: TextLimitConfig,
-): Pair<String, Limit<out Any>?> {
-
-    return when {
-        text.length > textLimitConfig.textLimit.maxLength.value -> {
-            Pair(textLimitConfig.error.maxTextLengthError, textLimitConfig.textLimit.maxLength)
-        }
-
-        text.length < textLimitConfig.textLimit.minLength.value -> {
-            Pair(textLimitConfig.error.minTextLengthError, textLimitConfig.textLimit.minLength)
-        }
-
-        !text.all {
-            it == '\u0000' || it.isLetterOrDigit() || textLimitConfig.textLimit.allowedSpecialCharacters?.value?.contains(
-                it
-            ) ?: true
-        } -> {
-            Pair(
-                textLimitConfig.error.allowedCharactersError,
-                textLimitConfig.textLimit.allowedSpecialCharacters
-            )
-        }
-
-        else -> {
-            throw IllegalStateException("Wrong textLimit state ${textLimitConfig}")
-        }
-    }
-}
-
-private fun matchTextLimit(
-    text: String,
-    textLimit: TextLimitConfig,
-): Pair<String, Limit<out Any>?>? {
-    return try {
-        checkText(text, textLimit)
-    } catch (e: Throwable) {
-        // e.printStackTrace()
-        null
-    }
 }
 
 
@@ -139,6 +103,7 @@ fun ThemedTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
+    keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
     placeHolder: (@Composable () -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
@@ -149,6 +114,7 @@ fun ThemedTextField(
         onValueChange = onValueChange,
         textStyle = textStyle,
         maxLines = maxLines,
+        keyboardOptions = keyboardOptions,
         interactionSource = remember { MutableInteractionSource() },
         decorationBox = {
 

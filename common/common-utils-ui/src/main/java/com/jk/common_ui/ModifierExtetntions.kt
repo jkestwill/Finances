@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -92,17 +93,22 @@ fun Modifier.loadingAnimation(
 
 fun Modifier.shake(enabled: Boolean) = composed(
     factory = {
+        var targetValue = remember {
+            mutableStateOf(20f)
+        }
         val scale by animateFloatAsState(
-            targetValue = if (enabled) 0.9f else 1f,
+
+            targetValue = if (enabled) 20f else 0f,
             animationSpec = repeatable(
-                iterations = 6,
-                animation = tween(durationMillis = 50, easing = LinearEasing),
+                iterations = 5,
+                animation = tween(durationMillis = 100, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
             )
         )
         this.graphicsLayer {
-            scaleX = if (enabled) scale else 1f
-            scaleY = if (enabled) scale else 1f
+            rotationZ=if (enabled) scale else 1f
+
+
         }
     },
     inspectorInfo = debugInspectorInfo {

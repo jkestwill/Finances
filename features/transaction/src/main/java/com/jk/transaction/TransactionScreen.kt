@@ -21,8 +21,8 @@ import com.jk.common_ui.FinanceHelperTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TransactionScreen(categoryListId: List<String>?) {
-    Scaffold(containerColor = FinanceHelperTheme.colors.primaryBackground,topBar = {
-        Row (){
+    Scaffold(containerColor = FinanceHelperTheme.colors.primaryBackground, topBar = {
+        Row() {
             Text("Create Transaction", style = FinanceHelperTheme.typography.h2)
         }
     }) {
@@ -62,9 +62,9 @@ fun TransactionInfoSection(modifier: Modifier = Modifier) {
         )
 
         CurrencyAmountText(modifier = Modifier.weight(1f), value = amount.value, onValueChange = {
-            amount.value = it.filter { ch ->
-                (ch.isDigit() || ch == ',') || it.count { c -> c == '.' } <= 1
-            }
+            amount.value = if (it.count { c -> c == '.' } <= 1) {
+                it
+            } else amount.value
         }) {
 
         }

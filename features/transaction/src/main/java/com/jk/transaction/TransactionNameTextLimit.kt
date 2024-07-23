@@ -17,6 +17,12 @@ class CurrencyAmountTextLimit(
     minTextLengthErrorMessage: String,
     maxTextLengthErrorMessage: String
 ) : TextLimitConfig(
-    textLimit = TextLimit(Limit(1, true), Limit(5, false), allowedSpecialCharacters = Limit(listOf('.'),true)),
-    error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage)
-)
+    textLimit = TextLimit(
+        Limit(1, true),
+        Limit(10, false),
+        allowedSpecialCharacters = Limit(listOf('.'), true),
+        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",false)
+    ),
+    error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage),
+
+    )

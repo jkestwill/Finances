@@ -1,9 +1,5 @@
 package com.jk.common_ui.composable
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.ui.res.stringResource
-
 
 data class TextError(
     val minTextLengthError: String = "",
@@ -17,8 +13,6 @@ data class TextError(
  *@param allowedSpecialCharacters allowedCharacters  - The only specials characters that can be used in text field. If null - all characters allowed.
  *@param requiredCharacters requiredCharacters  - Required specials characters that must be used in text field. If null - all characters allowed;
  * */
-
-
 data class Limit<T>(
     val value: T,
     val isTypingAllowed: Boolean
@@ -29,59 +23,58 @@ data class TextLimit(
     val maxLength: Limit<Int>,
     val allowedSpecialCharacters: Limit<List<Char>>? = null,
     val requiredCharacters: Limit<List<Char>>? = null,
+    val regexPattern: Limit<String>? = null
 )
 
 open class TextLimitConfig(
     val textLimit: TextLimit,
     val error: TextError
-)
-class TextErrorFromResource(
-    val minTextLengthError: ComposeString,
-    val maxTextLengthError: ComposeString,
-    val allowedCharactersError: ComposeString,
-    val wrongNameError: ComposeString
 ) {
-    companion object {
-//        fun create(textLimit: TextLimit): TextErrorFromResource {
-//            return TextErrorFromResource(
-//                minTextLengthError = ComposeString.StringResource(
-//                    R.string.minLengthError,
-//                    listOf(textLimit.minLength.value)
-//                ),
-//                maxTextLengthError = ComposeString.StringResource(
-//                    R.string.maxLengthError,
-//                    listOf(textLimit.maxLength.value)
-//                ),
-//                allowedCharactersError = ComposeString.StringResource(
-//                    R.string.allowedCharacters,
-//                    textLimit.allowedSpecialCharacters?.let {limit->
-//                        listOf(limit.value)
-//                    }
-//                        ?: listOf("")
-//                ),
-//            )
-//        }
-    }
-}
+    private fun checkText(
+        text: String,
+    ): Pair<String, Limit<out Any>?> {
+        val regex: Regex? =
+            if (textLimit.regexPattern != null) Regex(textLimit.regexPattern.value) else null
+        return when {
+            text.length > textLimit.maxLength.value -> {
+                Pair(error.maxTextLengthError, textLimit.maxLength)
+            }
 
+            text.length < textLimit.minLength.value -> {
+                Pair(error.minTextLengthError, textLimit.minLength)
+            }
 
-sealed interface ComposeString {
-    val value: String
-        @Composable
-        @ReadOnlyComposable
-        get
+            !text.all {
+                it == '\u0000' || it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
+                    it
+                ) ?: true
+            } -> {
+                Pair(
+                    error.allowedCharactersError,
+                    textLimit.allowedSpecialCharacters
+                )
+            }
 
-    data class StringResource(val resId: Int, val args: List<Any> = listOf()) : ComposeString {
+            regex != null && !regex.matches(text) -> {
+                Pair("Wrong pattern", textLimit.regexPattern)
 
-        override val value: String
-            @Composable
-            @ReadOnlyComposable
-            get() = stringResource(id = resId, *args.toTypedArray())
+            }
 
-
+            else -> {
+                throw IllegalStateException("Wrong textLimit state $this")
+            }
+        }
     }
 
-    data class Plain(override val value: String) : ComposeString
+    fun matchTextLimit(
+        text: String
+    ): Pair<String, Limit<out Any>?>? {
+        return try {
+            checkText(text)
+        } catch (e: Throwable) {
+            null
+        }
+    }
 }
 
 
