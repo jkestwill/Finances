@@ -1,9 +1,11 @@
 package com.jk.transaction
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.jk.common_ui.FinanceHelperTheme
@@ -19,7 +21,7 @@ fun TransactionNameText(
 ) {
 
     CharacterLimitTextField(
-        modifier = modifier,
+        modifier = modifier.background(FinanceHelperTheme.colors.defaultButtonColor, shape = FinanceHelperTheme.shape.shape20),
         value = value,
         onValueChange = onValueChange,
         placeHolder = {
@@ -43,7 +45,8 @@ fun CurrencyAmountText(
     onError: (String?) -> Unit
 ) {
     CharacterLimitTextField(
-        modifier = modifier, value = value, textLimitConfig = CurrencyAmountTextLimit(
+        modifier = modifier.background(FinanceHelperTheme.colors.defaultButtonColor,shape = FinanceHelperTheme.shape.shape20)
+        , value = value, textLimitConfig = CurrencyAmountTextLimit(
             minTextLengthErrorMessage = stringResource(
                 id = R.string.minLengthError, 1
             ), maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 10)
@@ -52,7 +55,7 @@ fun CurrencyAmountText(
         onError = onError,
         maxLengthPostfixVisibility = false,
         placeHolder = {
-            Text(text = stringResource(R.string.amount), style = FinanceHelperTheme.typography.h3)
+            Text(text = stringResource(R.string.amount), style = FinanceHelperTheme.typography.h3,color= Color.Black.copy(0.5f))
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )

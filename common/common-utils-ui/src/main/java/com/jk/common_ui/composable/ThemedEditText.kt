@@ -21,8 +21,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,25 +52,25 @@ fun CharacterLimitTextField(
     prefix: @Composable (() -> Unit)? = null,
     placeHolder: @Composable (() -> Unit)? = null
 ) {
-    val error = remember {
+    var error by remember {
         mutableStateOf<String?>(null)
     }
-    LaunchedEffect(error.value) {
-        onError(error.value)
+    LaunchedEffect(error) {
+        onError(error)
         delay(100)
-        error.value=null
-        Log.e("ERROR", "CharacterLimitTextField:${error.value} ")
+        error=null
+        Log.e("ERROR", "CharacterLimitTextField:${error} ")
     }
     ThemedTextField(
         modifier = modifier
-            .shake(error.value != null)
+            .shake(error != null)
             .border(2.dp, color = Color.Black, shape = FinanceHelperTheme.shape.shape20),
         value = value,
         onValueChange = {
             if (textLimitConfig != null) {
                 val errorMatcher = textLimitConfig.matchTextLimit(it)
-                error.value = errorMatcher?.first
-                if (errorMatcher?.second?.isTypingAllowed == true || error.value == null)
+                error = errorMatcher?.first
+                if (errorMatcher?.second?.isTypingAllowed == true || error == null)
                     onValueChange(it)
             } else {
                 onValueChange(it)
@@ -121,10 +123,6 @@ fun ThemedTextField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = FinanceHelperTheme.colors.primaryBackground.copy(alpha = 0.5f),
-                        shape = FinanceHelperTheme.shape.shape10
-                    )
                     .padding(FinanceHelperTheme.shape.padding),
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically

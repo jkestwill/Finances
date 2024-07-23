@@ -93,20 +93,16 @@ fun Modifier.loadingAnimation(
 
 fun Modifier.shake(enabled: Boolean) = composed(
     factory = {
-        var targetValue = remember {
-            mutableStateOf(20f)
-        }
         val scale by animateFloatAsState(
-
-            targetValue = if (enabled) 20f else 0f,
+            targetValue = if (enabled) 5f else 0f,
             animationSpec = repeatable(
-                iterations = 5,
-                animation = tween(durationMillis = 100, easing = LinearEasing),
+                iterations = 6,
+                animation = tween(durationMillis = 50, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
             )
         )
         this.graphicsLayer {
-            rotationZ=if (enabled) scale else 1f
+            rotationZ=if (enabled) scale else 0f
 
 
         }
