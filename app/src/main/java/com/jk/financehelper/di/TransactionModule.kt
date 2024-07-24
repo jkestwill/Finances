@@ -33,8 +33,7 @@ class TransactionModule {
         db:TransactionDatabase,
         transactionPagingSource:TransactionPagingSourceFactory
     ): TransactionRepository {
-        return TransactionRepository(transactionDao = db.getTransactionDao(), transactionPagingSource = transactionPagingSource)
+        return TransactionRepository(transactionDao = db.getTransactionDao(), currencyDao = db.getCurrencyDao(), transactionPagingSource = transactionPagingSource)
     }
-
 
 }

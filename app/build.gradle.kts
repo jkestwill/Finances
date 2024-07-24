@@ -103,6 +103,7 @@ dependencies {
     implementation(project(":features:goods:goods"))
     implementation(project(":common:common-ui:money"))
     implementation(project(":features:transaction"))
+    implementation(project(":core:money:money-data"))
     ksp(libs.androidx.room.compiler)
 
     //dagger hilt

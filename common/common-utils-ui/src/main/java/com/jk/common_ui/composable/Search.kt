@@ -112,6 +112,7 @@ fun Search(
                 .focusRequester(focusRequester),
             textStyle = FinanceHelperTheme.typography.h3,
             maxLines = 1,
+            maxLengthPostfixVisibility = true,
             value = text,
             onValueChange = onValueChange,
             textLimitConfig = textLimit,

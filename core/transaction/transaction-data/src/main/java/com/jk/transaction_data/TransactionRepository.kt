@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionPreview
+import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
     val transactionDao: TransactionDao,
+    val currencyDao: CurrencyDao,
     private val transactionPagingSource: TransactionPagingSourceFactory
 ) {
     fun getTransactionPreviewByCategoryId(
@@ -24,6 +26,9 @@ class TransactionRepository @Inject constructor(
     return Pager(PagingConfig(20)) {
                 transactionPagingSource.create(categoryId=categoryId,sortBy = sortBy, isAsc = isAsc, q = q)
             }.flow
+    }
+
+    fun getCurrencyList(){
 
     }
 

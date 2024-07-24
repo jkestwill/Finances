@@ -1,13 +1,18 @@
 package com.jk.common_ui.composable
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -18,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -25,13 +31,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.LightCreamy
+import com.jk.common_ui.Rotation
+import com.jk.common_ui.clickAnimation
+import com.jk.common_ui.rotationAnimation
 
 @Composable
 fun ButtonWithDropdownMenu(
     modifier: Modifier = Modifier,
     list: List<String>,
-    icon:Painter,
+    icon: Painter,
     color: Color,
     onClick: (String) -> Unit
 ) {
@@ -40,7 +50,12 @@ fun ButtonWithDropdownMenu(
         mutableStateOf(false)
     }
 
-    Column(modifier = modifier.width(30.dp).height(30.dp).padding(4.dp)) {
+    Column(
+        modifier = modifier
+            .width(30.dp)
+            .height(30.dp)
+            .padding(4.dp)
+    ) {
         IconButton(onClick = {
             expanded = !expanded
         }) {
@@ -59,17 +74,88 @@ fun ButtonWithDropdownMenu(
                     ExpandedListItem(item = i, color = color, onClick = {})
                 }, onClick = { onClick(i) })
             }
-
-
         }
     }
 }
 
 @Composable
-fun ExpandedListItem(item: String, color: Color, onClick: (String) -> Unit) {
+fun TextWithDropDownMenu(
+    modifier: Modifier = Modifier,
+    list: List<String>,
+    color: Color,
+    placeholderText: String,
+    onClick: (String) -> Unit
+) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    val selectedItem = remember {
+        mutableStateOf(placeholderText)
+    }
+    var expandedListArrowRotationState by remember {
+        mutableStateOf(Rotation.IDLE)
+    }
+    Column(
+        modifier = modifier
+            .clickAnimation {
+                expandedListArrowRotationState = Rotation.ROTATE
+                expanded = !expanded
+            }
+            .border(2.dp, color = Color.Black, shape = FinanceHelperTheme.shape.shape20)
+            .background(
+                color = FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
+                FinanceHelperTheme.shape.shape20
+            )
+            .padding(7.dp)
+    ) {
+        Row {
+            AutoSizeText(
+                modifier = Modifier.weight(2f).align(Alignment.CenterVertically),
+                text = selectedItem.value,
+                minTextSize =10.sp ,
+                maxTextSize = FinanceHelperTheme.typography.h3.fontSize,
+                style=FinanceHelperTheme.typography.h3,
+                maxLines = 1
+            )
+            Icon(modifier=Modifier.weight(1f).rotationAnimation(expandedListArrowRotationState).align(Alignment.CenterVertically),imageVector = Icons.Filled.ArrowDropDown, contentDescription = "ic_dropdown")
+        }
+        DropdownMenu(
+            modifier = Modifier
+                .width(100.dp)
+                .background(LightCreamy)
+
+            ,
+            expanded = expanded,
+            onDismissRequest = {
+                expandedListArrowRotationState = Rotation.IDLE
+                expanded = false
+            }) {
+            for (i in list) {
+                ExpandedListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    item = i,
+                    color = color,
+                    onClick = {
+
+                        selectedItem.value = it
+                        onClick(i)
+                        expanded = false
+                    })
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandedListItem(
+    modifier: Modifier = Modifier,
+    item: String,
+    color: Color,
+    onClick: (String) -> Unit
+) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
+
             .drawBehind {
                 drawLine(
                     color = color,
@@ -83,7 +169,9 @@ fun ExpandedListItem(item: String, color: Color, onClick: (String) -> Unit) {
 
     ) {
         Text(
-            modifier = Modifier.padding(4.dp),
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
             text = item,
             color = Color.Black,
             fontSize = 14.sp

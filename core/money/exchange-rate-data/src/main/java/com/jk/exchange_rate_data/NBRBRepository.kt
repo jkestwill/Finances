@@ -23,7 +23,7 @@ class NBRBRepository @Inject constructor(
 ) {
     fun getLast(
         currency: String,
-        mergeStrategy: MergeStrategy<ApiRequest<ExchangeRate>> = ApiRequestMergeStrategy()
+        mergeStrategy: MergeStrategy<ApiRequest<ExchangeRate>> = ApiRequestMergeStrategy<ExchangeRate>()
     ): Flow<ApiRequest<ExchangeRate>> {
         val cache = getFromDatabase()
         val remoteResult = getFromApi(currency)

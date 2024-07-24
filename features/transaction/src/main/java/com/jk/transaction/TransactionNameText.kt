@@ -21,19 +21,29 @@ fun TransactionNameText(
 ) {
 
     CharacterLimitTextField(
-        modifier = modifier.background(FinanceHelperTheme.colors.defaultButtonColor, shape = FinanceHelperTheme.shape.shape20),
+        modifier = modifier.background(
+            FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
+            shape = FinanceHelperTheme.shape.shape20
+        ),
         value = value,
         onValueChange = onValueChange,
         placeHolder = {
-            Text(text = stringResource(R.string.name), style = FinanceHelperTheme.typography.h3)
+            Text(
+                text = stringResource(R.string.name),
+                style = FinanceHelperTheme.typography.h3,
+                color = Color.Black.copy(0.5f)
+            )
         },
+        maxLengthPostfixVisibility = true,
+        maxLines = 1,
         textLimitConfig = TransactionNameTextLimit(
             minTextLengthErrorMessage = stringResource(
                 R.string.minLengthError,
                 3
             ), maxTextLengthErrorMessage = stringResource(R.string.maxLengthError, 100)
         ),
-        onError = onError
+        onError = onError,
+        textStyle = FinanceHelperTheme.typography.h3
     )
 }
 
@@ -45,18 +55,28 @@ fun CurrencyAmountText(
     onError: (String?) -> Unit
 ) {
     CharacterLimitTextField(
-        modifier = modifier.background(FinanceHelperTheme.colors.defaultButtonColor,shape = FinanceHelperTheme.shape.shape20)
-        , value = value, textLimitConfig = CurrencyAmountTextLimit(
-            minTextLengthErrorMessage = stringResource(
-                id = R.string.minLengthError, 1
-            ), maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 10)
+        modifier = modifier
+            .background(
+            FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
+            shape = FinanceHelperTheme.shape.shape20
+        ),
+        value = value,
+        textLimitConfig = CurrencyAmountTextLimit(
+            minTextLengthErrorMessage = stringResource(id = R.string.minLengthError, 1),
+            maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 10)
         ),
         onValueChange = onValueChange,
         onError = onError,
+        maxLines = 1,
         maxLengthPostfixVisibility = false,
         placeHolder = {
-            Text(text = stringResource(R.string.amount), style = FinanceHelperTheme.typography.h3,color= Color.Black.copy(0.5f))
+            Text(
+                text = stringResource(R.string.amount),
+                style = FinanceHelperTheme.typography.h3,
+                color = Color.Black.copy(0.5f)
+            )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        textStyle = FinanceHelperTheme.typography.h3
     )
 }

@@ -40,14 +40,12 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
     implementation(project(":common:common-data:category"))
-    kapt(libs.hilt.android.compiler)
-
+    implementation(project(":core:transaction-database"))
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
-
-    implementation(project(":core:transaction-database"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

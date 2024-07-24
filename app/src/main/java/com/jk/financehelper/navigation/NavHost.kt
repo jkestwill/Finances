@@ -2,6 +2,7 @@ package com.jk.financehelper.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -31,7 +32,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
+    NavHost(navController = navController, startDestination = Routes.CREATE_TRANSACTION) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)
         }
@@ -52,6 +53,9 @@ fun MainNavGraph(
                 viewModel = hiltViewModel(),
                 navController = navController,
                 categoryId = it.arguments?.getString("categoryId"),
+                onCreateTransactionClick = {
+                    navController.navigate(Routes.CREATE_TRANSACTION)
+                }
             )
         }
 
@@ -59,8 +63,15 @@ fun MainNavGraph(
             // GoodsList()
         }
 
-        composable("${Routes.CREATE_TRANSACTION}?categoryIdList={categoryIdList}"){
-            TransactionScreen(null)
+        composable("${Routes.CREATE_TRANSACTION}?categoryIdList={categoryIdList}") {
+            val onBack: () -> Unit = { navController.popBackStack() }
+            TransactionScreen(
+                hiltViewModel(),
+                categoryListId = null,
+                onBackClick = if (navController.currentBackStack.collectAsState().value.isNotEmpty()) {
+                    onBack
+                } else null
+            )
         }
 
         dialog(Routes.NEW_CATEGORY) {

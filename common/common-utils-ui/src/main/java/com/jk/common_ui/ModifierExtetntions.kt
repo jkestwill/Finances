@@ -2,11 +2,13 @@ package com.jk.common_ui
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,7 +32,9 @@ enum class ButtonState { PRESSED, IDLE }
 
 fun Modifier.clickAnimation(onClick: () -> Unit): Modifier = composed {
     var state = remember { mutableStateOf(ButtonState.IDLE) }
-    val scale by animateFloatAsState(if (state.value == ButtonState.PRESSED) 0.70f else 1f)
+    val scale by animateFloatAsState(
+        if (state.value == ButtonState.PRESSED) 0.9f else 1f, animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy,Spring.StiffnessMedium )
+    )
     val interactionSource = remember { MutableInteractionSource() }
     this
         .graphicsLayer {
@@ -51,8 +55,21 @@ fun Modifier.clickAnimation(onClick: () -> Unit): Modifier = composed {
                     awaitFirstDown()
                     ButtonState.PRESSED
                 }
+
             }
         }
+}
+
+enum class Rotation{
+    ROTATE,IDLE
+}
+fun Modifier.rotationAnimation(rotation: Rotation)=composed{
+    val rotationAnimation  = animateFloatAsState(targetValue = if(rotation == Rotation.ROTATE) 90f else 0f, animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy,Spring.StiffnessMedium ))
+
+   this.graphicsLayer {
+       rotationZ=rotationAnimation.value
+   }
+
 }
 
 fun Modifier.loadingAnimation(
@@ -102,7 +119,7 @@ fun Modifier.shake(enabled: Boolean) = composed(
             )
         )
         this.graphicsLayer {
-            rotationZ=if (enabled) scale else 0f
+            rotationZ = if (enabled) scale else 0f
 
 
         }

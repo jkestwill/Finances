@@ -64,6 +64,7 @@ fun CategoryScreen(
     viewModel: CategoryViewModel,
     navController: NavController,
     categoryId: String?,
+    onCreateTransactionClick: () -> Unit
 ) {
 
     LaunchedEffect(key1 = categoryId) {
@@ -132,9 +133,8 @@ fun CategoryScreen(
                         shape = FinanceHelperTheme.shape.shape20
                     ),
                 shape = FinanceHelperTheme.shape.shape20,
-                onClick = {
-
-                }, containerColor = FinanceHelperTheme.colors.defaultButtonColor
+                onClick = onCreateTransactionClick,
+                containerColor = FinanceHelperTheme.colors.defaultButtonColor
             ) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = "edit_ic")
             }
@@ -318,7 +318,10 @@ fun CategoryScreenPreview() {
         CategoryScreen(
             navController = rememberNavController(),
             categoryId = "zxc",
-            viewModel = viewModel()
+            viewModel = viewModel(),
+           onCreateTransactionClick =  {
+
+            }
         )
     }
 }

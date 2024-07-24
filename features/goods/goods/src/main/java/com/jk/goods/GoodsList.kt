@@ -30,8 +30,7 @@ import com.jk.goods_common_ui.MeasureUI
 import com.jk.goods_common_ui.SpecificationsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
-import com.jk.money_data.Currency
-import com.jk.money_data.Money
+
 
 // сделать просто списком в параметры передать лист убрать viewmodel
 

@@ -55,9 +55,22 @@ fun CharacterLimitTextField(
     var error by remember {
         mutableStateOf<String?>(null)
     }
+    var post:(@Composable ()->Unit)? = if(maxLengthPostfixVisibility){
+        ({
+            if (textLimitConfig != null)
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Unspecified),
+                    text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
+                    textAlign = TextAlign.End,
+                    style = FinanceHelperTheme.typography.h3,
+
+                    )
+        })
+    }else null
     LaunchedEffect(error) {
         onError(error)
-        delay(100)
         error=null
         Log.e("ERROR", "CharacterLimitTextField:${error} ")
     }
@@ -80,18 +93,7 @@ fun CharacterLimitTextField(
             placeHolder?.invoke()
         },
         prefix = prefix,
-        postfix = {
-            if (textLimitConfig != null && maxLengthPostfixVisibility)
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Unspecified),
-                    text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
-                    textAlign = TextAlign.End,
-                    style = FinanceHelperTheme.typography.h3,
-
-                    )
-        },
+        postfix = post,
         textStyle = textStyle,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions
@@ -148,7 +150,7 @@ fun ThemedTextField(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(2.dp)
+
                             .background(Color.Transparent)
 
                     ) {
