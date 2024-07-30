@@ -9,7 +9,6 @@ fun ULong.toByteArray(): ByteArray {
 }
 
 fun ByteArray.ULong(): ULong =
-
         foldIndexed(0UL) { index, acc, byte ->
             acc + (byte.toULong() shl index * 8)
         }

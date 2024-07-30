@@ -85,6 +85,28 @@ class CategoryRepository @Inject constructor(
 
         return merge(startEmitFlow, result)
     }
+
+    fun getByCategoryListId(categoryId:List<String>): Flow<ApiRequest<List<TransactionCategory>>> {
+        val startEmitFlow = flowOf(ApiRequest.Loading<List<TransactionCategory>>())
+
+        val result = flow {
+            emit(categoryDao.getByListId(categoryId))
+        }.map {
+            val category = it?.map { c->c.toCategory() }
+            if (category != null) {
+                ApiRequest.Success(category )
+            } else {
+                ApiRequest.Error<List<TransactionCategory>>(
+                    category,
+                    NoSuchElementException("Category with id $categoryId doesn't exists")
+                )
+            }
+        }.catch {
+            ApiRequest.Error(data = null, error = it)
+        }
+
+        return merge(startEmitFlow, result)
+    }
 }
 
 @AssistedFactory

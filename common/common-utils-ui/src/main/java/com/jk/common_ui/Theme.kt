@@ -1,6 +1,7 @@
 package com.jk.common_ui
 
 import android.app.Activity
+import androidx.compose.foundation.BorderStroke
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,8 +25,8 @@ data class FinanceHelperColors(
     val secondaryText: Color,
     val primaryBackground: Color,
     val secondaryBackground: Color,
-    val buttonDeleteColor:Color,
-    val defaultButtonColor:Color,
+    val buttonDeleteColor: Color,
+    val defaultButtonColor: Color,
     val error: Color
 )
 
@@ -34,15 +35,17 @@ data class FinanceHelperShape(
     val shape10: Shape,
     val shape20: Shape,
     val shape30: Shape,
+    val borderStroke: BorderStroke,
 )
+
 
 data class FinanceHelperTypography(
     val label: TextStyle,
     val body: TextStyle,
-    val h1:TextStyle,
-    val h2:TextStyle,
-    val h3:TextStyle,
-    val h4:TextStyle,
+    val h1: TextStyle,
+    val h2: TextStyle,
+    val h3: TextStyle,
+    val h4: TextStyle,
 )
 
 enum class FinanceHelperSize {
@@ -59,6 +62,8 @@ object FinanceHelperTheme {
     val typography: FinanceHelperTypography
         @Composable
         get() = LocalFinanceHelperTypography.current
+
+
 }
 
 val LocalFinanceHelperColors = staticCompositionLocalOf<FinanceHelperColors> {
@@ -95,32 +100,33 @@ fun FinanceHelperTheme(
         shape10 = RoundedCornerShape(10),
         shape20 = RoundedCornerShape(20),
         shape30 = RoundedCornerShape(30),
+        borderStroke = BorderStroke(2.dp,color=Color.Black)
     )
     val typography = FinanceHelperTypography(
         label = TextStyle(
-            fontSize = when(textSize){
-                FinanceHelperSize.LARGE ->24.sp
-                FinanceHelperSize.MEDIUM ->20.sp
+            fontSize = when (textSize) {
+                FinanceHelperSize.LARGE -> 24.sp
+                FinanceHelperSize.MEDIUM -> 20.sp
                 FinanceHelperSize.SMALL -> 16.sp
-                else-> error("No such typography style $textSize")
+                else -> error("No such typography style $textSize")
             },
             fontWeight = FontWeight.Bold,
             color = MidnightGreen
         ),
-        body =TextStyle(
-            fontSize = when(textSize){
-                FinanceHelperSize.LARGE ->20.sp
-                FinanceHelperSize.MEDIUM ->16.sp
+        body = TextStyle(
+            fontSize = when (textSize) {
+                FinanceHelperSize.LARGE -> 20.sp
+                FinanceHelperSize.MEDIUM -> 16.sp
                 FinanceHelperSize.SMALL -> 12.sp
-                else-> error("No such typography style $textSize")
+                else -> error("No such typography style $textSize")
             },
             fontWeight = FontWeight.Bold,
             color = Color.Black
         ),
         h1 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 32.sp),
-        h2 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 20.sp),
-        h3 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 16.sp),
-        h4 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black,fontSize = 12.sp),
+        h2 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 24.sp),
+        h3 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 16.sp),
+        h4 = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 12.sp),
     )
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -134,6 +140,6 @@ fun FinanceHelperTheme(
         LocalFinanceHelperColors provides colors,
         LocalFinanceHelperShape provides shape,
         LocalFinanceHelperTypography provides typography,
-        content=content
+        content = content
     )
 }

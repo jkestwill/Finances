@@ -43,7 +43,6 @@ class NBRBRepository @Inject constructor(
         }.onEach {
             if (it.isSuccess) {
                 val notNullApiRequest = checkNotNull(it.getOrThrow())
-
                 currencyDao.insertIfNotExist(notNullApiRequest.currencyIn)
                 currencyDao.insertIfNotExist(notNullApiRequest.currencyAbbreviation)
 

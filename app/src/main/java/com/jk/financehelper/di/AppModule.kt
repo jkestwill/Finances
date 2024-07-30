@@ -1,9 +1,10 @@
-package com.jk.financehelper
+package com.jk.financehelper.di
 
 import android.content.Context
-import androidx.room.Room
 import com.example.currencyexchangeapi.NBRBApi
 import com.example.currencyexchangeapi.services.by.NBRBApi
+import com.jk.common_data.Dispatchers
+import com.jk.financehelper.BuildConfig
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.database.transactionDatabase
@@ -33,5 +34,11 @@ object AppModule {
     @Singleton
     fun provideExchangeRateDao(transactionDatabase: TransactionDatabase): ExchangeRateDao {
         return transactionDatabase.getExchangeRateDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDispatchers(): Dispatchers {
+        return Dispatchers()
     }
 }

@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(project(":core:money:money-data"))
     implementation(project(":common:common-utils"))
+    implementation(project(":common:common-ui:category"))
+    implementation(project(":core:category:category-data"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)

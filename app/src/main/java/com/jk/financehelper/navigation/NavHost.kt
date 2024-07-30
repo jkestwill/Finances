@@ -1,10 +1,13 @@
 package com.jk.financehelper.navigation
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
@@ -17,6 +20,7 @@ import androidx.navigation.navArgument
 import com.jk.category.list.CategoryListScreen
 import com.jk.category.add_new_category.CategoryDialog
 import com.jk.category.CategoryScreen
+import com.jk.category.select_category_dialog.SelectCategoryDialog
 import com.jk.common_data.toByteArray
 import com.jk.common_data.ULong
 import com.jk.common_ui.Celadon
@@ -63,15 +67,58 @@ fun MainNavGraph(
             // GoodsList()
         }
 
-        composable("${Routes.CREATE_TRANSACTION}?categoryIdList={categoryIdList}") {
+        composable(
+            Routes.CREATE_TRANSACTION,
+            arguments = listOf(navArgument("categoryIdList") {
+                nullable = true; type = NavType.StringType
+            })
+        ) {
             val onBack: () -> Unit = { navController.popBackStack() }
+
+            val categoryIdList by it.savedStateHandle.getStateFlow<List<String>>(
+                "categoryIdList",
+                listOf()
+            ).collectAsState()
+            Log.e("TAG", "MainNavGraph jhjh:${categoryIdList} ")
             TransactionScreen(
-                hiltViewModel(),
-                categoryListId = null,
+                viewModel = hiltViewModel(),
+                categoryListId = categoryIdList,
                 onBackClick = if (navController.currentBackStack.collectAsState().value.isNotEmpty()) {
                     onBack
-                } else null
+                } else null,
+                onAddCategory = { idList ->
+                    navController.navigate(
+                        "${Routes.SELECT_CATEGORY}?selectedCategoryId=${
+                            idList?.joinToString(
+                                ","
+                            )
+                        }"
+                    )
+                }
             )
+        }
+
+        dialog("${Routes.SELECT_CATEGORY}?selectedCategoryId={selectedCategoryId}") {
+            val selectedCategoryId = it.arguments?.getString("selectedCategoryId")?.split(",")
+            Log.e("TAg", "MainNavGraph catId:${selectedCategoryId} ")
+            SelectCategoryDialog(
+                viewModel = hiltViewModel(),
+                selectedCategoryIdList = selectedCategoryId,
+                onSelectCategoryIds = { list ->
+                    val route = navController.previousBackStackEntry?.destination?.route
+                    Log.e("TAG", "MainNavGraph qq:$list")
+                    if (route != null) {
+                        navController.previousBackStackEntry?.savedStateHandle?.set(
+                            "categoryIdList",
+                            list
+                        )
+                        navController.popBackStack()
+
+                    }
+
+                }, onDismiss = {
+                    navController.popBackStack()
+                })
         }
 
         dialog(Routes.NEW_CATEGORY) {

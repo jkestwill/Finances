@@ -1,6 +1,7 @@
 package com.jk.transaction_database.transaction.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -44,6 +45,7 @@ import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
+import java.util.concurrent.Executors
 
 
 @Database(
@@ -110,6 +112,9 @@ fun transactionDatabase(context: Context): TransactionDatabase {
         klass = TransactionDatabase::class.java,
         name = "transaction_db"
     ).fallbackToDestructiveMigration()
+        .setQueryCallback({ sqlQuery, bindArgs ->
+            Log.e("DATABASE_LOG", "${sqlQuery} ## Args:${bindArgs} ")
+        }, executor = Executors.newSingleThreadExecutor())
         .build()
         .apply {
             query(query = "PRAGMA foreign_keys=ON", args = null)

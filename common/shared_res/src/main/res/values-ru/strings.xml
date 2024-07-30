@@ -33,7 +33,9 @@
     <string name="create">Создать</string>
     <string name="name">Название</string>
     <string name="cancel">Отмена</string>
+    <string name="add">Добавить</string>
     <string name="add_new_category">Добавить новую категорию</string>
+    <string name="select_category">Выбрать категорию</string>
     <string name="expenses">Траты</string>
     <string name="maxLengthError">Используйте %d символов или меньше</string>
     <string name="minLengthError">Используйте %d символов или больше</string>
