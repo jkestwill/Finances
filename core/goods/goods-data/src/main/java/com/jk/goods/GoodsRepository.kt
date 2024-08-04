@@ -1,6 +1,7 @@
 package com.jk.goods
 
 import com.jk.common_data.ApiRequest
+import com.jk.common_data.SearchParams
 import com.jk.common_data.map
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.relations.GoodsRelation
@@ -23,9 +24,7 @@ class GoodsRepository @Inject constructor(
     }
 
     suspend fun getAllFromDatabase(
-        q: String = "",
-        sortBy: String = "id",
-        isAsc: Boolean = true,
+        searchParams: SearchParams,
         offset: Int = 0,
         limit: Int = 10
     ): Flow<ApiRequest<List<com.jk.common_goods_data.Goods>>> {
@@ -33,7 +32,15 @@ class GoodsRepository @Inject constructor(
             flowOf(ApiRequest.Loading())
 
         val dbRequest: Flow<ApiRequest<List<GoodsRelation>>> =
-            flowOf(goodsLocalDataSource.getAll(q, sortBy, isAsc, offset, limit)).map {
+            flowOf(
+                goodsLocalDataSource.getAll(
+                    searchParams.q,
+                    searchParams.sortBy,
+                    searchParams.isAsc,
+                    offset,
+                    limit
+                )
+            ).map {
                 ApiRequest.Success(it)
             }.catch {
                 ApiRequest.Error<List<GoodsRelation>>(error = it)

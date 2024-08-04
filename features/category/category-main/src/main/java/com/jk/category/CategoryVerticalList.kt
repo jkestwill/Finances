@@ -14,12 +14,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SnapshotMutationPolicy
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -37,44 +41,51 @@ fun CategoryVerticalList(
     modifier: Modifier = Modifier,
     items: List<CategoryUI>,
     preselectedItems: List<CategoryUI>? = null,
-    onListChanged: (List<CategoryUI>) -> Unit
+    onListChanged: (CategoryUI,Boolean) -> Unit
 ) {
     val buffList = remember() {
         mutableStateListOf<CategoryUI>()
     }
-    LaunchedEffect(key1 = preselectedItems?.size) {
-        if (preselectedItems != null) {
-            Log.d("qq", "CategoryVerticalList:${preselectedItems.toList()} ")
-            if (buffList.isEmpty()) {
-                buffList.addAll(preselectedItems)
-            }else
-                buffList.clear()
-
-        }
+    val ssas = remember {
+        mutableStateOf(false)
     }
+//    LaunchedEffect(key1 = preselectedItems?.size) {
+//        if (preselectedItems != null) {
+//            Log.d("qq", "CategoryVerticalList:${preselectedItems.toList()} ")
+//            if (buffList.isEmpty()) {
+//                buffList.addAll(preselectedItems)
+//            }else
+//                buffList.clear()
+//
+//        }
+//    }
     LazyColumn(
         modifier,
         contentPadding = PaddingValues(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(items.size) { index ->
-            val selected by remember(buffList.size) {
-                mutableStateOf(buffList.contains(items[index]))
+            val selected = rememberSaveable(preselectedItems?.size) {
+                mutableStateOf(value = preselectedItems?.contains(items[index])?:false)
             }
+            // при преселектед айтемах не убирает выделение
 
             CategoryVerticalListItem(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickAnimation {
+//                    if (!selected.value) {
+//                        buffList.add(items[index])
+//                    } else {
+//                        buffList.remove(items[index])
+//                    }
+                        Log.e("QS", "CategoryVerticalList: ${selected.value}", )
+                        Log.e("QS", "CategoryVerticalList: ${preselectedItems?.contains(items[index])}", )
+
+                        onListChanged(items[index], selected.value)
+                    },
                 category = items[index],
-                selected = selected,
-                onCheckedChange = {
-                    if (!it) {
-                        buffList.add(items[index])
-                    } else {
-                        buffList.remove(items[index])
-                    }
-                    onListChanged(buffList.toList())
-                    Log.e("TAG", "CategoryVerticalList: ${buffList.toList()}")
-                }
+                selected = selected.value,
             )
         }
     }
@@ -85,9 +96,8 @@ fun CategoryVerticalListItem(
     modifier: Modifier,
     category: CategoryUI,
     selected: Boolean,
-    onCheckedChange: (Boolean) -> Unit
 ) {
-    val checked by remember(selected) {
+    val checked by remember(selected,category) {
         mutableStateOf(selected)
     }
     val checkedColors = FinanceHelperTheme.colors.defaultButtonColor
@@ -115,6 +125,7 @@ fun CategoryVerticalListItem(
                 .drawBehind {
                     val offset = Offset(x = 2f, y = 2f)
                     if (checked) {
+                        println("redraw")
                         drawRoundRect(
                             color = checkedColors,
                             topLeft = offset,
@@ -127,9 +138,6 @@ fun CategoryVerticalListItem(
                     color = Color.Transparent,
                     shape = FinanceHelperTheme.shape.shape20
                 )
-                .clickAnimation {
-                    onCheckedChange(selected)
-                }
                 .width(30.dp)
                 .height(30.dp)
                 .border(

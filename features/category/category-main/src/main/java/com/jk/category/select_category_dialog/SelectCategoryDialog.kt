@@ -1,5 +1,6 @@
 package com.jk.category.select_category_dialog
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,18 +17,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,6 +36,7 @@ import com.jk.common_ui.Red
 import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.shared_res.R
+import kotlinx.coroutines.flow.update
 
 
 @Composable
@@ -47,24 +46,22 @@ fun SelectCategoryDialog(
     onSelectCategoryIds: (List<String>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val preselectedCategoryList by viewModel.selectedCategoryFlow.collectAsState()
-    val bufferList = remember(preselectedCategoryList) {
-        mutableStateListOf<CategoryUI>()
-    }
+    val preselectedCategoryList by viewModel.preselectedCategoryFlow.collectAsState()
     val categoryPagingItems = viewModel.allCategoryListFlow.collectAsLazyPagingItems()
     val dialogHeight = rememberSaveable() {
-        mutableIntStateOf(350)
+        mutableIntStateOf(400)
     }
     LaunchedEffect(key1 = selectedCategoryIdList) {
         if (selectedCategoryIdList != null) {
             viewModel.getCategoryListById(selectedCategoryIdList)
         }
     }
+
     LaunchedEffect(key1 = preselectedCategoryList) {
         when (preselectedCategoryList) {
             is State.Success -> {
-                bufferList.clear()
-                bufferList.addAll((preselectedCategoryList as State.Success<List<CategoryUI>>).data)
+                viewModel.selectedCategoryList.clear()
+                viewModel.selectedCategoryList.addAll((preselectedCategoryList as State.Success<List<CategoryUI>>).data)
             }
 
             else -> {}
@@ -75,16 +72,12 @@ fun SelectCategoryDialog(
     ) {
         Box(
             modifier = Modifier
-
                 .height(dialogHeight.intValue.dp)
-
                 .fillMaxWidth()
-
                 .background(
                     color = FinanceHelperTheme.colors.primaryBackground,
                     shape = FinanceHelperTheme.shape.shape10
                 )
-
                 .border(
                     border = FinanceHelperTheme.shape.borderStroke,
                     shape = FinanceHelperTheme.shape.shape10
@@ -95,7 +88,7 @@ fun SelectCategoryDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.Center), verticalArrangement = Arrangement.spacedBy(10.dp)
+                    .align(Alignment.TopCenter), verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                     Text(
@@ -110,10 +103,14 @@ fun SelectCategoryDialog(
                         modifier = Modifier
                             .weight(1f)
                             .clickAnimation {
-                                if (bufferList.isEmpty()) {
-                                    bufferList.addAll(categoryPagingItems.itemSnapshotList.items)
+
+                                if (viewModel.selectedCategoryList.isEmpty() || viewModel.selectedCategoryList.size < categoryPagingItems.itemSnapshotList.size) {
+                                    viewModel.selectedCategoryList.clear()
+                                    viewModel.selectedCategoryList.addAll(categoryPagingItems.itemSnapshotList.items)
+
+                                    Log.e("zxc", "${viewModel.selectedCategoryList.toList()}: ", )
                                 } else
-                                    bufferList.clear()
+                                    viewModel.selectedCategoryList.clear()
                             }
                             .background(
                                 FinanceHelperTheme.colors.defaultButtonColor,
@@ -123,14 +120,14 @@ fun SelectCategoryDialog(
                                 border = FinanceHelperTheme.shape.borderStroke,
                                 shape = FinanceHelperTheme.shape.shape20
                             )
-                            .align(Alignment.CenterVertically)
-                            .padding(5.dp),
+                            .align(Alignment.Bottom)
+                            .padding(10.dp),
                     ) {
                         Text(
                             modifier = Modifier.align(Alignment.Center),
                             text = stringResource(id = R.string.select_all),
                             style = FinanceHelperTheme.typography.h3,
-                            maxLines = 1
+                            maxLines = 1,
                         )
                     }
                 }
@@ -138,12 +135,16 @@ fun SelectCategoryDialog(
                 CategoryVerticalList(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height((dialogHeight.intValue/1.5).dp),
+                        .height((dialogHeight.intValue / 1.8).dp),
                     items = categoryPagingItems,
-                    preSelectedItems = bufferList
-                ) {
-                    bufferList.clear()
-                    bufferList.addAll(it)
+                    preSelectedItems = viewModel.selectedCategoryList
+                ) { category, selected ->
+                    if(selected){
+                        viewModel.selectedCategoryList.remove(category)
+                    }
+                    else  viewModel.selectedCategoryList.add(category)
+
+                    Log.e("tag", "dialog ${viewModel.selectedCategoryList.toList()}")
                 }
             }
             Row(modifier = Modifier.align(Alignment.BottomCenter)) {
@@ -152,7 +153,11 @@ fun SelectCategoryDialog(
                     .weight(1f)
                     .align(Alignment.CenterVertically)
                     .clickAnimation {
-                        onSelectCategoryIds(bufferList.map { it.id })
+                        Log.e(
+                            "xx",
+                            "SelectCategoryDialog: ${viewModel.selectedCategoryList.toList()}"
+                        )
+                        onSelectCategoryIds(viewModel.selectedCategoryList.map { it.id })
                     }) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
@@ -189,7 +194,7 @@ fun CategoryVerticalList(
     modifier: Modifier,
     items: LazyPagingItems<CategoryUI>,
     preSelectedItems: List<CategoryUI>,
-    onListChanged: (List<CategoryUI>) -> Unit
+    onListChanged: (CategoryUI, Boolean) -> Unit
 ) {
     CategoryVerticalList(
         modifier = modifier,

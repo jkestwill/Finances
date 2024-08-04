@@ -43,6 +43,7 @@
     <string name="error">Ошибка</string>
     <string name="all_transactions">All transactions</string>
     <string name="amount">Сумма</string>
+    <string name="goods">Товары</string>
 
     <string-array name="goods_list_header">
         <item name="goods_name">Название</item>

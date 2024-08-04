@@ -19,7 +19,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FinanceHelperTheme(textSize = FinanceHelperSize.LARGE) {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = FinanceHelperTheme.colors.primaryBackground

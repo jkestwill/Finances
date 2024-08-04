@@ -31,15 +31,15 @@ import androidx.compose.ui.platform.debugInspectorInfo
 enum class ButtonState { PRESSED, IDLE }
 
 fun Modifier.clickAnimation(onClick: () -> Unit): Modifier = composed {
-    var state = remember { mutableStateOf(ButtonState.IDLE) }
-    val scale by animateFloatAsState(
+    val state = remember { mutableStateOf(ButtonState.IDLE) }
+    val scale = animateFloatAsState(
         if (state.value == ButtonState.PRESSED) 0.9f else 1f, animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy,Spring.StiffnessMedium )
     )
     val interactionSource = remember { MutableInteractionSource() }
     this
         .graphicsLayer {
-            scaleX = scale
-            scaleY = scale
+            scaleX = scale.value
+            scaleY = scale.value
         }
         .clickable(
             interactionSource = interactionSource,

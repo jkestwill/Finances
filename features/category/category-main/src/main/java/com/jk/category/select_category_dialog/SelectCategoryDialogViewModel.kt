@@ -1,5 +1,6 @@
 package com.jk.category.select_category_dialog
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -13,6 +14,7 @@ import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -39,12 +41,14 @@ class SelectCategoryDialogViewModel @Inject constructor(
             SharingStarted.Lazily, PagingData.empty()
         )
 
-   private val _selectedCategoryFlow: MutableStateFlow<State<List<CategoryUI>>> = MutableStateFlow(State.None)
-    val selectedCategoryFlow: StateFlow<State<List<CategoryUI>>> get() = _selectedCategoryFlow
+    private val _preselectedCategoryFlow: MutableStateFlow<State<List<CategoryUI>>> =
+        MutableStateFlow(State.None)
+    val preselectedCategoryFlow: StateFlow<State<List<CategoryUI>>> get() = _preselectedCategoryFlow
 
+    var selectedCategoryList =  mutableStateListOf<CategoryUI>()
     fun getCategoryListById(listId: List<String>) {
         viewModelScope.launch {
-            _selectedCategoryFlow.emitAll(categoryRepository.getByCategoryListId(listId)
+            _preselectedCategoryFlow.emitAll(categoryRepository.getByCategoryListId(listId)
                 .map { req -> req.map { list -> list.map { cat -> cat.toUI() } }.toState() }
             )
         }
