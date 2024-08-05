@@ -52,7 +52,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":common:common-data:transaction"))
     implementation(project(":common:common-ui:transaction"))
@@ -65,15 +64,13 @@ dependencies {
     implementation(project(":common:common-data:money"))
     implementation(project(":common:common-utils-ui"))
     implementation(project(":common:shared_res"))
-
-
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(project(":core:money:money-data"))
     implementation(project(":common:common-utils"))
     implementation(project(":common:common-ui:category"))
     implementation(project(":core:category:category-data"))
     implementation(project(":core:goods:goods-data"))
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)

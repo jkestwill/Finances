@@ -1,52 +1,32 @@
 package com.jk.goods
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jk.common_ui.State
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.jk.common_data.SearchParams
 import com.jk.goods_common_ui.GoodsUI
-import com.jk.common_ui.toState
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-import com.jk.common_data.map
 import com.jk.goods_common_ui.toGoods
 import com.jk.goods_common_ui.toUI
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class GoodsListViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository
 ) : ViewModel() {
 
-    private var _goodsStateFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
-    val goodsStateFlow: Flow<State<List<GoodsUI>>> get() = _goodsStateFlow
-
-
-    fun getAllGoods() {
-        viewModelScope.launch {
-            goodsRepository.getAllFromDatabase().map { apiRequest ->
-                apiRequest.map { goodsList ->
-                    goodsList.map { goods ->
-                        goods.toUI()
-                    }
-                }.toState()
-            }.collectLatest {
-                _goodsStateFlow.value = it
-                when (it) {
-                    is State.Success -> {
-
-                        Log.e("VIEWMODEl", "getAllGoods: ${it.data}")
-                    }
-
-                    else -> {}
-                }
+    private var _goodsStateFlow =
+        goodsRepository.getAllFromDatabase(SearchParams.getDefault()).map { pagingData ->
+            pagingData.map { goodsList ->
+                goodsList.toUI()
             }
-        }
-    }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
+
 
     fun add(goodsList: List<GoodsUI>) {
         viewModelScope.launch {
@@ -56,6 +36,5 @@ class GoodsListViewModel @Inject constructor(
         }
 
     }
-
 
 }

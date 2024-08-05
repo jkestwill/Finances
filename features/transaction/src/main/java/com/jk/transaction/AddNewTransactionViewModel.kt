@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_common_ui.toUI
 import com.jk.category_data.CategoryRepository
@@ -11,10 +12,13 @@ import com.jk.common_data.Dispatchers
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
+import com.jk.common_goods_data.Goods
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
+import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.toUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
@@ -72,9 +76,21 @@ class AddNewTransactionViewModel @Inject constructor(
             SharingStarted.Lazily, State.None
         )
 
-    val allGoodsFlow =goodsRepository.getAllFromDatabase(searchParams =  SearchParams.getDefault())
-    fun getCategoryListById(idList: List<String>) {
+    val allGoodsFlow =
+        goodsRepository.getAllFromDatabase(searchParams = SearchParams.getDefault())
+            .map { request ->
+                request.map { goods ->
+                    goods.toUI()
+                }
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Lazily, PagingData.empty()
+            )
 
+    val newGoodsBuilder = TransactionUI.Builder
+
+    fun getCategoryListById(idList: List<String>) {
         viewModelScope.launch(dispatchers.io) {
             _categoryList.emitAll(
                 categoryRepository.getByCategoryListId(idList)
@@ -82,7 +98,6 @@ class AddNewTransactionViewModel @Inject constructor(
                     .onEach { state ->
                         if (state is State.Success)
                             state.map { list ->
-
                                 editableCategoriesStateList.clear()
                                 editableCategoriesStateList.addAll(list)
                             }

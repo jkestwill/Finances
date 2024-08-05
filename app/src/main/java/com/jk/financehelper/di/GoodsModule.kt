@@ -1,6 +1,7 @@
 package com.jk.financehelper.di
 
 
+import com.jk.goods.GoodsPagingSource
 import com.jk.goods.GoodsRepository
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.LanguageDao
@@ -50,7 +51,7 @@ class GoodsModule {
 
     @Provides
     @Singleton
-    fun provideGoodsRepository(goodsDao: GoodsDao): GoodsRepository {
-        return GoodsRepository(goodsDao)
+    fun provideGoodsRepository(goodsDao: GoodsDao,goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory): GoodsRepository {
+        return GoodsRepository(goodsDao,goodsPagingSource)
     }
 }

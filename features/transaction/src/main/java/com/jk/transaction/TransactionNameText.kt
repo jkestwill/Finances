@@ -80,3 +80,34 @@ fun CurrencyAmountText(
         textStyle = FinanceHelperTheme.typography.h3
     )
 }
+@Composable
+fun GoodsNameText(modifier:Modifier,value:String,onValueChange:(String)->Unit,onError: (String?) -> Unit){
+    CharacterLimitTextField(
+        modifier = modifier
+            .background(
+                FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
+                shape = FinanceHelperTheme.shape.shape20
+            ),
+        value = value,
+        textLimitConfig = CurrencyAmountTextLimit(
+            minTextLengthErrorMessage = stringResource(id = R.string.minLengthError, 1),
+            maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 100)
+        ),
+        onValueChange = onValueChange,
+        onError = onError,
+        maxLines = 1,
+        maxLengthPostfixVisibility = false,
+        placeHolder = {
+            Text(
+                text = stringResource(R.string.amount),
+                style = FinanceHelperTheme.typography.h3,
+                color = Color.Black.copy(0.5f)
+            )
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        textStyle = FinanceHelperTheme.typography.h3
+    )
+}
+
+
+
