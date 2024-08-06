@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.jk.common_data.Selectable
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.LightCreamy
 import com.jk.common_ui.Rotation
@@ -38,12 +38,12 @@ import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.rotationAnimation
 
 @Composable
-fun ButtonWithDropdownMenu(
+fun <T: Selectable> ButtonWithDropdownMenu(
     modifier: Modifier = Modifier,
-    list: List<String>,
+    list: List<T>,
     icon: Painter,
     color: Color,
-    onClick: (String) -> Unit
+    onClick: (T) -> Unit
 ) {
 
     var expanded by remember {
@@ -79,12 +79,12 @@ fun ButtonWithDropdownMenu(
 }
 
 @Composable
-fun TextWithDropDownMenu(
+fun <T:Selectable> TextWithDropDownMenu(
     modifier: Modifier = Modifier,
-    list: List<String>,
+    list: List<T>,
     color: Color,
     placeholderText: String,
-    onClick: (String) -> Unit
+    onClick: (T) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
@@ -110,21 +110,28 @@ fun TextWithDropDownMenu(
     ) {
         Row {
             AutoSizeText(
-                modifier = Modifier.weight(2f).align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .weight(2f)
+                    .align(Alignment.CenterVertically),
                 text = selectedItem.value,
-                minTextSize =10.sp ,
-                maxTextSize = FinanceHelperTheme.typography.h3.fontSize,
-                style=FinanceHelperTheme.typography.h3,
+                minTextSize = 10.sp,
+                maxTextSize = FinanceHelperTheme.typography.h2.fontSize,
+                style = FinanceHelperTheme.typography.h3,
                 maxLines = 1
             )
-            Icon(modifier=Modifier.weight(1f).rotationAnimation(expandedListArrowRotationState).align(Alignment.CenterVertically),imageVector = Icons.Filled.ArrowDropDown, contentDescription = "ic_dropdown")
+            Icon(
+                modifier = Modifier
+                    .weight(1f)
+                    .rotationAnimation(expandedListArrowRotationState)
+                    .align(Alignment.CenterVertically),
+                imageVector = Icons.Filled.ArrowDropDown,
+                contentDescription = "ic_dropdown"
+            )
         }
         DropdownMenu(
             modifier = Modifier
                 .width(100.dp)
-                .background(LightCreamy)
-
-            ,
+                .background(LightCreamy),
             expanded = expanded,
             onDismissRequest = {
                 expandedListArrowRotationState = Rotation.IDLE
@@ -136,8 +143,7 @@ fun TextWithDropDownMenu(
                     item = i,
                     color = color,
                     onClick = {
-
-                        selectedItem.value = it
+                        selectedItem.value = it.value
                         onClick(i)
                         expanded = false
                     })
@@ -147,11 +153,11 @@ fun TextWithDropDownMenu(
 }
 
 @Composable
-fun ExpandedListItem(
+fun <T : Selectable> ExpandedListItem(
     modifier: Modifier = Modifier,
-    item: String,
+    item: T,
     color: Color,
-    onClick: (String) -> Unit
+    onClick: (T) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -172,17 +178,9 @@ fun ExpandedListItem(
             modifier = Modifier
                 .padding(4.dp)
                 .fillMaxWidth(),
-            text = item,
+            text = item.value,
             color = Color.Black,
             fontSize = 14.sp
         )
     }
 }
-
-//@Preview
-//@Composable
-//fun Preview() {
-//    SortButton(list = listOf("zxc", "qwe", "pizdec", "popa"), color = Celadon, onClick = {
-//        println(it),
-//    })
-//}

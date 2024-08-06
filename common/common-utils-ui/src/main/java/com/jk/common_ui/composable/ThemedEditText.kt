@@ -44,6 +44,7 @@ fun CharacterLimitTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
+    singleLine: Boolean=true,
     keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility:Boolean=true,
@@ -94,6 +95,7 @@ fun CharacterLimitTextField(
         },
         prefix = prefix,
         postfix = post,
+        singleLine = singleLine,
         textStyle = textStyle,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions
@@ -107,6 +109,7 @@ fun ThemedTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
+    singleLine:Boolean=true,
     keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
     placeHolder: (@Composable () -> Unit)? = null,
@@ -118,6 +121,7 @@ fun ThemedTextField(
         onValueChange = onValueChange,
         textStyle = textStyle,
         maxLines = maxLines,
+        singleLine = singleLine,
         keyboardOptions = keyboardOptions,
         interactionSource = remember { MutableInteractionSource() },
         decorationBox = {

@@ -13,13 +13,37 @@ data class GoodsUI(
 ) {
     class Builder() {
 
-        private val id: String = ""
-        private val name: String = ""
-        private val amount = 0
-        private val specifications = listOf<SpecificationsUI>()
-        private val cost =
-            MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id = "", name = ""))
+        private var id: String = ""
+        private var name: String = ""
+        private var amount = 0
+        private var specifications = listOf<SpecificationsUI>()
+        private var cost = MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id = "", name = ""))
 
+        fun id(id:String):Builder{
+            this.id=id
+            return this
+        }
+
+        fun name(name:String):Builder{
+            this.name=name
+            return this
+        }
+
+        fun amount(amount:Int):Builder{
+            this.amount=amount
+            return this
+        }
+
+
+        fun specifications(specifications:List<SpecificationsUI>):Builder{
+            this.specifications=specifications
+            return this
+        }
+
+        fun cost(cost: MoneyUI):Builder{
+            this.cost=cost
+            return this
+        }
         fun build(): GoodsUI {
             return GoodsUI(id, name, amount = amount, specifications, cost = cost)
         }

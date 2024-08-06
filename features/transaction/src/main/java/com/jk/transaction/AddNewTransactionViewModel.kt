@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_common_ui.toUI
@@ -83,12 +84,14 @@ class AddNewTransactionViewModel @Inject constructor(
                     goods.toUI()
                 }
             }
+            .cachedIn(viewModelScope)
             .stateIn(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
 
-    val newGoodsBuilder = TransactionUI.Builder
+    val newGoodsBuilder = MutableStateFlow<TransactionUI.Builder>(TransactionUI.Builder())
+
 
     fun getCategoryListById(idList: List<String>) {
         viewModelScope.launch(dispatchers.io) {

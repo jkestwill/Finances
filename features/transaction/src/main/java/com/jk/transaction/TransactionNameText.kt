@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.composable.CharacterLimitTextField
@@ -76,7 +77,7 @@ fun CurrencyAmountText(
                 color = Color.Black.copy(0.5f)
             )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
         textStyle = FinanceHelperTheme.typography.h3
     )
 }
@@ -89,7 +90,7 @@ fun GoodsNameText(modifier:Modifier,value:String,onValueChange:(String)->Unit,on
                 shape = FinanceHelperTheme.shape.shape20
             ),
         value = value,
-        textLimitConfig = CurrencyAmountTextLimit(
+        textLimitConfig = TransactionNameTextLimit(
             minTextLengthErrorMessage = stringResource(id = R.string.minLengthError, 1),
             maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 100)
         ),
@@ -99,12 +100,12 @@ fun GoodsNameText(modifier:Modifier,value:String,onValueChange:(String)->Unit,on
         maxLengthPostfixVisibility = false,
         placeHolder = {
             Text(
-                text = stringResource(R.string.amount),
+                text = stringResource(R.string.name),
                 style = FinanceHelperTheme.typography.h3,
                 color = Color.Black.copy(0.5f)
             )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
         textStyle = FinanceHelperTheme.typography.h3
     )
 }
