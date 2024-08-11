@@ -1,9 +1,11 @@
 package com.jk.transaction_common_ui
 
+import android.os.Parcelable
 import com.jk.category_common_ui.CategoryUI
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
 data class TransactionUI(
@@ -57,7 +59,9 @@ data class OperationUI(
     val goodsList: List<GoodsUI>,
     val money: MoneyUI
 ) {
+
     class Builder() {
+
         private var id: String = ""
         private var name: String = ""
         private var categoryList: List<CategoryUI> = listOf()

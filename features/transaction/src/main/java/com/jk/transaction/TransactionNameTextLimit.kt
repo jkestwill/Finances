@@ -20,9 +20,8 @@ class CurrencyAmountTextLimit(
     textLimit = TextLimit(
         Limit(1, true),
         Limit(10, false),
-        allowedSpecialCharacters = Limit(listOf('.'), true),
+        allowedSpecialCharacters = Limit(listOf('.'), false),
         regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",false)
     ),
     error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage),
-
     )

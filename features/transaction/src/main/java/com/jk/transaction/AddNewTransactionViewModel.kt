@@ -13,7 +13,7 @@ import com.jk.common_data.Dispatchers
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
-import com.jk.common_goods_data.Goods
+import com.jk.common_data.sha256
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
@@ -23,6 +23,7 @@ import com.jk.goods_common_ui.toUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
+import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.TransactionUI
 import com.jk.transaction_common_ui.toTransaction
 import com.jk.transaction_data.TransactionRepository
@@ -30,6 +31,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -38,6 +40,8 @@ import kotlinx.coroutines.launch
 import java.util.logging.Logger
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class AddNewTransactionViewModel @Inject constructor(
@@ -50,6 +54,7 @@ class AddNewTransactionViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())
+    val transactionState: StateFlow<PagingData<TransactionUI>> get() = _transactionState
 
     private var _categoryList = MutableStateFlow<State<List<CategoryUI>>>(State.None)
     val categoryList: StateFlow<State<List<CategoryUI>>> = _categoryList
@@ -59,7 +64,7 @@ class AddNewTransactionViewModel @Inject constructor(
     // костыль чтобы сравнивать занчения приходящие из параметров composable функции TransactionScreen
     // для того чтобы после удаления категории при поровороте экрана или его обновлении и не приходили удаленные категории
     var prevCategoryIdList: List<String>? = null
-    val transactionState: StateFlow<PagingData<TransactionUI>> get() = _transactionState
+
     val currencyListState: StateFlow<State<List<CurrencyUI>>> = currencyRepository.getCurrencyList()
         .map {
             it.map { list ->
@@ -90,7 +95,9 @@ class AddNewTransactionViewModel @Inject constructor(
                 SharingStarted.Lazily, PagingData.empty()
             )
 
-    val newGoodsBuilder = MutableStateFlow<TransactionUI.Builder>(TransactionUI.Builder())
+    val newGoodsBuilder = mutableStateListOf<GoodsUI.Builder>()
+
+    val newTransactionState = MutableStateFlow(TransactionUI.Builder().build())
 
 
     fun getCategoryListById(idList: List<String>) {
@@ -110,10 +117,42 @@ class AddNewTransactionViewModel @Inject constructor(
     }
 
 
-    fun addTransaction(transactionUI: TransactionUI) {
+    fun addTransaction(
+        transactionUI: TransactionUI.Builder,
+        goodsList: List<GoodsUI.Builder>?,
+        operationBuilder: OperationUI.Builder?
+    ) {
         viewModelScope.launch(dispatchers.io) {
-            transactionRepository.addTransaction(transactionUI.toTransaction())
+
+            transactionRepository.addTransaction(checkNBuild(transactionUI).toTransaction())
         }
     }
+
+    fun checkNBuild(
+        goodsList: List<GoodsUI.Builder>,
+        operationBuilder: OperationUI.Builder,
+        transactionBuilder: TransactionUI.Builder
+    ) {
+        val preBuildGoodsList = goodsList.map { it.build() }
+        val preBuildOperation = operationBuilder.build()
+        val preBuildTransaction = transactionBuilder.build()
+
+    }
+
+    private fun checkNBuild(transactionUI: TransactionUI.Builder): TransactionUI {
+        val preBuild = transactionUI.build()
+        when {
+            preBuild.type.name.isEmpty() -> {
+
+            }
+
+            preBuild.id.isEmpty() -> {
+                transactionUI.setId("${preBuild.date}${preBuild.operation.name}${preBuild.operation.money.amount}".sha256())
+            }
+
+        }
+        return transactionUI.build()
+    }
+
 
 }

@@ -1,7 +1,6 @@
 package com.jk.transaction
 
 import android.util.Log
-import android.view.KeyEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -39,27 +39,23 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
@@ -75,7 +71,9 @@ import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.shared_res.R
-import kotlin.math.log
+import com.jk.transaction_common_ui.OperationUI
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 // при поворачивании экрана в селект категори категории не добавляются
@@ -133,7 +131,10 @@ fun TransactionScreen(
             TransactionInfoSection(
                 modifier = Modifier.padding(
                     start = 10.dp, end = 10.dp
-                ), currencyList.value
+                ), currencyList = currencyList.value,
+                onChange = {
+                    Log.e("TAG", "TransactionScreen:${it} ")
+                }
             )
 
             CategorySection(
@@ -146,14 +147,26 @@ fun TransactionScreen(
             }
 
             //разделить на стейты загрузка хуюска и обработать
-            //если выбраны категории прихода то товары недост
+            //если выбраны категории прихода то секция товаров недоступна
             GoodsSection(
                 modifier = Modifier
                     .padding(start = 10.dp, end = 10.dp)
                     .height(400.dp),
-                goodsList = goodsList.itemSnapshotList.items,
-                currencyListState = currencyList.value
+                immutableGoodsList = goodsList.itemSnapshotList.items,
+                mutableGoodsList = viewModel.newGoodsBuilder,
+                currencyListState = currencyList.value,
+                onListChanged = {
+                    viewModel.newGoodsBuilder.clear()
+                    viewModel.newGoodsBuilder.addAll(it)
+                }
             )
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .clickAnimation {
+                    // viewModel.addTransaction(transactionUI =)
+                }) {
+                Image(imageVector = Icons.Filled.Add, contentDescription = "ic_add")
+            }
         }
     }
 }
@@ -162,7 +175,11 @@ fun TransactionScreen(
  * Transaction section contains base info about transaction f.e name amount currency etc.
  * */
 @Composable
-fun TransactionInfoSection(modifier: Modifier = Modifier, currencyList: State<List<CurrencyUI>>) {
+fun TransactionInfoSection(
+    modifier: Modifier = Modifier,
+    currencyList: State<List<CurrencyUI>>,
+    onChange: (OperationUI.Builder) -> Unit
+) {
     val transactionName = rememberSaveable() {
         mutableStateOf("")
     }
@@ -172,6 +189,37 @@ fun TransactionInfoSection(modifier: Modifier = Modifier, currencyList: State<Li
     val currency = rememberSaveable() {
         mutableStateOf(CurrencyUI(id = "", name = ""))
     }
+    val operationBuilder = remember {
+        mutableStateOf(OperationUI.Builder())
+    }
+    val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(key1 = amount.value, currency.value, transactionName.value) {
+        val job = coroutineScope.launch {
+            val am = try {
+                amount.value.toDouble()
+            } catch (e: NumberFormatException) {
+                0.0
+            }
+            delay(200)
+            operationBuilder.value
+                .setName(amount.value)
+                .setMoney(
+                    MoneyUI(
+                        id = "",
+                        amount = am,
+                        currency = currency.value
+                    )
+                )
+            onChange(operationBuilder.value)
+        }
+        onDispose {
+            job.cancel()
+        }
+
+
+    }
+
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(text = "General", style = FinanceHelperTheme.typography.h2)
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -183,10 +231,9 @@ fun TransactionInfoSection(modifier: Modifier = Modifier, currencyList: State<Li
             CurrencyAmountText(modifier = Modifier.weight(1f),
                 value = amount.value,
                 onValueChange = {
-                    amount.value = if (it.count { c -> c == '.' } <= 1) {
-                        it
-                    } else amount.value
-                }) {}
+                    amount.value = it
+                }, onError = {})
+
 
             CurrencyDropDownMenu(
                 modifier = Modifier.weight(1f),
@@ -250,9 +297,17 @@ fun CategoryGrid(
 @Composable
 fun GoodsSection(
     modifier: Modifier = Modifier,
-    goodsList: List<GoodsUI>,
-    currencyListState: State<List<CurrencyUI>>
+    immutableGoodsList: List<GoodsUI>,
+    mutableGoodsList: SnapshotStateList<GoodsUI.Builder>,
+    currencyListState: State<List<CurrencyUI>>,
+    onListChanged: (List<GoodsUI.Builder>) -> Unit
 ) {
+    LaunchedEffect(key1 = immutableGoodsList, mutableGoodsList) {
+        mutableGoodsList.clear()
+        mutableGoodsList.addAll(
+            mutableGoodsList.union(immutableGoodsList.map { it.toBuilder() }).toMutableStateList()
+        )
+    }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -278,25 +333,35 @@ fun GoodsSection(
         }
         GoodsList(
             modifier = Modifier,
-            goodsList = goodsList,
+            goodsList = mutableGoodsList,
             currencyListState = currencyListState,
-            onListChanged = {
-
-            })
+            onListChanged = onListChanged
+        )
     }
 }
 
 @Composable
 fun GoodsList(
     modifier: Modifier = Modifier,
-    goodsList: List<GoodsUI>,
+    goodsList: SnapshotStateList<GoodsUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
-    onListChanged: (List<GoodsUI>) -> Unit
+    onListChanged: (List<GoodsUI.Builder>) -> Unit
 ) {
-    val editableItemList = remember {
-        mutableStateListOf<GoodsUI.Builder>()
-    }
+
     val focusManager = LocalFocusManager.current
+
+    val scope = rememberCoroutineScope()
+
+//    DisposableEffect(key1 = goodsList.size) {
+//        val job = scope.launch {
+//            delay(200)
+//            onListChanged(goodsList)
+//            Log.e("zxc", "GoodsList: list size changed disposable ${goodsList}")
+//        }
+//        onDispose {
+//            job.cancel()
+//        }
+//    }
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
         LazyColumn(
             modifier = Modifier
@@ -304,22 +369,20 @@ fun GoodsList(
                 .heightIn(max = 300.dp),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-            items(goodsList.size) {
-                ImmutableGoodsListItem(currencyListState = currencyListState,
-                    goodsUI = goodsList[it],
-                    onCountChanged = {
-
-                    })
-            }
+//            items(goodsList.size) {
+//                ImmutableGoodsListItem(currencyListState = currencyListState,
+//                    goodsUI = goodsList[it],
+//                    onCountChanged = {
+//
+//                    })
+//            }
             items(
-                key = { editableItemList[it].build().id },
-                count = editableItemList.size
+                key = { goodsList[it].build().id },
+                count = goodsList.size
             ) { index ->
-
                 EditableListItem(modifier = Modifier
                     .fillMaxWidth()
                     .onKeyEvent {
-                        Log.e("TAG", "GoodsList:${it.key} ")
                         println(it.key)
                         if (it.key == Key.Enter) {
                             focusManager.moveFocus(FocusDirection.Next)
@@ -329,20 +392,21 @@ fun GoodsList(
                         }
                     },
                     currencyListState = currencyListState,
-                    onAdd = {
-                        editableItemList.add(GoodsUI.Builder())
+                    onChange = {
+                        goodsList.set(index, it.id(goodsList[index].build().id))
+                      //  onListChanged(goodsList)
                     }, onRemove = {
                         //addCount-=1
-                        editableItemList.remove(editableItemList[index])
+                        goodsList.remove(goodsList[index])
                     })
             }
         }
         Box(modifier = Modifier
             .clickAnimation {
-                editableItemList.add(
+                goodsList.add(
                     GoodsUI
                         .Builder()
-                        .id("${editableItemList.size + System.currentTimeMillis()}".sha256())
+                        .id("${goodsList.size + System.currentTimeMillis()}".sha256())
                 )
             }
             .fillMaxWidth()
@@ -358,6 +422,7 @@ fun GoodsList(
                 imageVector = Icons.Filled.Add,
                 contentDescription = "ic_add"
             )
+
         }
     }
 }
@@ -368,7 +433,7 @@ fun GoodsList(
 fun EditableListItem(
     modifier: Modifier,
     currencyListState: State<List<CurrencyUI>>,
-    onAdd: (GoodsUI.Builder) -> Unit,
+    onChange: (GoodsUI.Builder) -> Unit,
     onRemove: () -> Unit
 ) {
     val goodsName = rememberSaveable() {
@@ -384,6 +449,34 @@ fun EditableListItem(
         mutableIntStateOf(0)
     }
     val (first, second) = remember { FocusRequester.createRefs() }
+
+    LaunchedEffect(goodsCount.intValue, goodsName.value, goodsAmount.value, currency.value) {
+        val gAm = try {
+            goodsAmount.value.toDouble()
+        } catch (e: NumberFormatException) {
+            0.0
+        }
+
+        Log.e(
+            "zxc",
+            "typing new goods info count:${goodsCount.intValue} name:${goodsName.value} currency:${currency.value}  "
+        )
+        if (goodsAmount.value.isNotEmpty() || goodsName.value.isNotEmpty() || currency.value.id.isNotEmpty())
+            onChange(
+                GoodsUI
+                    .Builder()
+                    .id("${goodsAmount.value}${goodsCount}".sha256())
+                    .amount(goodsCount.intValue)
+                    .name(goodsName.value)
+                    .cost(
+                        MoneyUI(
+                            id = "${gAm}${currency.value}".sha256(),
+                            amount = gAm,
+                            currency = currency.value
+                        )
+                    )
+            )
+    }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -440,23 +533,6 @@ fun EditableListItem(
                 previous = second
                 next = second
             }
-            .onKeyEvent {
-                if (it.key == Key.Enter) {
-                    onAdd(
-                        GoodsUI
-                            .Builder()
-                            .amount(goodsCount.intValue)
-                            .cost(
-                                MoneyUI(
-                                    id = "${goodsAmount.value}${goodsCount}".sha256(),
-                                    amount = goodsAmount.value.toDouble(),
-                                    currency = currency.value
-                                )
-                            )
-                    )
-                    true
-                } else false
-            }
             .focusable(
                 enabled = true,
                 interactionSource = remember { MutableInteractionSource() }),
@@ -486,6 +562,7 @@ fun EditableListItem(
             color = FinanceHelperTheme.colors.defaultButtonColor,
             placeholderText = currency.value.name
         ) {
+
             currency.value = it
         }
         Box(modifier = Modifier

@@ -45,7 +45,7 @@ open class TextLimitConfig(
             }
 
             !text.all {
-                it == '\u0000' || it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
+                  it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
                     it
                 ) ?: true
             } -> {

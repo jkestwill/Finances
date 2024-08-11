@@ -40,6 +40,7 @@ junitKtx = "1.2.1"
 foundationAndroid = "1.6.8"
 uiTooling = "1.6.8"
 protoliteWellKnownTypes = "18.0.0"
+kotlin-parcelize="2.0.20-RC"
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -101,3 +102,4 @@ jetbrains-kotlin-jvm={id="org.jetbrains.kotlin.jvm",version.ref="jetbrains-kotli
 kotilinx-serialization={id="org.jetbrains.kotlin.plugin.serialization",version.ref="jetbrains-kotlin-android"}
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "jetbrains-kotlin-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrains-kotlin-android" }
+jetbrains-kotlin-parcelize = {id="org.jetbrains.kotlin.plugin.parcelize",version.ref="jetbrains-kotlin-android"}
