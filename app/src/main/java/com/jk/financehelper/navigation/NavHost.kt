@@ -5,18 +5,11 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
-import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
@@ -26,12 +19,10 @@ import com.jk.category.list.CategoryListScreen
 import com.jk.category.add_new_category.CategoryDialog
 import com.jk.category.CategoryScreen
 import com.jk.category.select_category_dialog.SelectCategoryDialog
-import com.jk.common_data.toByteArray
-import com.jk.common_data.ULong
-import com.jk.common_ui.Celadon
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
 import com.jk.financehelper.main.HomeScreen
+import com.jk.goods.SelectGoodsDialog
 import com.jk.transaction.TransactionScreen
 
 
@@ -84,6 +75,7 @@ fun MainNavGraph(
                 "categoryIdList",
                 listOf()
             ).collectAsState()
+
             LaunchedEffect(key1 = categoryIdList) {
                 Log.e("TAG", "MainNavGraph jhjh:${categoryIdList} ")
             }
@@ -98,6 +90,15 @@ fun MainNavGraph(
                     navController.navigate(
                         "${Routes.SELECT_CATEGORY}?selectedCategoryId=${
                             idList?.joinToString(
+                                ","
+                            )
+                        }"
+                    )
+                },
+                onGoodsAdd = { preselectedGoodsIdList ->
+                    navController.navigate(
+                        "${Routes.SELECT_GOODS}?preselectedGoodsId=${
+                            preselectedGoodsIdList?.joinToString(
                                 ","
                             )
                         }"
@@ -157,6 +158,31 @@ fun MainNavGraph(
                             .setPopUpTo(route = Routes.CATEGORY_LIST, true).build()
                     )
                 })
+        }
+
+        dialog(Routes.SELECT_GOODS) {
+            val preselectedGoodsId = it.savedStateHandle.getStateFlow<List<String>>(
+                "preselectedGoodsId",
+                listOf()
+            ).collectAsState()
+
+            val prevDestination = navController.previousBackStackEntry?.destination?.route
+            SelectGoodsDialog(
+                viewModel = hiltViewModel(),
+                preselectedIdList = preselectedGoodsId.value,
+                onSelect = { idList ->
+                    if (prevDestination != null)
+                        navController.popBackStack(
+                            "${prevDestination}?preselectedGoodsId=${
+                                idList.joinToString(",") { goodsId->goodsId }
+                            }", true
+                        )
+                },
+                onDismiss = {
+                    navController.popBackStack()
+                })
+
+
         }
     }
 }

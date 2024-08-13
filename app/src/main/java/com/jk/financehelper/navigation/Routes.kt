@@ -10,5 +10,5 @@ object Routes {
     const val EXCHANGE_RATE="exchange_rate"
     const val GOODS = "goods_list"
     const val CREATE_TRANSACTION = "create_transaction"
-
+    const val SELECT_GOODS = "select_goods"
 }

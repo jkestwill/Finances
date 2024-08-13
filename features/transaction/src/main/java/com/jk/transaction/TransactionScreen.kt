@@ -83,7 +83,8 @@ fun TransactionScreen(
     viewModel: AddNewTransactionViewModel,
     categoryListId: List<String>?,
     onBackClick: (() -> Unit)?,
-    onAddCategory: (List<String>?) -> Unit
+    onAddCategory: (List<String>?) -> Unit,
+    onGoodsAdd: (List<String>?) -> Unit
 ) {
     val goodsList = viewModel.allGoodsFlow.collectAsLazyPagingItems()
     LaunchedEffect(key1 = categoryListId) {
@@ -158,14 +159,29 @@ fun TransactionScreen(
                 onListChanged = {
                     viewModel.newGoodsBuilder.clear()
                     viewModel.newGoodsBuilder.addAll(it)
-                }
+                },
+                onGoodsAdd = onGoodsAdd
             )
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .clickAnimation {
-                    // viewModel.addTransaction(transactionUI =)
-                }) {
-                Image(imageVector = Icons.Filled.Add, contentDescription = "ic_add")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 10.dp)
+                    .background(
+                        FinanceHelperTheme.colors.defaultButtonColor,
+                        FinanceHelperTheme.shape.shape20
+                    )
+                    .border(FinanceHelperTheme.shape.borderStroke)
+                    .clickAnimation {
+                        // viewModel.addTransaction(transactionUI =)
+                    }
+                    .height(30.dp)
+            )
+            {
+                Image(
+                    modifier = Modifier.align(Alignment.Center),
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "ic_add"
+                )
             }
         }
     }
@@ -300,14 +316,15 @@ fun GoodsSection(
     immutableGoodsList: List<GoodsUI>,
     mutableGoodsList: SnapshotStateList<GoodsUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
-    onListChanged: (List<GoodsUI.Builder>) -> Unit
+    onListChanged: (List<GoodsUI.Builder>) -> Unit,
+    onGoodsAdd: (List<String>?) -> Unit
 ) {
-    LaunchedEffect(key1 = immutableGoodsList, mutableGoodsList) {
-        mutableGoodsList.clear()
-        mutableGoodsList.addAll(
-            mutableGoodsList.union(immutableGoodsList.map { it.toBuilder() }).toMutableStateList()
-        )
-    }
+//    LaunchedEffect(key1 = immutableGoodsList, mutableGoodsList) {
+//        mutableGoodsList.clear()
+//        mutableGoodsList.addAll(
+//            mutableGoodsList.union(immutableGoodsList.map { it.toBuilder() }).toMutableStateList()
+//        )
+//    }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -321,7 +338,7 @@ fun GoodsSection(
             )
             Box(modifier = Modifier
                 .clickAnimation {
-
+                    onGoodsAdd(immutableGoodsList.map { it.id })
                 }
                 .background(
                     FinanceHelperTheme.colors.defaultButtonColor,
@@ -347,7 +364,6 @@ fun GoodsList(
     currencyListState: State<List<CurrencyUI>>,
     onListChanged: (List<GoodsUI.Builder>) -> Unit
 ) {
-
     val focusManager = LocalFocusManager.current
 
     val scope = rememberCoroutineScope()
@@ -393,8 +409,8 @@ fun GoodsList(
                     },
                     currencyListState = currencyListState,
                     onChange = {
-                        goodsList.set(index, it.id(goodsList[index].build().id))
-                      //  onListChanged(goodsList)
+                        //goodsList.set(index, it.id(goodsList[index].build().id))
+                        //  onListChanged(goodsList)
                     }, onRemove = {
                         //addCount-=1
                         goodsList.remove(goodsList[index])
@@ -580,87 +596,6 @@ fun EditableListItem(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = "ic_add"
             )
-        }
-    }
-}
-
-@Composable
-fun ImmutableGoodsListItem(
-    modifier: Modifier = Modifier,
-    currencyListState: State<List<CurrencyUI>>,
-    goodsUI: GoodsUI,
-    onCountChanged: (Int) -> Unit
-) {
-
-    val goodsCount = remember {
-        mutableIntStateOf(0)
-    }
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Box(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)
-            .clickAnimation {
-                goodsCount.intValue += goodsCount.intValue
-                onCountChanged(goodsCount.intValue)
-            }
-        ) {
-            Image(
-                modifier = Modifier.align(Alignment.Center),
-                imageVector = Icons.Filled.Add,
-                contentDescription = "ic_add"
-            )
-        }
-
-        if (goodsUI.amount > 0) Box(modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically)
-            .clickAnimation {
-                if (goodsCount.intValue > 0) goodsCount.intValue -= goodsCount.intValue
-                onCountChanged(goodsCount.intValue)
-            }) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize(),
-                text = "-",
-                style = FinanceHelperTheme.typography.h2,
-                textAlign = TextAlign.End
-            )
-        }
-
-        Text(
-            modifier = Modifier.weight(1f),
-            text = goodsUI.amount.toString(),
-            style = FinanceHelperTheme.typography.h2
-        )
-        Row(
-            modifier = Modifier.weight(2f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            Text(
-                modifier = Modifier.weight(2f),
-                text = goodsUI.name,
-                style = FinanceHelperTheme.typography.h2
-            )
-            Text(
-                modifier = Modifier.weight(1f),
-                text = goodsUI.cost.amount.toString(),
-                style = FinanceHelperTheme.typography.h2
-            )
-
-            CurrencyDropDownMenu(
-                modifier = Modifier.weight(1f),
-                currencyListState = currencyListState,
-                color = FinanceHelperTheme.colors.defaultButtonColor,
-                placeholderText = goodsUI.cost.currency.name
-            ) {
-
-            }
         }
     }
 }

@@ -103,12 +103,10 @@ fun SelectCategoryDialog(
                         modifier = Modifier
                             .weight(1f)
                             .clickAnimation {
-
                                 if (viewModel.selectedCategoryList.isEmpty() || viewModel.selectedCategoryList.size < categoryPagingItems.itemSnapshotList.size) {
                                     viewModel.selectedCategoryList.clear()
                                     viewModel.selectedCategoryList.addAll(categoryPagingItems.itemSnapshotList.items)
 
-                                    Log.e("zxc", "${viewModel.selectedCategoryList.toList()}: ", )
                                 } else
                                     viewModel.selectedCategoryList.clear()
                             }
@@ -131,7 +129,6 @@ fun SelectCategoryDialog(
                         )
                     }
                 }
-
                 CategoryVerticalList(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -143,8 +140,6 @@ fun SelectCategoryDialog(
                         viewModel.selectedCategoryList.remove(category)
                     }
                     else  viewModel.selectedCategoryList.add(category)
-
-                    Log.e("tag", "dialog ${viewModel.selectedCategoryList.toList()}")
                 }
             }
             Row(modifier = Modifier.align(Alignment.BottomCenter)) {
@@ -153,10 +148,6 @@ fun SelectCategoryDialog(
                     .weight(1f)
                     .align(Alignment.CenterVertically)
                     .clickAnimation {
-                        Log.e(
-                            "xx",
-                            "SelectCategoryDialog: ${viewModel.selectedCategoryList.toList()}"
-                        )
                         onSelectCategoryIds(viewModel.selectedCategoryList.map { it.id })
                     }) {
                     Text(
@@ -188,6 +179,7 @@ fun SelectCategoryDialog(
         }
     }
 }
+
 
 @Composable
 fun CategoryVerticalList(

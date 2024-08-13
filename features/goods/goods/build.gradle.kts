@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":common:common-ui:goods"))
     implementation(project(":common:common-ui:money"))
     implementation(project(":common:common-data:money"))
+    implementation(project(":common:shared_res"))
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     testImplementation(libs.junit)

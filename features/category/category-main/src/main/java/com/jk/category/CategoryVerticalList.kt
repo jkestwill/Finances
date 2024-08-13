@@ -1,6 +1,5 @@
 package com.jk.category
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,17 +12,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SnapshotMutationPolicy
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -43,22 +35,6 @@ fun CategoryVerticalList(
     preselectedItems: List<CategoryUI>? = null,
     onListChanged: (CategoryUI,Boolean) -> Unit
 ) {
-    val buffList = remember() {
-        mutableStateListOf<CategoryUI>()
-    }
-    val ssas = remember {
-        mutableStateOf(false)
-    }
-//    LaunchedEffect(key1 = preselectedItems?.size) {
-//        if (preselectedItems != null) {
-//            Log.d("qq", "CategoryVerticalList:${preselectedItems.toList()} ")
-//            if (buffList.isEmpty()) {
-//                buffList.addAll(preselectedItems)
-//            }else
-//                buffList.clear()
-//
-//        }
-//    }
     LazyColumn(
         modifier,
         contentPadding = PaddingValues(5.dp),
@@ -68,20 +44,10 @@ fun CategoryVerticalList(
             val selected = rememberSaveable(preselectedItems?.size) {
                 mutableStateOf(value = preselectedItems?.contains(items[index])?:false)
             }
-            // при преселектед айтемах не убирает выделение
-
             CategoryVerticalListItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickAnimation {
-//                    if (!selected.value) {
-//                        buffList.add(items[index])
-//                    } else {
-//                        buffList.remove(items[index])
-//                    }
-                        Log.e("QS", "CategoryVerticalList: ${selected.value}", )
-                        Log.e("QS", "CategoryVerticalList: ${preselectedItems?.contains(items[index])}", )
-
                         onListChanged(items[index], selected.value)
                     },
                 category = items[index],
@@ -125,7 +91,6 @@ fun CategoryVerticalListItem(
                 .drawBehind {
                     val offset = Offset(x = 2f, y = 2f)
                     if (checked) {
-                        println("redraw")
                         drawRoundRect(
                             color = checkedColors,
                             topLeft = offset,
