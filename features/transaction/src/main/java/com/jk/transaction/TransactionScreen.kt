@@ -5,6 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +25,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -99,7 +105,7 @@ fun TransactionScreen(
     val currencyList = viewModel.currencyListState.collectAsState()
 
     Scaffold(containerColor = FinanceHelperTheme.colors.primaryBackground, topBar = {
-        Row(modifier = Modifier.padding(FinanceHelperTheme.shape.padding)) {
+        Row(modifier = Modifier.background(FinanceHelperTheme.colors.primaryBackground).padding(FinanceHelperTheme.shape.padding)) {
             if (onBackClick != null) IconButton(
                 modifier = Modifier.align(Alignment.CenterVertically), onClick = onBackClick
             ) {
@@ -119,15 +125,40 @@ fun TransactionScreen(
                 overflow = TextOverflow.Visible,
             )
             Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(FinanceHelperTheme.shape.borderStroke)
+                    .padding(start = 10.dp, end = 10.dp)
+
+                    .background(
+                        FinanceHelperTheme.colors.defaultButtonColor,
+                        FinanceHelperTheme.shape.shape20
+                    )
+                    .clickAnimation {
+                        // viewModel.addTransaction(transactionUI =)
+                    }
+                    .height(30.dp)
+            )
+            {
+                Image(
+                    modifier = Modifier.align(Alignment.Center),
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "ic_add"
+                )
+            }
         }
     }) { scaffoldPadding ->
         Column(
-            modifier = Modifier.padding(
-                top = scaffoldPadding.calculateTopPadding(),
-                bottom = scaffoldPadding.calculateBottomPadding(),
-                start = scaffoldPadding.calculateStartPadding(LayoutDirection.Ltr),
-                end = scaffoldPadding.calculateEndPadding(LayoutDirection.Rtl)
-            ), verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    top = scaffoldPadding.calculateTopPadding(),
+                    bottom = scaffoldPadding.calculateBottomPadding(),
+                    start = scaffoldPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    end = scaffoldPadding.calculateEndPadding(LayoutDirection.Rtl)
+                )
+                , verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             TransactionInfoSection(
                 modifier = Modifier.padding(
@@ -162,27 +193,7 @@ fun TransactionScreen(
                 },
                 onGoodsAdd = onGoodsAdd
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp)
-                    .background(
-                        FinanceHelperTheme.colors.defaultButtonColor,
-                        FinanceHelperTheme.shape.shape20
-                    )
-                    .border(FinanceHelperTheme.shape.borderStroke)
-                    .clickAnimation {
-                        // viewModel.addTransaction(transactionUI =)
-                    }
-                    .height(30.dp)
-            )
-            {
-                Image(
-                    modifier = Modifier.align(Alignment.Center),
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "ic_add"
-                )
-            }
+
         }
     }
 }

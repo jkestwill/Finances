@@ -41,6 +41,7 @@ dependencies {
 
     implementation(project(":common:common-data:money"))
     implementation(project(":common:common-utils"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
