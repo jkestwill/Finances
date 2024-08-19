@@ -35,8 +35,12 @@ class GoodsCountTextLimit(
         maxLength = Limit(7, false),
         regexPattern = Limit("\\d+$", false),
         onValueChange = {
-            if (it.length > 1)
-                it.trim('0')
+            if (it.length > 1) {
+                if (it == "00")
+                    "0"
+                else
+                    it.trim('0')
+            }
             else it
         }
     ),

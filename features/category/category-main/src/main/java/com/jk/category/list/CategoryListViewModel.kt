@@ -6,10 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.toUI
 import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.toUI
 import com.jk.category_data.CategoryRepository
-import com.jk.category_data.CategorySortBy
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
@@ -19,8 +18,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,7 +63,7 @@ class CategoryListViewModel @Inject constructor(
 
     fun getAllCategories(search: String) {
         viewModelScope.launch {
-            _categoryFLow .emitAll(
+            _categoryFLow.emitAll(
                 categoryRepository.getList(
                     SearchParams(
                         q = search,
@@ -87,7 +84,6 @@ class CategoryListViewModel @Inject constructor(
                         initialValue = PagingData.empty()
                     )
             )
-
         }
     }
 

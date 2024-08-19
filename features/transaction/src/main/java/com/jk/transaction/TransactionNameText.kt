@@ -3,7 +3,6 @@ package com.jk.transaction
 import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -12,7 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -29,7 +27,6 @@ import com.jk.common_ui.composable.CharacterLimitTextField
 import com.jk.common_ui.composable.KeyboardState
 import com.jk.common_ui.composable.keyboardAsState
 import com.jk.shared_res.R
-import kotlinx.coroutines.launch
 
 @Composable
 fun TransactionNameText(
@@ -158,7 +155,6 @@ fun GoodsCountText(
 
     LaunchedEffect(key1 = keyboardState.value) {
         if (keyboardState.value == KeyboardState.CLOSED) {
-            //focusRequester.captureFocus()
             Log.e("QQ", "GoodsCountText:${expanded.value} ")
             expanded.value = false
         }
@@ -170,12 +166,10 @@ fun GoodsCountText(
             .width(if (expanded.value) 200.dp else 40.dp)
             .focusRequester(focusRequester)
             .onFocusEvent {
-                if(it.isFocused){
-                    expanded.value=true
-                   // focusRequester.requestFocus()
+                if(it.isFocused || it.isCaptured) {
+                    expanded.value = true
+                    // focusRequester.requestFocus()
                     keyboard?.show()
-                }else{
-                    expanded.value=false
                 }
             },
         value = value,
@@ -187,6 +181,7 @@ fun GoodsCountText(
                 id = R.string.maxLengthError, 7
             )
         ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         maxLengthPostfixVisibility = false,
         textStyle = FinanceHelperTheme.typography.h3

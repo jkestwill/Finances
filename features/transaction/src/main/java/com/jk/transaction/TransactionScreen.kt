@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -38,7 +37,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,7 +60,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_data.sha256
@@ -215,7 +212,6 @@ fun TransactionScreen(
                 viewModel = viewModel,
                 onAddCategory = onAddCategory
             )
-
             //разделить на стейты загрузка хуюска и обработать
             //если выбраны категории прихода то секция товаров недоступна
             GoodsSection(
@@ -490,12 +486,13 @@ fun EditableListItem(
             )
         )
     }
-    val goodsCount = rememberSaveable() {
-        mutableStateOf(preBuild.value.amount.toString())
-    }
     val gCount = rememberSaveable() {
         mutableStateOf(preBuild.value.amount)
     }
+    val goodsCount = rememberSaveable( ) {
+        mutableStateOf(preBuild.value.amount.toString())
+    }
+
     val (first, second) = remember { FocusRequester.createRefs() }
     val defaultModifier = Modifier
         .fillMaxHeight()
@@ -509,6 +506,9 @@ fun EditableListItem(
         )
     val iconButtonModifier = defaultModifier.width(40.dp)
 
+    LaunchedEffect(key1 = gCount.value) {
+        goodsCount.value=gCount.value.toString()
+    }
     LaunchedEffect(goodsCount.value, goodsName.value, goodsAmount.value, currency.value) {
         val gAm = try {
             if (goodsAmount.value.isNotEmpty())
@@ -546,13 +546,15 @@ fun EditableListItem(
     ) {
         Box(
             modifier = CombinedModifier(
-                iconButtonModifier, Modifier
+                iconButtonModifier,
+                Modifier
                     .background(
                         FinanceHelperTheme.colors.buttonDeleteColor,
                         FinanceHelperTheme.shape.shapeRoundMedium
                     )
                     .clickAnimation {
                         gCount.value += 1
+                        //goodsCount.value = gCount.value.toString()
                     }
             )
         )
@@ -568,7 +570,10 @@ fun EditableListItem(
                 modifier = CombinedModifier(
                     Modifier
                         .clickAnimation {
-                            if (gCount.value > 0) gCount.value -= 1
+                            if (gCount.value > 0) {
+                                gCount.value -= 1
+                               // goodsCount.value=gCount.value.toString()
+                            }
                         },
                     iconButtonModifier
                 )
@@ -591,7 +596,8 @@ fun EditableListItem(
 
             }
         )
-        GoodsNameText(modifier = Modifier
+        GoodsNameText(modifier =
+        Modifier
             .weight(2f)
             .fillMaxHeight()
             .focusRequester(first)
@@ -602,7 +608,6 @@ fun EditableListItem(
             .focusable(
                 enabled = true,
                 interactionSource = remember { MutableInteractionSource() }),
-
             value = goodsName.value,
             onValueChange = {
                 goodsName.value = it
@@ -633,18 +638,16 @@ fun EditableListItem(
                 .fillMaxHeight(),
             currencyListState = currencyListState,
             color = FinanceHelperTheme.colors.defaultButtonColor,
-            placeholderText = if (currency.value.name.isNotEmpty()) currency.value.name else stringResource(
-                id = R.string.currency
-            )
+            placeholderText = currency.value.name.ifEmpty { stringResource(id = R.string.currency) }
         ) {
             currency.value = it
         }
         Box(
             modifier = CombinedModifier(
-                Modifier
+                outer = Modifier
                     .clickAnimation {
                         onRemove()
-                    }, iconButtonModifier
+                    }, inner = iconButtonModifier
             )
         ) {
             Image(
