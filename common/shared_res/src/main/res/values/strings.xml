@@ -14,11 +14,9 @@
         <item name="october">October</item>
         <item name="november">November</item>
         <item name="december">December</item>
-
     </string-array>
 
     <string-array name="days_of_week">
-
         <item name="monday">Monday</item>
         <item name="tuesday">Tuesday</item>
         <item name="wednesday">Wednesday</item>
@@ -38,7 +36,9 @@
     <string name="add_new_category">Add new category</string>
     <string name="select_category">Select category</string>
     <string name="expenses">Expenses</string>
-
+    <string name="category">Category</string>
+    <string name="categories">Categories</string>
+    <string name="currency">Currency</string>
     <string name="maxLengthError">Use %1$d characters or fewer</string>
     <string name="minLengthError">Use %1$d characters or more</string>
     <string name="allowedCharacters">Allowed characters: %1$S</string>
@@ -46,6 +46,8 @@
     <string name="all_transactions">All transactions</string>
     <string name="amount">Amount</string>
     <string name="goods">Goods</string>
+    <string name="general">General</string>
+
     <string-array name="goods_list_header">
         <item name="goods_name">Name</item>
         <item name="goods_amount">Amount</item>

@@ -31,10 +31,12 @@ data class FinanceHelperColors(
 )
 
 data class FinanceHelperShape(
-    val padding: Dp,
-    val shape10: Shape,
-    val shape20: Shape,
-    val shape30: Shape,
+    val buttonPadding: Dp,
+    val textPadding: Dp,
+    val headerPadding:Dp,
+    val shapeRoundedLow: Shape,
+    val shapeRoundMedium: Shape,
+    val shapeRoundHard: Shape,
     val borderStroke: BorderStroke,
 )
 
@@ -89,18 +91,14 @@ fun FinanceHelperTheme(
 
     val colors = lightPalette
     val shape = FinanceHelperShape(
-        padding = when (paddingSize) {
-            FinanceHelperSize.MEDIUM -> 10.dp
-            FinanceHelperSize.LARGE -> 15.dp
-            FinanceHelperSize.SMALL -> 4.dp
-            else -> {
-                error("No such size $paddingSize")
-            }
-        },
-        shape10 = RoundedCornerShape(10),
-        shape20 = RoundedCornerShape(20),
-        shape30 = RoundedCornerShape(30),
-        borderStroke = BorderStroke(2.dp,color=Color.Black)
+        buttonPadding = 5.dp,
+        textPadding = 5.dp,
+        headerPadding = 10.dp,
+        shapeRoundedLow = RoundedCornerShape(10),
+        shapeRoundMedium = RoundedCornerShape(20),
+        shapeRoundHard = RoundedCornerShape(30),
+
+        borderStroke = BorderStroke(2.dp, color = Color.Black)
     )
     val typography = FinanceHelperTypography(
         label = TextStyle(

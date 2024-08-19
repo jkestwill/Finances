@@ -2,6 +2,7 @@ package com.jk.common_ui.composable
 
 import android.util.Log
 import android.view.ViewTreeObserver
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -27,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.ui.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,7 +52,7 @@ private const val TAG = "Search"
 fun Search(
     modifier: Modifier,
     text: String,
-    textLimit: TextLimitConfig?=null,
+    textLimit: TextLimitConfig? = null,
     onValueChange: (String) -> Unit,
     color: Color = FinanceHelperTheme.colors.defaultButtonColor,
     // onClick: (SearchState) -> Unit
@@ -84,11 +83,10 @@ fun Search(
         IconButton(modifier = Modifier
             .width(40.dp)
             .height(40.dp)
-            .border(2.dp,color= Color.Black, shape = RoundedCornerShape(20))
+            .border(2.dp, color = Color.Black, shape = RoundedCornerShape(20))
             .background(
                 color = color,
-                shape = FinanceHelperTheme.shape.shape20
-
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .zIndex(1f), onClick = {
             coroutineScope.launch {
@@ -104,10 +102,11 @@ fun Search(
         CharacterLimitTextField(
             modifier = modifier
                 .height(40.dp)
-                .width(size.value)
+                .animateContentSize()
+                .width(if (state.value == SearchState.EXPANDED) 150.dp else 0.dp)
                 .background(
-                    color=color.copy(alpha = 0.5f),
-                    shape = FinanceHelperTheme.shape.shape10
+                    color = color.copy(alpha = 0.5f),
+                    shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
                 .focusRequester(focusRequester),
             textStyle = FinanceHelperTheme.typography.h3,
@@ -120,7 +119,10 @@ fun Search(
                 Log.e("TAG", "Search:${it} ")
             },
             placeHolder = {
-                Text(text= stringResource(id = androidx.appcompat.R.string.search_menu_title), style = FinanceHelperTheme.typography.h3)
+                Text(
+                    text = stringResource(id = androidx.appcompat.R.string.search_menu_title),
+                    style = FinanceHelperTheme.typography.h3
+                )
             }
         )
 

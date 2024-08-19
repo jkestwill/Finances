@@ -81,7 +81,7 @@ fun Transaction.toRelation(): TransactionRelation {
 
 fun Operation.toRelation(): OperationRelation {
     return OperationRelation(
-        toOperationEntity(),
+        operation = toOperationEntity(),
         categoryList = categoryList.map { it.toEntity() },
         goodsList = goodsList.map { it.toRelation() },
         cost = money.toRelation(),

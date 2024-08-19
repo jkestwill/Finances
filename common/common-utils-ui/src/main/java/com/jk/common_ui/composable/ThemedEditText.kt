@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -29,13 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.shake
-import kotlinx.coroutines.delay
 
 
 @Composable
@@ -44,10 +42,10 @@ fun CharacterLimitTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
-    singleLine: Boolean=true,
-    keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textLimitConfig: TextLimitConfig? = null,
-    maxLengthPostfixVisibility:Boolean=true,
+    maxLengthPostfixVisibility: Boolean = true,
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit,
     prefix: @Composable (() -> Unit)? = null,
@@ -56,7 +54,7 @@ fun CharacterLimitTextField(
     var error by remember {
         mutableStateOf<String?>(null)
     }
-    var post:(@Composable ()->Unit)? = if(maxLengthPostfixVisibility){
+    val post: (@Composable () -> Unit)? = if (maxLengthPostfixVisibility) {
         ({
             if (textLimitConfig != null)
                 Text(
@@ -65,27 +63,25 @@ fun CharacterLimitTextField(
                         .background(Color.Unspecified),
                     text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
                     textAlign = TextAlign.End,
-                    style = FinanceHelperTheme.typography.h3,
-
-                    )
+                    style = FinanceHelperTheme.typography.h3)
         })
-    }else null
+    } else null
     LaunchedEffect(error) {
         onError(error)
-        error=null
+        error = null
         Log.e("ERROR", "CharacterLimitTextField:${error} ")
     }
     ThemedTextField(
         modifier = modifier
             .shake(error != null)
-            .border(2.dp, color = Color.Black, shape = FinanceHelperTheme.shape.shape20),
+            .border(2.dp, color = Color.Black, shape = FinanceHelperTheme.shape.shapeRoundMedium),
         value = value,
         onValueChange = {
             if (textLimitConfig != null) {
                 val errorMatcher = textLimitConfig.matchTextLimit(it)
                 error = errorMatcher?.first
                 if (errorMatcher?.second?.isTypingAllowed == true || error == null)
-                    onValueChange(it)
+                    onValueChange(textLimitConfig.textLimit.onValueChange?.invoke(it)?:it)
             } else {
                 onValueChange(it)
             }
@@ -98,7 +94,7 @@ fun CharacterLimitTextField(
         singleLine = singleLine,
         textStyle = textStyle,
         maxLines = maxLines,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
     )
 }
 
@@ -109,8 +105,8 @@ fun ThemedTextField(
     value: String,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
-    singleLine:Boolean=true,
-    keyboardOptions: KeyboardOptions=KeyboardOptions.Default,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
     placeHolder: (@Composable () -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
@@ -125,11 +121,10 @@ fun ThemedTextField(
         keyboardOptions = keyboardOptions,
         interactionSource = remember { MutableInteractionSource() },
         decorationBox = {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(FinanceHelperTheme.shape.padding),
+                    .padding(FinanceHelperTheme.shape.headerPadding),
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

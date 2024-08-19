@@ -1,11 +1,9 @@
 package com.jk.transaction_common_ui
 
-import android.os.Parcelable
 import com.jk.category_common_ui.CategoryUI
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
-import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
 data class TransactionUI(
@@ -14,29 +12,29 @@ data class TransactionUI(
     val date: LocalDateTime,
     val type: TransactionTypeUI
 ) {
-    class Builder() {
-        private var id: String = ""
+    class Builder():BaseIdBuilder<TransactionUI>() {
+
         private var operation: OperationUI = OperationUI.Builder().build()
         private var date: LocalDateTime = LocalDateTime.now()
-        private var type: TransactionTypeUI = TransactionTypeUI(id = "", name = TransactionTypeUI.Type.OFFLINE.value)
+        private var type: TransactionTypeUI =
+            TransactionTypeUI(id = "", name = TransactionTypeUI.Type.OFFLINE.value)
 
-        fun setId(id: String) {
-            this.id = id
-        }
-
-        fun setOperation(operationUI: OperationUI) {
+        fun setOperation(operationUI: OperationUI):Builder {
             this.operation = operationUI
+            return this
         }
 
-        fun setDate(date: LocalDateTime) {
+        fun setDate(date: LocalDateTime):Builder {
             this.date = date
+            return this
         }
 
-        fun setType(type: TransactionTypeUI) {
+        fun setType(type: TransactionTypeUI):Builder {
             this.type = type
+            return this
         }
 
-        fun build(): TransactionUI {
+        override fun build(): TransactionUI {
             return TransactionUI(id, operation, date, type)
         }
     }
@@ -45,8 +43,8 @@ data class TransactionUI(
 data class TransactionTypeUI(
     val id: String,
     val name: String
-){
-    enum class Type(val value:String){
+) {
+    enum class Type(val value: String) {
         ONLINE("online"), OFFLINE("offline")
     }
 }
@@ -60,19 +58,13 @@ data class OperationUI(
     val money: MoneyUI
 ) {
 
-    class Builder() {
+    class Builder():BaseIdBuilder<OperationUI>() {
 
-        private var id: String = ""
         private var name: String = ""
         private var categoryList: List<CategoryUI> = listOf()
         private var scheduleList: List<ScheduleUI> = listOf()
         private var goodsList: List<GoodsUI> = listOf()
         private var money: MoneyUI = MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id, name))
-
-        fun setId(id: String): Builder {
-            this.id = id
-            return this
-        }
 
         fun setName(name: String): Builder {
             this.name = name
@@ -99,7 +91,7 @@ data class OperationUI(
             return this
         }
 
-        fun build(): OperationUI {
+      override  fun build(): OperationUI {
             return OperationUI(id, name, categoryList, scheduleList, goodsList, money)
         }
     }
@@ -111,5 +103,40 @@ data class ScheduleUI(
     val dateStart: LocalDateTime,
     val countLeft: Int,
     val repeatPeriodMillis: Long
-)
+) {
+    class Builder() : BaseIdBuilder<ScheduleUI>() {
+        private var dateStart = LocalDateTime.now()
+        private var countLeft: Int = 0
+        private var repeatPeriodMillis: Long = 0L
 
+        fun dateStart(dateStart: LocalDateTime):Builder{
+            this.dateStart=dateStart
+            return this
+        }
+
+        fun countLeft(countLeft: Int):Builder{
+            this.countLeft=countLeft
+            return this
+        }
+
+        fun repeatPeriodMillis(repeatPeriodMillis: Long):Builder{
+            this.repeatPeriodMillis=repeatPeriodMillis
+            return this
+        }
+        override fun build(): ScheduleUI {
+            return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis)
+        }
+
+    }
+}
+
+abstract class BaseIdBuilder<T : Any> {
+    var id: String = ""
+
+    fun id(id: String): BaseIdBuilder<T> {
+        this.id = id
+        return this
+    }
+
+    abstract fun build(): T
+}

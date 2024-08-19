@@ -21,7 +21,28 @@ class CurrencyAmountTextLimit(
         Limit(1, true),
         Limit(10, false),
         allowedSpecialCharacters = Limit(listOf('.'), false),
-        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)",false)
+        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", false)
     ),
     error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage),
+)
+
+class GoodsCountTextLimit(
+    minTextLengthErrorMessage: String,
+    maxTextLengthErrorMessage: String
+) : TextLimitConfig(
+    textLimit = TextLimit(
+        minLength = Limit(1, true),
+        maxLength = Limit(7, false),
+        regexPattern = Limit("\\d+$", false),
+        onValueChange = {
+            if (it.length > 1)
+                it.trim('0')
+            else it
+        }
+    ),
+    error = TextError(
+        minTextLengthError = minTextLengthErrorMessage,
+        maxTextLengthError = maxTextLengthErrorMessage
+    ),
+
     )

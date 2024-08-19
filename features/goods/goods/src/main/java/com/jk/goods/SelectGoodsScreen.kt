@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,10 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.common_ui.FinanceHelperTheme
@@ -103,11 +96,11 @@ fun <T : Any> SelectableItemsDialog(
                 .fillMaxWidth()
                 .background(
                     color = FinanceHelperTheme.colors.primaryBackground,
-                    shape = FinanceHelperTheme.shape.shape10
+                    shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
                 .border(
                     border = FinanceHelperTheme.shape.borderStroke,
-                    shape = FinanceHelperTheme.shape.shape10
+                    shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
                 .padding(15.dp)
 
@@ -139,11 +132,11 @@ fun <T : Any> SelectableItemsDialog(
                             }
                             .background(
                                 FinanceHelperTheme.colors.defaultButtonColor,
-                                FinanceHelperTheme.shape.shape20
+                                FinanceHelperTheme.shape.shapeRoundMedium
                             )
                             .border(
                                 border = FinanceHelperTheme.shape.borderStroke,
-                                shape = FinanceHelperTheme.shape.shape20
+                                shape = FinanceHelperTheme.shape.shapeRoundMedium
                             )
                             .align(Alignment.Bottom)
                             .padding(10.dp),
@@ -254,11 +247,11 @@ fun GoodsListItem(
         modifier = modifier
             .border(
                 border = FinanceHelperTheme.shape.borderStroke,
-                shape = FinanceHelperTheme.shape.shape20
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .background(
                 color = FinanceHelperTheme.colors.primaryBackground,
-                shape = FinanceHelperTheme.shape.shape20
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)
 
@@ -284,13 +277,13 @@ fun GoodsListItem(
                 }
                 .background(
                     color = Color.Transparent,
-                    shape = FinanceHelperTheme.shape.shape20
+                    shape = FinanceHelperTheme.shape.shapeRoundMedium
                 )
                 .width(30.dp)
                 .height(30.dp)
                 .border(
                     border = FinanceHelperTheme.shape.borderStroke,
-                    shape = FinanceHelperTheme.shape.shape20
+                    shape = FinanceHelperTheme.shape.shapeRoundMedium
                 ),
 
             )

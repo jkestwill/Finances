@@ -91,7 +91,7 @@ fun CategoryDialog(
             ) {
                 Column(
                     modifier = Modifier
-                        .clip(FinanceHelperTheme.shape.shape10)
+                        .clip(FinanceHelperTheme.shape.shapeRoundedLow)
                         .background(FinanceHelperTheme.colors.secondaryBackground)
                         .padding(5.dp),
                     verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -102,7 +102,7 @@ fun CategoryDialog(
                         style = FinanceHelperTheme.typography.label
                     )
                     ThemedTextField(
-                        modifier = Modifier.padding(FinanceHelperTheme.shape.padding),
+                        modifier = Modifier.padding(FinanceHelperTheme.shape.textPadding),
                         value = name.value,
                         onValueChange = {
                             name.value = it
@@ -140,7 +140,7 @@ fun CategoryDialog(
                     ) {
                         Text(
                             modifier = Modifier
-                                .padding(FinanceHelperTheme.shape.padding),
+                                .padding(FinanceHelperTheme.shape.textPadding),
                             text = expensesLabel,
                             style = FinanceHelperTheme.typography.body,
                         )
@@ -159,7 +159,7 @@ fun CategoryDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(FinanceHelperTheme.shape.padding)
+                            .padding(FinanceHelperTheme.shape.headerPadding)
                     ) {
                         Box(modifier = Modifier
                             .weight(1f)
@@ -216,7 +216,7 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
         mutableStateOf<ULong?>(null)
     }
     val borderColor = FinanceHelperTheme.colors.secondaryText
-    val shape = FinanceHelperTheme.shape.shape10
+    val shape = FinanceHelperTheme.shape.shapeRoundedLow
     LazyVerticalGrid(
         modifier = modifier
             .fillMaxWidth()
@@ -239,7 +239,7 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
                 modifier = borderModifier
                     .height(30.dp)
                     .width(25.dp)
-                    .background(color = it, shape = FinanceHelperTheme.shape.shape20)
+                    .background(color = it, shape = FinanceHelperTheme.shape.shapeRoundMedium)
                     .clickAnimation {
 
                         if (it.value == selectedColor.value) {

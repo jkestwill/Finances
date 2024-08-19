@@ -69,7 +69,7 @@ fun BoxScope.Error(
                     )
                     .widthIn(80.dp, 200.dp)
                     .height(30.dp)
-                    .padding(FinanceHelperTheme.shape.padding)
+                    .padding(FinanceHelperTheme.shape.buttonPadding)
             ) {
                 AutoSizeText(
                     text = pp.value,

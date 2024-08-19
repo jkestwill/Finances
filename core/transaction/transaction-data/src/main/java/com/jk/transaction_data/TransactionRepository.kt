@@ -3,6 +3,8 @@ package com.jk.transaction_data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.jk.common_data.Response
+import com.jk.common_data.apiRequest
 import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionPreview
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -23,18 +25,22 @@ class TransactionRepository @Inject constructor(
         sortBy: String,
         isAsc: Boolean
     ): Flow<PagingData<TransactionPreview>> {
-    return Pager(PagingConfig(20)) {
-                transactionPagingSource.create(categoryId=categoryId,sortBy = sortBy, isAsc = isAsc, q = q)
-            }.flow
+        return Pager(PagingConfig(20)) {
+            transactionPagingSource.create(
+                categoryId = categoryId,
+                sortBy = sortBy,
+                isAsc = isAsc,
+                q = q
+            )
+        }.flow
     }
 
-    fun getCurrencyList(){
 
-    }
+    suspend fun addTransaction(transaction: Transaction): Response<Unit> {
+        return apiRequest {
+            transactionDao.insert(transaction.toRelation())
+        }
 
-
-    suspend fun addTransaction(transaction: Transaction){
-        transactionDao.insert(transaction.toRelation())
     }
 }
 

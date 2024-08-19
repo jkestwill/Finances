@@ -83,7 +83,7 @@ fun MainNavGraph(
             TransactionScreen(
                 viewModel = hiltViewModel(),
                 categoryListId = categoryIdList.value,
-                onBackClick = if (navController.currentBackStack.value.size > 1) {
+                onBackClick = if (navController.currentBackStack.collectAsState().value.size > 2) {
                     onBack
                 } else null,
                 onAddCategory = { idList ->
@@ -103,6 +103,9 @@ fun MainNavGraph(
                             )
                         }"
                     )
+                },
+                onBack={
+                    navController.popBackStack()
                 }
             )
         }

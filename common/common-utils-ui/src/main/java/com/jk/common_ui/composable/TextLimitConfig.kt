@@ -23,7 +23,9 @@ data class TextLimit(
     val maxLength: Limit<Int>,
     val allowedSpecialCharacters: Limit<List<Char>>? = null,
     val requiredCharacters: Limit<List<Char>>? = null,
-    val regexPattern: Limit<String>? = null
+    val regexPattern: Limit<String>? = null,
+    val filter:((String)->Boolean)? = null,
+    val onValueChange:((String)->String)?=null
 )
 
 open class TextLimitConfig(

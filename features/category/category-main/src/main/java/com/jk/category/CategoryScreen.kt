@@ -130,9 +130,9 @@ fun CategoryScreen(
                     .border(
                         width = 2.dp,
                         color = Color.Black,
-                        shape = FinanceHelperTheme.shape.shape20
+                        shape = FinanceHelperTheme.shape.shapeRoundMedium
                     ),
-                shape = FinanceHelperTheme.shape.shape20,
+                shape = FinanceHelperTheme.shape.shapeRoundMedium,
                 onClick = onCreateTransactionClick,
                 containerColor = FinanceHelperTheme.colors.defaultButtonColor
             ) {
@@ -261,7 +261,7 @@ fun TransactionList(transactionList: List<TransactionPreviewUI>, color: Color) {
 fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color) {
     Row(
         Modifier
-            .background(color, FinanceHelperTheme.shape.shape20)
+            .background(color, FinanceHelperTheme.shape.shapeRoundMedium)
             .border(2.dp, Color.Black, RoundedCornerShape(20))
             .height(60.dp)
             .padding(start = 10.dp)
@@ -294,7 +294,7 @@ fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color) {
                 .align(Alignment.CenterVertically)
                 .height(40.dp)
                 .background(
-                    color = color, shape = FinanceHelperTheme.shape.shape20
+                    color = color, shape = FinanceHelperTheme.shape.shapeRoundMedium
                 )
 
         ) {

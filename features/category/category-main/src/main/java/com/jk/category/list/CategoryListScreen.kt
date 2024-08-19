@@ -157,7 +157,7 @@ fun CategoryListScreen(
                         Log.e(TAG, "CategoryListScqqqqreen: ${searchPositionY}")
                         this.translationY = searchPositionY
                     }
-                    .padding(FinanceHelperTheme.shape.padding)
+                    .padding(FinanceHelperTheme.shape.headerPadding)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
@@ -189,7 +189,7 @@ fun CategoryListScreen(
                         .padding(10.dp)
                         .background(
                             color = FinanceHelperTheme.colors.defaultButtonColor,
-                            shape = FinanceHelperTheme.shape.shape20
+                            shape = FinanceHelperTheme.shape.shapeRoundMedium
                         ),
                     onClick = {
                         onNewCategoryClick()
@@ -243,7 +243,7 @@ fun BoxScope.SelectItemsMenu(
                 modifier = Modifier
                     .background(
                         FinanceHelperTheme.colors.buttonDeleteColor,
-                        shape = FinanceHelperTheme.shape.shape20
+                        shape = FinanceHelperTheme.shape.shapeRoundMedium
                     )
                     .align(Alignment.BottomCenter)
             ) {
@@ -271,10 +271,10 @@ fun BoxScope.SelectItemsMenu(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .height(65.dp)
-                        .padding(FinanceHelperTheme.shape.padding)
+                        .padding(FinanceHelperTheme.shape.buttonPadding)
                         .background(
                             FinanceHelperTheme.colors.buttonDeleteColor,
-                            shape = FinanceHelperTheme.shape.shape20
+                            shape = FinanceHelperTheme.shape.shapeRoundMedium
                         ), onClick = onDelete
 
                 ) {
@@ -415,7 +415,7 @@ fun CategoryItem(
     Box(
         modifier = modifier
             .height(100.dp)
-            .background(color, FinanceHelperTheme.shape.shape10)
+            .background(color, FinanceHelperTheme.shape.shapeRoundedLow)
             .drawBehind {
                 if (isSelectionMode == CategoryListViewModel.SelectionState.ON) {
                     val strokeWidth = 4f

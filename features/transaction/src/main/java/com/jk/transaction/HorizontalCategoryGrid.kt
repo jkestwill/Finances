@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,13 +27,41 @@ import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.AutoSizeText
 
 @Composable
-fun HorizontalCategoryGrid(modifier: Modifier, items: List<CategoryUI>, onDelete: (CategoryUI) -> Unit) {
+fun HorizontalCategoryGrid(
+    modifier: Modifier,
+    items: List<CategoryUI>,
+    onChooseCategory: (List<String>) -> Unit,
+    onDelete: (CategoryUI) -> Unit
+) {
     val buffList = remember(items) {
         mutableStateOf<List<CategoryUI>>(items)
     }
 
 
-    LazyHorizontalGrid(modifier = modifier, rows = GridCells.Adaptive(40.dp)) {
+    LazyHorizontalGrid(modifier = modifier, rows = GridCells.Fixed(2)) {
+        item {
+            IconButton(modifier = Modifier
+                .background(
+                    color = FinanceHelperTheme.colors.defaultButtonColor,
+                    shape = FinanceHelperTheme.shape.shapeRoundMedium
+                )
+
+                .border(2.dp, color = Color.Black, shape = RoundedCornerShape(20))
+                .padding(5.dp)
+                .width(50.dp)
+                ,
+                onClick = {
+                    onChooseCategory(items.map { it.id })
+                }) {
+                Icon(
+                    modifier = Modifier,
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "ic_add"
+                )
+
+            }
+        }
+
         items(buffList.value.size) { i ->
             HorizontalCategoryGridItem(
                 modifier = Modifier
@@ -54,7 +84,7 @@ fun HorizontalCategoryGridItem(
         modifier = modifier
             .background(
                 color = Color(categoryUI.color),
-                shape = FinanceHelperTheme.shape.shape20
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)
             .width(100.dp),

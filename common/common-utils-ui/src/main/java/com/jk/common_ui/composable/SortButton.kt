@@ -3,6 +3,7 @@ package com.jk.common_ui.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,18 +35,16 @@ import com.jk.common_data.Selectable
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.LightCreamy
 import com.jk.common_ui.Rotation
-import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.rotationAnimation
 
 @Composable
-fun <T: Selectable> ButtonWithDropdownMenu(
+fun <T : Selectable> ButtonWithDropdownMenu(
     modifier: Modifier = Modifier,
     list: List<T>,
     icon: Painter,
     color: Color,
     onClick: (T) -> Unit
 ) {
-
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -69,7 +68,6 @@ fun <T: Selectable> ButtonWithDropdownMenu(
                 expanded = false
             }) {
             for (i in list) {
-
                 DropdownMenuItem(text = {
                     ExpandedListItem(item = i, color = color, onClick = {})
                 }, onClick = { onClick(i) })
@@ -79,7 +77,7 @@ fun <T: Selectable> ButtonWithDropdownMenu(
 }
 
 @Composable
-fun <T:Selectable> TextWithDropDownMenu(
+fun <T : Selectable> TextWithDropDownMenu(
     modifier: Modifier = Modifier,
     list: List<T>,
     color: Color,
@@ -97,27 +95,33 @@ fun <T:Selectable> TextWithDropDownMenu(
     }
     Column(
         modifier = modifier
-            .clickAnimation {
+            .clickable {
                 expandedListArrowRotationState = Rotation.ROTATE
                 expanded = !expanded
             }
-            .border(2.dp, color = Color.Black, shape = FinanceHelperTheme.shape.shape20)
+            .border(
+                2.dp,
+                color = Color.Black,
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
+            )
             .background(
                 color = FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
-                FinanceHelperTheme.shape.shape20
+                FinanceHelperTheme.shape.shapeRoundMedium
             )
-            .padding(7.dp)
+            .padding(FinanceHelperTheme.shape.textPadding),
+        verticalArrangement = Arrangement.Center
     ) {
-        Row {
+        Row() {
             AutoSizeText(
                 modifier = Modifier
                     .weight(2f)
                     .align(Alignment.CenterVertically),
                 text = selectedItem.value,
                 minTextSize = 10.sp,
-                maxTextSize = FinanceHelperTheme.typography.h2.fontSize,
+                maxTextSize = FinanceHelperTheme.typography.h3.fontSize,
                 style = FinanceHelperTheme.typography.h3,
-                maxLines = 1
+                maxLines = 1,
+                alignment = Alignment.Center
             )
             Icon(
                 modifier = Modifier
@@ -139,7 +143,9 @@ fun <T:Selectable> TextWithDropDownMenu(
             }) {
             for (i in list) {
                 ExpandedListItem(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(2.dp),
                     item = i,
                     color = color,
                     onClick = {
@@ -161,7 +167,6 @@ fun <T : Selectable> ExpandedListItem(
 ) {
     Box(
         modifier = modifier
-
             .drawBehind {
                 drawLine(
                     color = color,
@@ -172,7 +177,6 @@ fun <T : Selectable> ExpandedListItem(
             .clickable {
                 onClick(item)
             }
-
     ) {
         Text(
             modifier = Modifier
@@ -180,7 +184,7 @@ fun <T : Selectable> ExpandedListItem(
                 .fillMaxWidth(),
             text = item.value,
             color = Color.Black,
-            fontSize = 14.sp
+            fontSize = FinanceHelperTheme.typography.h3.fontSize
         )
     }
 }

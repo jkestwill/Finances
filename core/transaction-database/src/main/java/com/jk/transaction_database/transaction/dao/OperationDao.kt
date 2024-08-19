@@ -1,5 +1,6 @@
 package com.jk.transaction_database.transaction.dao
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -39,12 +40,12 @@ abstract class OperationDao(
 
     @Transaction
     open suspend fun insert(operationRelation: OperationRelation) {
-        moneyDao.insert(operationRelation.cost.money)
-        scheduleDao.insert(operationRelation.schedule)
         moneyDao.insert(operationRelation.cost)
+        scheduleDao.insert(operationRelation.schedule)
         for (category in operationRelation.categoryList) {
             categoryDao.checkIfNoExistNInsert(category)
         }
+        Log.e("TAG", "insert:${operationRelation.goodsList} ", )
         for (goods in operationRelation.goodsList) {
             goodsDao.insert(goods)
         }

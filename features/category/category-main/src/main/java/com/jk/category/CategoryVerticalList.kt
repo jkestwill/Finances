@@ -71,11 +71,11 @@ fun CategoryVerticalListItem(
         modifier = modifier
             .border(
                 border = FinanceHelperTheme.shape.borderStroke,
-                shape = FinanceHelperTheme.shape.shape20
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .background(
                 color = Color(category.color),
-                shape = FinanceHelperTheme.shape.shape20
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)
 
@@ -101,13 +101,13 @@ fun CategoryVerticalListItem(
                 }
                 .background(
                     color = Color.Transparent,
-                    shape = FinanceHelperTheme.shape.shape20
+                    shape = FinanceHelperTheme.shape.shapeRoundMedium
                 )
                 .width(30.dp)
                 .height(30.dp)
                 .border(
                     border = FinanceHelperTheme.shape.borderStroke,
-                    shape = FinanceHelperTheme.shape.shape20
+                    shape = FinanceHelperTheme.shape.shapeRoundMedium
                 ),
 
             )

@@ -5,19 +5,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,7 +25,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -42,14 +39,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.CombinedModifier
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -66,9 +62,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_data.sha256
+import com.jk.common_ui.ExpandedSection
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
@@ -90,11 +88,11 @@ fun TransactionScreen(
     categoryListId: List<String>?,
     onBackClick: (() -> Unit)?,
     onAddCategory: (List<String>?) -> Unit,
-    onGoodsAdd: (List<String>?) -> Unit
+    onGoodsAdd: (List<String>?) -> Unit,
+    onBack: () -> Unit
 ) {
     val goodsList = viewModel.allGoodsFlow.collectAsLazyPagingItems()
     LaunchedEffect(key1 = categoryListId) {
-
         if (categoryListId != null && (viewModel.prevCategoryIdList == null || viewModel.prevCategoryIdList != categoryListId)) {
             viewModel.prevCategoryIdList = categoryListId
             viewModel.getCategoryListById(categoryListId)
@@ -103,41 +101,57 @@ fun TransactionScreen(
         Log.e("QQ", "TransactionScreen:${categoryListId} ")
     }
     val currencyList = viewModel.currencyListState.collectAsState()
-
     Scaffold(containerColor = FinanceHelperTheme.colors.primaryBackground, topBar = {
-        Row(modifier = Modifier.background(FinanceHelperTheme.colors.primaryBackground).padding(FinanceHelperTheme.shape.padding)) {
-            if (onBackClick != null) IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically), onClick = onBackClick
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "ic_back"
+        Row(
+            modifier = Modifier
+                .background(
+                    FinanceHelperTheme.colors.primaryBackground,
+                    FinanceHelperTheme.shape.shapeRoundMedium
                 )
-            }
+                .padding(FinanceHelperTheme.shape.headerPadding)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            if (onBackClick != null)
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterVertically), onClick = onBackClick
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "ic_back"
+                    )
+                }
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
-                    .weight(2f, fill = false),
+                    .weight(3f, fill = false),
                 text = "Create Transaction",
                 style = FinanceHelperTheme.typography.h1,
-                minLines = 2,
                 maxLines = 2,
                 overflow = TextOverflow.Visible,
             )
-            Spacer(modifier = Modifier.weight(1f))
+
             Box(
                 modifier = Modifier
+                    .clickAnimation {
+                        viewModel.addTransaction(onSuccess = {
+                            Log.e("TransactionScreen", "Success")
+                        }, onFailure = {
+                            Log.e("TransactionScreen", "$it")
+                        })
+                    }
                     .weight(1f)
-                    .border(FinanceHelperTheme.shape.borderStroke)
-                    .padding(start = 10.dp, end = 10.dp)
-
+                    .align(Alignment.CenterVertically)
+                    .border(
+                        FinanceHelperTheme.shape.borderStroke,
+                        FinanceHelperTheme.shape.shapeRoundedLow
+                    )
                     .background(
                         FinanceHelperTheme.colors.defaultButtonColor,
-                        FinanceHelperTheme.shape.shape20
+                        FinanceHelperTheme.shape.shapeRoundedLow
                     )
-                    .clickAnimation {
-                        // viewModel.addTransaction(transactionUI =)
-                    }
+                    .padding(start = 10.dp, end = 10.dp)
+
                     .height(30.dp)
             )
             {
@@ -145,6 +159,31 @@ fun TransactionScreen(
                     modifier = Modifier.align(Alignment.Center),
                     imageVector = Icons.Filled.Add,
                     contentDescription = "ic_add"
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clickAnimation {
+                        onBack()
+                    }
+                    .weight(1f)
+                    .align(Alignment.CenterVertically)
+                    .border(
+                        FinanceHelperTheme.shape.borderStroke,
+                        FinanceHelperTheme.shape.shapeRoundedLow
+                    )
+                    .background(
+                        FinanceHelperTheme.colors.error,
+                        FinanceHelperTheme.shape.shapeRoundedLow
+                    )
+                    .padding(start = 10.dp, end = 10.dp)
+                    .height(30.dp)
+            )
+            {
+                Image(
+                    modifier = Modifier.align(Alignment.Center),
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "ic_cancel"
                 )
             }
         }
@@ -157,14 +196,14 @@ fun TransactionScreen(
                     bottom = scaffoldPadding.calculateBottomPadding(),
                     start = scaffoldPadding.calculateStartPadding(LayoutDirection.Ltr),
                     end = scaffoldPadding.calculateEndPadding(LayoutDirection.Rtl)
-                )
-                , verticalArrangement = Arrangement.spacedBy(10.dp)
+                ), verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             TransactionInfoSection(
                 modifier = Modifier.padding(
                     start = 10.dp, end = 10.dp
                 ), currencyList = currencyList.value,
                 onChange = {
+                    viewModel.operationBuilder.value = it
                     Log.e("TAG", "TransactionScreen:${it} ")
                 }
             )
@@ -173,10 +212,9 @@ fun TransactionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp, end = 10.dp),
-                viewModel = viewModel
-            ) {
-                onAddCategory(it)
-            }
+                viewModel = viewModel,
+                onAddCategory = onAddCategory
+            )
 
             //разделить на стейты загрузка хуюска и обработать
             //если выбраны категории прихода то секция товаров недоступна
@@ -185,15 +223,10 @@ fun TransactionScreen(
                     .padding(start = 10.dp, end = 10.dp)
                     .height(400.dp),
                 immutableGoodsList = goodsList.itemSnapshotList.items,
-                mutableGoodsList = viewModel.newGoodsBuilder,
+                mutableGoodsList = viewModel.newGoodsBuilderList,
                 currencyListState = currencyList.value,
-                onListChanged = {
-                    viewModel.newGoodsBuilder.clear()
-                    viewModel.newGoodsBuilder.addAll(it)
-                },
                 onGoodsAdd = onGoodsAdd
             )
-
         }
     }
 }
@@ -221,6 +254,9 @@ fun TransactionInfoSection(
     }
     val coroutineScope = rememberCoroutineScope()
 
+    val minHeightModifier by remember {
+        mutableStateOf(Modifier.heightIn(40.dp))
+    }
     DisposableEffect(key1 = amount.value, currency.value, transactionName.value) {
         val job = coroutineScope.launch {
             val am = try {
@@ -233,7 +269,7 @@ fun TransactionInfoSection(
                 .setName(amount.value)
                 .setMoney(
                     MoneyUI(
-                        id = "",
+                        id = "${amount}${currency.value}".sha256(),
                         amount = am,
                         currency = currency.value
                     )
@@ -243,29 +279,26 @@ fun TransactionInfoSection(
         onDispose {
             job.cancel()
         }
-
-
     }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text(text = "General", style = FinanceHelperTheme.typography.h2)
+        Text(text = stringResource(id = R.string.general), style = FinanceHelperTheme.typography.h2)
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-            TransactionNameText(modifier = Modifier.weight(2f),
+            TransactionNameText(modifier = minHeightModifier.weight(2f),
                 transactionName.value,
                 onValueChange = { transactionName.value = it },
                 onError = {})
 
-            CurrencyAmountText(modifier = Modifier.weight(1f),
+            CurrencyAmountText(modifier = minHeightModifier.weight(1f),
                 value = amount.value,
                 onValueChange = {
                     amount.value = it
                 }, onError = {})
 
-
             CurrencyDropDownMenu(
-                modifier = Modifier.weight(1f),
+                modifier = minHeightModifier.weight(1f),
                 currencyListState = currencyList,
-                placeholderText = "Currency",
+                placeholderText = stringResource(id = R.string.currency),
                 color = FinanceHelperTheme.colors.defaultButtonColor
             ) {
                 currency.value = it
@@ -281,41 +314,39 @@ fun CategorySection(
     viewModel: AddNewTransactionViewModel,
     onAddCategory: (List<String>?) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(modifier = Modifier, text = "Categories", style = FinanceHelperTheme.typography.h2)
-            IconButton(modifier = Modifier
-                .background(
-                    color = FinanceHelperTheme.colors.defaultButtonColor,
-                    shape = FinanceHelperTheme.shape.shape20
-                )
-                .height(24.dp)
-                .width(24.dp), onClick = {
-                onAddCategory(viewModel.editableCategoriesStateList.map { it.id })
-            }) {
-                Icon(
-                    modifier = Modifier,
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "ic_add"
-                )
-            }
-        }
-        CategoryGrid(modifier = Modifier.fillMaxWidth(),
+    ExpandedSection(modifier = modifier, expandedContent = {
+        CategoryGrid(
+            modifier = Modifier
+                .fillMaxWidth(),
             items = viewModel.editableCategoriesStateList,
             onDelete = {
                 viewModel.editableCategoriesStateList.remove(it)
-            })
+            }, onAddCategory = onAddCategory
+        )
+    }) {
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                modifier = Modifier,
+                text = stringResource(id = R.string.category),
+                style = FinanceHelperTheme.typography.h2
+            )
+        }
     }
 }
 
 @Composable
 fun CategoryGrid(
-    modifier: Modifier, items: List<CategoryUI>, onDelete: (CategoryUI) -> Unit
+    modifier: Modifier,
+    items: List<CategoryUI>,
+    onAddCategory: (List<String>?) -> Unit,
+    onDelete: (CategoryUI) -> Unit
 ) {
     HorizontalCategoryGrid(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp), items = items.toList()
+            .height(100.dp),
+        items = items.toList(),
+        onChooseCategory = onAddCategory
     ) {
         onDelete(it)
     }
@@ -327,19 +358,15 @@ fun GoodsSection(
     immutableGoodsList: List<GoodsUI>,
     mutableGoodsList: SnapshotStateList<GoodsUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
-    onListChanged: (List<GoodsUI.Builder>) -> Unit,
     onGoodsAdd: (List<String>?) -> Unit
 ) {
-//    LaunchedEffect(key1 = immutableGoodsList, mutableGoodsList) {
-//        mutableGoodsList.clear()
-//        mutableGoodsList.addAll(
-//            mutableGoodsList.union(immutableGoodsList.map { it.toBuilder() }).toMutableStateList()
-//        )
-//    }
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
+    ExpandedSection(modifier = modifier, expandedContent = {
+        GoodsList(
+            modifier = Modifier.fillMaxWidth(),
+            goodsList = mutableGoodsList,
+            currencyListState = currencyListState,
+        )
+    }) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -353,18 +380,17 @@ fun GoodsSection(
                 }
                 .background(
                     FinanceHelperTheme.colors.defaultButtonColor,
-                    FinanceHelperTheme.shape.shape20
+                    FinanceHelperTheme.shape.shapeRoundMedium
                 )
-                .border(FinanceHelperTheme.shape.borderStroke, FinanceHelperTheme.shape.shape20)) {
-                Image(imageVector = Icons.Filled.Add, contentDescription = "ic_add")
+                .border(
+                    FinanceHelperTheme.shape.borderStroke,
+                    FinanceHelperTheme.shape.shapeRoundMedium
+                )
+                .padding(5.dp)
+            ) {
+                Image(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
             }
         }
-        GoodsList(
-            modifier = Modifier,
-            goodsList = mutableGoodsList,
-            currencyListState = currencyListState,
-            onListChanged = onListChanged
-        )
     }
 }
 
@@ -372,45 +398,24 @@ fun GoodsSection(
 fun GoodsList(
     modifier: Modifier = Modifier,
     goodsList: SnapshotStateList<GoodsUI.Builder>,
-    currencyListState: State<List<CurrencyUI>>,
-    onListChanged: (List<GoodsUI.Builder>) -> Unit
+    currencyListState: State<List<CurrencyUI>>
 ) {
     val focusManager = LocalFocusManager.current
 
-    val scope = rememberCoroutineScope()
-
-//    DisposableEffect(key1 = goodsList.size) {
-//        val job = scope.launch {
-//            delay(200)
-//            onListChanged(goodsList)
-//            Log.e("zxc", "GoodsList: list size changed disposable ${goodsList}")
-//        }
-//        onDispose {
-//            job.cancel()
-//        }
-//    }
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 300.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
-//            items(goodsList.size) {
-//                ImmutableGoodsListItem(currencyListState = currencyListState,
-//                    goodsUI = goodsList[it],
-//                    onCountChanged = {
-//
-//                    })
-//            }
             items(
                 key = { goodsList[it].build().id },
                 count = goodsList.size
             ) { index ->
                 EditableListItem(modifier = Modifier
                     .fillMaxWidth()
+                    .heightIn(max = 40.dp)
                     .onKeyEvent {
-                        println(it.key)
                         if (it.key == Key.Enter) {
                             focusManager.moveFocus(FocusDirection.Next)
                             true
@@ -419,9 +424,10 @@ fun GoodsList(
                         }
                     },
                     currencyListState = currencyListState,
+                    item = goodsList[index],
                     onChange = {
-                        //goodsList.set(index, it.id(goodsList[index].build().id))
-                        //  onListChanged(goodsList)
+                        Log.e("TAG", "GoodsList onChange ${it}")
+                        goodsList[index] = it.id(goodsList[index].build().id)
                     }, onRemove = {
                         //addCount-=1
                         goodsList.remove(goodsList[index])
@@ -440,9 +446,12 @@ fun GoodsList(
             .height(30.dp)
             .background(
                 FinanceHelperTheme.colors.defaultButtonColor,
-                FinanceHelperTheme.shape.shape20
+                FinanceHelperTheme.shape.shapeRoundMedium
             )
-            .border(FinanceHelperTheme.shape.borderStroke, FinanceHelperTheme.shape.shape20)
+            .border(
+                FinanceHelperTheme.shape.borderStroke,
+                FinanceHelperTheme.shape.shapeRoundMedium
+            )
         ) {
             Icon(
                 modifier = Modifier.align(Alignment.Center),
@@ -460,40 +469,66 @@ fun GoodsList(
 fun EditableListItem(
     modifier: Modifier,
     currencyListState: State<List<CurrencyUI>>,
+    item: GoodsUI.Builder,
     onChange: (GoodsUI.Builder) -> Unit,
     onRemove: () -> Unit
 ) {
+    val preBuild = remember {
+        mutableStateOf(item.build())
+    }
     val goodsName = rememberSaveable() {
-        mutableStateOf("")
+        mutableStateOf(preBuild.value.name)
     }
     val goodsAmount = rememberSaveable() {
-        mutableStateOf("")
+        mutableStateOf(preBuild.value.cost.amount.toString())
     }
     val currency = rememberSaveable() {
-        mutableStateOf(CurrencyUI(id = "", name = ""))
+        mutableStateOf(
+            CurrencyUI(
+                id = preBuild.value.cost.currency.id,
+                name = preBuild.value.cost.currency.name
+            )
+        )
     }
     val goodsCount = rememberSaveable() {
-        mutableIntStateOf(0)
+        mutableStateOf(preBuild.value.amount.toString())
+    }
+    val gCount = rememberSaveable() {
+        mutableStateOf(preBuild.value.amount)
     }
     val (first, second) = remember { FocusRequester.createRefs() }
+    val defaultModifier = Modifier
+        .fillMaxHeight()
+        .background(
+            FinanceHelperTheme.colors.error,
+            FinanceHelperTheme.shape.shapeRoundMedium
+        )
+        .border(
+            FinanceHelperTheme.shape.borderStroke,
+            FinanceHelperTheme.shape.shapeRoundMedium
+        )
+    val iconButtonModifier = defaultModifier.width(40.dp)
 
-    LaunchedEffect(goodsCount.intValue, goodsName.value, goodsAmount.value, currency.value) {
+    LaunchedEffect(goodsCount.value, goodsName.value, goodsAmount.value, currency.value) {
         val gAm = try {
-            goodsAmount.value.toDouble()
-        } catch (e: NumberFormatException) {
+            if (goodsAmount.value.isNotEmpty())
+                goodsAmount.value.toDouble()
+            else 0.0
+        } catch (e: Throwable) {
             0.0
         }
-
-        Log.e(
-            "zxc",
-            "typing new goods info count:${goodsCount.intValue} name:${goodsName.value} currency:${currency.value}  "
-        )
-        if (goodsAmount.value.isNotEmpty() || goodsName.value.isNotEmpty() || currency.value.id.isNotEmpty())
+        gCount.value = try {
+            if (goodsCount.value.isNotEmpty()) {
+                goodsCount.value.toInt()
+            } else 0
+        } catch (e: NumberFormatException) {
+            0
+        }
+        if (goodsName.value.isNotEmpty() || currency.value.id.isNotEmpty())
             onChange(
-                GoodsUI
-                    .Builder()
-                    .id("${goodsAmount.value}${goodsCount}".sha256())
-                    .amount(goodsCount.intValue)
+                item
+                    .id("${gAm}${goodsCount}".sha256())
+                    .amount(gCount.value)
                     .name(goodsName.value)
                     .cost(
                         MoneyUI(
@@ -509,34 +544,34 @@ fun EditableListItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Box(modifier = Modifier
-            .size(30.dp)
-            .background(
-                FinanceHelperTheme.colors.defaultButtonColor,
-                FinanceHelperTheme.shape.shape20
+        Box(
+            modifier = CombinedModifier(
+                iconButtonModifier, Modifier
+                    .background(
+                        FinanceHelperTheme.colors.buttonDeleteColor,
+                        FinanceHelperTheme.shape.shapeRoundMedium
+                    )
+                    .clickAnimation {
+                        gCount.value += 1
+                    }
             )
-            .border(FinanceHelperTheme.shape.borderStroke, FinanceHelperTheme.shape.shape20)
-            .clickAnimation {
-                goodsCount.intValue += 1
-            }) {
+        )
+        {
             Image(
                 modifier = Modifier.align(Alignment.Center),
                 imageVector = Icons.Filled.Add,
                 contentDescription = "ic_add"
             )
         }
-        if (goodsCount.intValue > 0)
-            Box(modifier = Modifier
-                .size(30.dp)
-                .clickAnimation {
-                    if (goodsCount.intValue > 0) goodsCount.intValue -= 1
-                }
-                .background(
-                    FinanceHelperTheme.colors.error,
-                    FinanceHelperTheme.shape.shape20
+        if (gCount.value > 0)
+            Box(
+                modifier = CombinedModifier(
+                    Modifier
+                        .clickAnimation {
+                            if (gCount.value > 0) gCount.value -= 1
+                        },
+                    iconButtonModifier
                 )
-                .border(FinanceHelperTheme.shape.borderStroke, FinanceHelperTheme.shape.shape20)
-
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
@@ -545,16 +580,20 @@ fun EditableListItem(
                     textAlign = TextAlign.Center
                 )
             }
-        Text(
+        GoodsCountText(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .size(20.dp),
-            text = goodsCount.intValue.toString(),
-            style = FinanceHelperTheme.typography.h3,
-            textAlign = TextAlign.Center
+                .align(Alignment.CenterVertically),
+            value = goodsCount.value,
+            onValueChange = {
+                goodsCount.value = it
+            },
+            onError = {
+
+            }
         )
         GoodsNameText(modifier = Modifier
             .weight(2f)
+            .fillMaxHeight()
             .focusRequester(first)
             .focusProperties {
                 previous = second
@@ -568,15 +607,20 @@ fun EditableListItem(
             onValueChange = {
                 goodsName.value = it
             },
-            onError = {})
+            onError = {
 
-        CurrencyAmountText(modifier = Modifier
-            .focusRequester(second)
-            .focusProperties {
-                previous = first
-                next = first
-            }
-            .weight(1.5f),
+            })
+
+        CurrencyAmountText(
+            modifier = Modifier
+                .fillMaxHeight()
+                .focusRequester(second)
+                .focusProperties {
+                    previous = first
+                    next = first
+                }
+                .weight(1f)
+                .align(Alignment.CenterVertically),
             value = goodsAmount.value,
             onValueChange = { goodsAmount.value = it },
             onError = {
@@ -584,24 +628,25 @@ fun EditableListItem(
             })
 
         CurrencyDropDownMenu(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
             currencyListState = currencyListState,
             color = FinanceHelperTheme.colors.defaultButtonColor,
-            placeholderText = currency.value.name
+            placeholderText = if (currency.value.name.isNotEmpty()) currency.value.name else stringResource(
+                id = R.string.currency
+            )
         ) {
-
             currency.value = it
         }
-        Box(modifier = Modifier
-            .size(40.dp)
-            .background(
-                FinanceHelperTheme.colors.error,
-                FinanceHelperTheme.shape.shape20
+        Box(
+            modifier = CombinedModifier(
+                Modifier
+                    .clickAnimation {
+                        onRemove()
+                    }, iconButtonModifier
             )
-            .border(FinanceHelperTheme.shape.borderStroke, FinanceHelperTheme.shape.shape20)
-            .clickAnimation {
-                onRemove()
-            }) {
+        ) {
             Image(
                 modifier = Modifier.align(Alignment.Center),
                 imageVector = Icons.Filled.Delete,
@@ -633,6 +678,7 @@ fun CurrencyDropDownMenu(
             }
         }
     }
+
     TextWithDropDownMenu(
         modifier = modifier,
         list = currencyList,
@@ -640,5 +686,4 @@ fun CurrencyDropDownMenu(
         color = color,
         onClick = onClick
     )
-
 }

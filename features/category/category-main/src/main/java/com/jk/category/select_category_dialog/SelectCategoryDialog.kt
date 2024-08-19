@@ -1,6 +1,5 @@
 package com.jk.category.select_category_dialog
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,10 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -36,7 +32,6 @@ import com.jk.common_ui.Red
 import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.shared_res.R
-import kotlinx.coroutines.flow.update
 
 
 @Composable
@@ -76,11 +71,11 @@ fun SelectCategoryDialog(
                 .fillMaxWidth()
                 .background(
                     color = FinanceHelperTheme.colors.primaryBackground,
-                    shape = FinanceHelperTheme.shape.shape10
+                    shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
                 .border(
                     border = FinanceHelperTheme.shape.borderStroke,
-                    shape = FinanceHelperTheme.shape.shape10
+                    shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
                 .padding(15.dp)
 
@@ -112,11 +107,11 @@ fun SelectCategoryDialog(
                             }
                             .background(
                                 FinanceHelperTheme.colors.defaultButtonColor,
-                                FinanceHelperTheme.shape.shape20
+                                FinanceHelperTheme.shape.shapeRoundMedium
                             )
                             .border(
                                 border = FinanceHelperTheme.shape.borderStroke,
-                                shape = FinanceHelperTheme.shape.shape20
+                                shape = FinanceHelperTheme.shape.shapeRoundMedium
                             )
                             .align(Alignment.Bottom)
                             .padding(10.dp),
