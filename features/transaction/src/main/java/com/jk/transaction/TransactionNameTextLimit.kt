@@ -36,10 +36,10 @@ class GoodsCountTextLimit(
         regexPattern = Limit("\\d+$", false),
         onValueChange = {
             if (it.length > 1) {
-                if (it == "00")
-                    "0"
+                if (it.startsWith("00"))
+                    it[0].toString()
                 else
-                    it.trim('0')
+                    it.trimStart('0')
             }
             else it
         }

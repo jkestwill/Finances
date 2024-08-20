@@ -2,9 +2,11 @@ package com.jk.transaction
 
 import android.util.Log
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +21,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -139,6 +142,7 @@ fun GoodsNameText(
     )
 }
 
+
 @Composable
 fun GoodsCountText(
     modifier: Modifier,
@@ -152,7 +156,6 @@ fun GoodsCountText(
     val keyboardState = keyboardAsState()
     val keyboard = LocalSoftwareKeyboardController.current
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
-
     LaunchedEffect(key1 = keyboardState.value) {
         if (keyboardState.value == KeyboardState.CLOSED) {
             Log.e("QQ", "GoodsCountText:${expanded.value} ")
@@ -166,7 +169,7 @@ fun GoodsCountText(
             .width(if (expanded.value) 200.dp else 40.dp)
             .focusRequester(focusRequester)
             .onFocusEvent {
-                if(it.isFocused || it.isCaptured) {
+                if (it.isFocused) {
                     expanded.value = true
                     // focusRequester.requestFocus()
                     keyboard?.show()

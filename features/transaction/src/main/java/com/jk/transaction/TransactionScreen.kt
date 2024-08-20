@@ -489,8 +489,8 @@ fun EditableListItem(
     val gCount = rememberSaveable() {
         mutableStateOf(preBuild.value.amount)
     }
-    val goodsCount = rememberSaveable( ) {
-        mutableStateOf(preBuild.value.amount.toString())
+    val goodsCount = rememberSaveable(gCount.value) {
+        mutableStateOf(gCount.value.toString())
     }
 
     val (first, second) = remember { FocusRequester.createRefs() }

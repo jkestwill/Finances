@@ -24,8 +24,8 @@ data class TextLimit(
     val allowedSpecialCharacters: Limit<List<Char>>? = null,
     val requiredCharacters: Limit<List<Char>>? = null,
     val regexPattern: Limit<String>? = null,
-    val filter:((String)->Boolean)? = null,
-    val onValueChange:((String)->String)?=null
+    val filter: ((String) -> Boolean)? = null,
+    val onValueChange: ((String) -> String)? = null
 )
 
 open class TextLimitConfig(
@@ -47,7 +47,7 @@ open class TextLimitConfig(
             }
 
             !text.all {
-                  it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
+                it.isLetterOrDigit() || textLimit.allowedSpecialCharacters?.value?.contains(
                     it
                 ) ?: true
             } -> {
@@ -76,6 +76,11 @@ open class TextLimitConfig(
         } catch (e: Throwable) {
             null
         }
+    }
+
+    fun isTypingAllowed(text: String): Boolean {
+        val matcher = matchTextLimit(text)
+        return matcher == null || matcher.second?.isTypingAllowed == true
     }
 }
 
