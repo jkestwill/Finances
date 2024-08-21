@@ -21,10 +21,18 @@ class CurrencyAmountTextLimit(
         Limit(1, true),
         Limit(10, false),
         allowedSpecialCharacters = Limit(listOf('.'), false),
-        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", false)
+        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", false),
+        onValueChange = {
+            (if (it.length > 1) {
+                if (it.startsWith("00"))
+                    it[0].toString()
+                else
+                    it.trimStart('0')
+            }
+            else it).format("%.2f")
+        }
     ),
-    error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage),
-)
+    error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage))
 
 class GoodsCountTextLimit(
     minTextLengthErrorMessage: String,

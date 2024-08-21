@@ -5,6 +5,8 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material3.Text
@@ -72,7 +74,8 @@ fun CurrencyAmountText(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    onError: (String?) -> Unit
+    onError: (String?) -> Unit,
+    onDone:KeyboardActionScope.()->Unit={}
 ) {
     CharacterLimitTextField(
         modifier = modifier
@@ -101,6 +104,7 @@ fun CurrencyAmountText(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
+        keyboardActions = KeyboardActions(onDone = onDone),
         textStyle = FinanceHelperTheme.typography.h3
     )
 }

@@ -50,6 +50,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -198,7 +199,9 @@ fun TransactionScreen(
             TransactionInfoSection(
                 modifier = Modifier.padding(
                     start = 10.dp, end = 10.dp
-                ), currencyList = currencyList.value,
+                ),
+                currencyList = currencyList.value,
+                goodsList = viewModel.newGoodsBuilderList,
                 onChange = {
                     viewModel.operationBuilder.value = it
                     Log.e("TAG", "TransactionScreen:${it} ")
@@ -221,8 +224,9 @@ fun TransactionScreen(
                 immutableGoodsList = goodsList.itemSnapshotList.items,
                 mutableGoodsList = viewModel.newGoodsBuilderList,
                 currencyListState = currencyList.value,
-                onGoodsAdd = onGoodsAdd
-            )
+                onGoodsAdd = onGoodsAdd,
+
+                )
         }
     }
 }
@@ -234,13 +238,19 @@ fun TransactionScreen(
 fun TransactionInfoSection(
     modifier: Modifier = Modifier,
     currencyList: State<List<CurrencyUI>>,
+    goodsList: SnapshotStateList<GoodsUI.Builder>,
     onChange: (OperationUI.Builder) -> Unit
 ) {
     val transactionName = rememberSaveable() {
         mutableStateOf("")
     }
-    val amount = rememberSaveable() {
-        mutableStateOf("")
+    var amount = remember(goodsList) {
+       mutableStateOf(
+            goodsList.sumOf { it.build().cost.amount * it.build().amount },
+       )
+    }
+    val amountString = rememberSaveable() {
+        mutableStateOf(amount.value.toString())
     }
     val currency = rememberSaveable() {
         mutableStateOf(CurrencyUI(id = "", name = ""))
@@ -253,20 +263,25 @@ fun TransactionInfoSection(
     val minHeightModifier by remember {
         mutableStateOf(Modifier.heightIn(40.dp))
     }
-    DisposableEffect(key1 = amount.value, currency.value, transactionName.value) {
+
+    LaunchedEffect(key1 = amount.value) {
+        amountString.value = amount.value.toString()
+    }
+    DisposableEffect(key1 = amountString.value, currency.value, transactionName.value) {
+        Log.e("TAG", "TransactionInfoSection:${amount.value} ", )
         val job = coroutineScope.launch {
-            val am = try {
-                amount.value.toDouble()
+            amount.value = try {
+                amountString.value.toDouble()
             } catch (e: NumberFormatException) {
                 0.0
             }
             delay(200)
             operationBuilder.value
-                .setName(amount.value)
+                .setName(name = transactionName.value)
                 .setMoney(
                     MoneyUI(
                         id = "${amount}${currency.value}".sha256(),
-                        amount = am,
+                        amount = amount.value,
                         currency = currency.value
                     )
                 )
@@ -286,9 +301,9 @@ fun TransactionInfoSection(
                 onError = {})
 
             CurrencyAmountText(modifier = minHeightModifier.weight(1f),
-                value = amount.value,
+                value = amountString.value,
                 onValueChange = {
-                    amount.value = it
+                    amountString.value = it
                 }, onError = {})
 
             CurrencyDropDownMenu(
@@ -358,7 +373,9 @@ fun GoodsSection(
 ) {
     ExpandedSection(modifier = modifier, expandedContent = {
         GoodsList(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
             goodsList = mutableGoodsList,
             currencyListState = currencyListState,
         )
@@ -394,7 +411,7 @@ fun GoodsSection(
 fun GoodsList(
     modifier: Modifier = Modifier,
     goodsList: SnapshotStateList<GoodsUI.Builder>,
-    currencyListState: State<List<CurrencyUI>>
+    currencyListState: State<List<CurrencyUI>>,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -476,7 +493,10 @@ fun EditableListItem(
         mutableStateOf(preBuild.value.name)
     }
     val goodsAmount = rememberSaveable() {
-        mutableStateOf(preBuild.value.cost.amount.toString())
+        mutableStateOf(preBuild.value.cost.amount)
+    }
+    val goodsAmountString = rememberSaveable() {
+        mutableStateOf(goodsAmount.value.toString())
     }
     val currency = rememberSaveable() {
         mutableStateOf(
@@ -486,11 +506,11 @@ fun EditableListItem(
             )
         )
     }
-    val gCount = rememberSaveable() {
+    val goodsCount = rememberSaveable() {
         mutableStateOf(preBuild.value.amount)
     }
-    val goodsCount = rememberSaveable(gCount.value) {
-        mutableStateOf(gCount.value.toString())
+    val goodsCountString = rememberSaveable() {
+        mutableStateOf(goodsCount.value.toString())
     }
 
     val (first, second) = remember { FocusRequester.createRefs() }
@@ -504,40 +524,44 @@ fun EditableListItem(
             FinanceHelperTheme.shape.borderStroke,
             FinanceHelperTheme.shape.shapeRoundMedium
         )
-    val iconButtonModifier = defaultModifier.width(40.dp)
+    val iconButtonModifier = defaultModifier.width(30.dp)
 
-    LaunchedEffect(key1 = gCount.value) {
-        goodsCount.value=gCount.value.toString()
+    LaunchedEffect(key1 = goodsCount.value) {
+        Log.e("EditableListItem", "amount:${goodsAmount.value} ")
+        goodsCountString.value = goodsCount.value.toString()
+        goodsAmountString.value = (goodsAmount.value * goodsCount.value).toString()
     }
-    LaunchedEffect(goodsCount.value, goodsName.value, goodsAmount.value, currency.value) {
-        val gAm = try {
-            if (goodsAmount.value.isNotEmpty())
-                goodsAmount.value.toDouble()
-            else 0.0
-        } catch (e: Throwable) {
-            0.0
-        }
-        gCount.value = try {
-            if (goodsCount.value.isNotEmpty()) {
-                goodsCount.value.toInt()
+
+    LaunchedEffect(
+        goodsCountString.value,
+        goodsName.value,
+        goodsAmountString.value,
+        currency.value
+    ) {
+        Log.e("EditableListItem", "sum:${goodsAmount.value * goodsCount.value} ")
+
+        goodsCount.value = try {
+            Log.e("EditableListItem", "goods count string:${goodsCountString.value} ")
+            if (goodsCountString.value.isNotEmpty()) {
+                goodsCountString.value.toInt()
             } else 0
         } catch (e: NumberFormatException) {
+            e.printStackTrace()
             0
         }
-        if (goodsName.value.isNotEmpty() || currency.value.id.isNotEmpty())
-            onChange(
-                item
-                    .id("${gAm}${goodsCount}".sha256())
-                    .amount(gCount.value)
-                    .name(goodsName.value)
-                    .cost(
-                        MoneyUI(
-                            id = "${gAm}${currency.value}".sha256(),
-                            amount = gAm,
-                            currency = currency.value
-                        )
+        onChange(
+            item
+                .id("${goodsAmount}${goodsCountString}".sha256())
+                .amount(goodsCount.value)
+                .name(goodsName.value)
+                .cost(
+                    MoneyUI(
+                        id = "${goodsAmount}${currency.value}".sha256(),
+                        amount = goodsAmount.value,
+                        currency = currency.value
                     )
-            )
+                )
+        )
     }
     Row(
         modifier = modifier,
@@ -553,8 +577,7 @@ fun EditableListItem(
                         FinanceHelperTheme.shape.shapeRoundMedium
                     )
                     .clickAnimation {
-                        gCount.value += 1
-                        //goodsCount.value = gCount.value.toString()
+                        goodsCount.value += 1
                     }
             )
         )
@@ -565,14 +588,14 @@ fun EditableListItem(
                 contentDescription = "ic_add"
             )
         }
-        if (gCount.value > 0)
+        if (goodsCount.value > 0)
             Box(
                 modifier = CombinedModifier(
                     Modifier
                         .clickAnimation {
-                            if (gCount.value > 0) {
-                                gCount.value -= 1
-                               // goodsCount.value=gCount.value.toString()
+                            if (goodsCount.value > 0) {
+                                goodsCount.value -= 1
+                                // goodsCount.value=gCount.value.toString()
                             }
                         },
                     iconButtonModifier
@@ -588,9 +611,9 @@ fun EditableListItem(
         GoodsCountText(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            value = goodsCount.value,
+            value = goodsCountString.value,
             onValueChange = {
-                goodsCount.value = it
+                goodsCountString.value = it
             },
             onError = {
 
@@ -626,10 +649,32 @@ fun EditableListItem(
                 }
                 .weight(1f)
                 .align(Alignment.CenterVertically),
-            value = goodsAmount.value,
-            onValueChange = { goodsAmount.value = it },
+            value = goodsAmountString.value,
+            onValueChange = {
+                goodsAmountString.value = it
+                goodsAmount.value = try {
+                    if (it.isNotEmpty()) {
+                        println(it)
+                        println(it.toDouble())
+                        println(it.toDouble() / goodsCount.value)
+                        if (goodsCount.value != 0)
+                            it.toDouble() / goodsCount.value
+                        else it.toDouble()
+                    } else 0.0
+                } catch (e: NumberFormatException) {
+                    e.printStackTrace()
+                    0.0
+                } catch (e: ArithmeticException) {
+                    e.printStackTrace()
+                    it.toDouble()
+                }
+            },
             onError = {
 
+            },
+            onDone = {
+                goodsAmount.value *= goodsCount.value
+                goodsAmountString.value = goodsAmount.value.toString()
             })
 
         CurrencyDropDownMenu(

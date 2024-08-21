@@ -2,7 +2,6 @@ package com.jk.common_ui.composable
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.error
-import com.jk.common_ui.shake
 import kotlinx.coroutines.delay
 
 
@@ -46,6 +44,7 @@ fun CharacterLimitTextField(
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions=KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
 
@@ -87,6 +86,7 @@ fun CharacterLimitTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
+        keyboardActions=keyboardActions,
         textLimitConfig = textLimitConfig,
         maxLengthPostfixVisibility = maxLengthPostfixVisibility,
         prefix = prefix,
@@ -162,7 +162,6 @@ fun ThemedEditTextCursorHandle(
     prefix: @Composable (() -> Unit)? = null,
     placeHolder: @Composable (() -> Unit)? = null
 ) {
-
     val postfix: (@Composable () -> Unit)? = if (maxLengthPostfixVisibility) {
         ({
             if (textLimitConfig != null)
@@ -202,6 +201,7 @@ fun ThemedTextField(
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions=KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
     prefix: @Composable (() -> Unit)? = null,
@@ -234,7 +234,8 @@ fun ThemedTextField(
         textStyle = textStyle,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions,
-    )
+
+        )
 }
 
 
@@ -274,6 +275,7 @@ fun ThemedTextField(
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions= KeyboardActions(),
     onValueChange: (TextFieldValue) -> Unit,
     placeHolder: (@Composable () -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
@@ -286,6 +288,7 @@ fun ThemedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         interactionSource = remember { MutableInteractionSource() },
         decorationBox = {
             DecorationBoxTextField(
