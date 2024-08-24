@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.FlowRowScopeInstance.weight
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -75,7 +78,7 @@ fun CurrencyAmountText(
     value: String,
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit,
-    onDone:KeyboardActionScope.()->Unit={}
+    onDone: KeyboardActionScope.() -> Unit = {}
 ) {
     CharacterLimitTextField(
         modifier = modifier
@@ -109,6 +112,23 @@ fun CurrencyAmountText(
     )
 }
 
+
+@Composable
+fun RowScope.ExpandableTextField(block: @Composable RowScope.(Modifier) -> Unit) {
+    val expanded = rememberSaveable() {
+        mutableStateOf(false)
+    }
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+
+    block(Modifier
+        .onFocusEvent {
+            if (!it.isFocused) {
+                expanded.value = false
+            }
+        }
+    )
+}
+
 @Composable
 fun GoodsNameText(
     modifier: Modifier,
@@ -116,13 +136,21 @@ fun GoodsNameText(
     onValueChange: (String) -> Unit,
     onError: (String?) -> Unit
 ) {
+
+
     CharacterLimitTextField(
         modifier = modifier
+            .animateContentSize()
+            .focusRequester(focusRequester)
             .background(
                 FinanceHelperTheme.colors.defaultButtonColor.copy(0.5f),
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
-            ),
+            )
+           ,
         value = value,
+        onClick = {
+            expanded.value = true
+        },
         textLimitConfig = TransactionNameTextLimit(
             minTextLengthErrorMessage = stringResource(id = R.string.minLengthError, 1),
             maxTextLengthErrorMessage = stringResource(id = R.string.maxLengthError, 100)
@@ -162,25 +190,32 @@ fun GoodsCountText(
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     LaunchedEffect(key1 = keyboardState.value) {
         if (keyboardState.value == KeyboardState.CLOSED) {
-            Log.e("QQ", "GoodsCountText:${expanded.value} ")
             expanded.value = false
         }
     }
-
+    LaunchedEffect(key1 = expanded.value) {
+        if (expanded.value) {
+            keyboard?.show()
+        } else {
+            keyboard?.hide()
+        }
+    }
     CharacterLimitTextField(
         modifier = modifier
             .animateContentSize()
-            .width(if (expanded.value) 200.dp else 40.dp)
+            .width(if (expanded.value) 150.dp else 40.dp)
             .focusRequester(focusRequester)
             .onFocusEvent {
-                if (it.isFocused) {
-                    expanded.value = true
-                    // focusRequester.requestFocus()
-                    keyboard?.show()
+                if (!it.isFocused) {
+                    Log.e("SAS", "GoodsCountText:captured")
+                    expanded.value = false
                 }
             },
         value = value,
         onValueChange = onValueChange,
+        onClick = {
+            expanded.value = true
+        },
         onError = onError,
         textLimitConfig = GoodsCountTextLimit(
             minTextLengthErrorMessage = stringResource(id = R.string.minLengthError, 1),

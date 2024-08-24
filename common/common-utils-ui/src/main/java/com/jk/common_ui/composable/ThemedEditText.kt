@@ -2,7 +2,9 @@ package com.jk.common_ui.composable
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -40,11 +42,12 @@ fun CharacterLimitTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions=KeyboardActions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
 
@@ -76,17 +79,21 @@ fun CharacterLimitTextField(
             if (textLimitConfig != null) {
                 val errorMatcher = textLimitConfig.matchTextLimit(it)
                 error.value = errorMatcher?.first
-                if (textLimitConfig.isTypingAllowed(it))
-                    onValueChange(textLimitConfig.textLimit.onValueChange?.invoke(it) ?: it)
+                if (textLimitConfig.isTypingAllowed(it)) onValueChange(
+                    textLimitConfig.textLimit.onValueChange?.invoke(
+                        it
+                    ) ?: it
+                )
             } else {
                 onValueChange(it)
             }
         },
+        onClick = onClick,
         textStyle = textStyle,
         maxLines = maxLines,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
-        keyboardActions=keyboardActions,
+        keyboardActions = keyboardActions,
         textLimitConfig = textLimitConfig,
         maxLengthPostfixVisibility = maxLengthPostfixVisibility,
         prefix = prefix,
@@ -99,6 +106,7 @@ fun CharacterLimitTextField(
     modifier: Modifier = Modifier,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
     singleLine: Boolean = true,
@@ -121,6 +129,7 @@ fun CharacterLimitTextField(
     ThemedEditTextCursorHandle(
         modifier = modifier,
         value = value,
+        onClick = onClick,
         textStyle = textStyle,
         maxLines = maxLines,
         singleLine = singleLine,
@@ -134,14 +143,13 @@ fun CharacterLimitTextField(
                 if (errorMatcher?.second?.isTypingAllowed == true || error.value == null) {
                     val textFieldValue = TextFieldValue(
                         text = textLimitConfig.textLimit.onValueChange?.invoke(it.text) ?: it.text,
-                        it.selection
+                        selection = it.selection
                     )
                     onValueChange(textFieldValue)
                 }
             } else {
                 onValueChange(it)
             }
-
         },
         prefix = prefix,
         placeHolder = placeHolder
@@ -153,6 +161,7 @@ fun ThemedEditTextCursorHandle(
     modifier: Modifier = Modifier,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
     singleLine: Boolean = true,
@@ -164,15 +173,14 @@ fun ThemedEditTextCursorHandle(
 ) {
     val postfix: (@Composable () -> Unit)? = if (maxLengthPostfixVisibility) {
         ({
-            if (textLimitConfig != null)
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Unspecified),
-                    text = "${value.text.length}/${textLimitConfig.textLimit.maxLength.value}",
-                    textAlign = TextAlign.End,
-                    style = FinanceHelperTheme.typography.h3
-                )
+            if (textLimitConfig != null) Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Unspecified),
+                text = "${value.text.length}/${textLimitConfig.textLimit.maxLength.value}",
+                textAlign = TextAlign.End,
+                style = FinanceHelperTheme.typography.h3
+            )
         })
     } else null
 
@@ -180,6 +188,7 @@ fun ThemedEditTextCursorHandle(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
+        onClick = onClick,
         placeHolder = {
             placeHolder?.invoke()
         },
@@ -197,11 +206,12 @@ fun ThemedTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions=KeyboardActions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
     prefix: @Composable (() -> Unit)? = null,
@@ -210,21 +220,21 @@ fun ThemedTextField(
 
     val post: (@Composable () -> Unit)? = if (maxLengthPostfixVisibility) {
         ({
-            if (textLimitConfig != null)
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Unspecified),
-                    text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
-                    textAlign = TextAlign.End,
-                    style = FinanceHelperTheme.typography.h3
-                )
+            if (textLimitConfig != null) Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Unspecified),
+                text = "${value.length}/${textLimitConfig.textLimit.maxLength.value}",
+                textAlign = TextAlign.End,
+                style = FinanceHelperTheme.typography.h3
+            )
         })
     } else null
     ThemedTextField(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
+        onClick = onClick,
         placeHolder = {
             placeHolder?.invoke()
         },
@@ -234,8 +244,8 @@ fun ThemedTextField(
         textStyle = textStyle,
         maxLines = maxLines,
         keyboardOptions = keyboardOptions,
-
-        )
+        keyboardActions = keyboardActions
+    )
 }
 
 
@@ -244,9 +254,11 @@ fun ThemedTextField(
     modifier: Modifier = Modifier,
     value: String,
     textStyle: TextStyle = TextStyle.Default,
+    onClick: (() -> Unit)? = null,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChange: (String) -> Unit,
     placeHolder: (@Composable () -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
@@ -260,9 +272,24 @@ fun ThemedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
-        interactionSource = remember { MutableInteractionSource() },
+        keyboardActions = keyboardActions,
+        interactionSource = remember { MutableInteractionSource() }.also { interactionSource ->
+            LaunchedEffect(interactionSource) {
+                interactionSource.interactions.collect {
+                    if (it is PressInteraction.Release) {
+                        onClick?.invoke()
+                    }
+                }
+            }
+        },
         decorationBox = {
-            DecorationBoxTextField(value = value, innerTextField = it, placeHolder, prefix, postfix)
+            DecorationBoxTextField(
+                value = value,
+                innerTextField = it,
+                placeHolder = placeHolder,
+                prefix = prefix,
+                postfix = postfix
+            )
         })
 }
 
@@ -271,12 +298,13 @@ fun ThemedTextField(
 fun ThemedTextField(
     modifier: Modifier = Modifier,
     value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions= KeyboardActions(),
-    onValueChange: (TextFieldValue) -> Unit,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     placeHolder: (@Composable () -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
     postfix: @Composable (() -> Unit)? = null
@@ -289,14 +317,22 @@ fun ThemedTextField(
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = remember { MutableInteractionSource() }.also { interactionSource ->
+            LaunchedEffect(interactionSource) {
+                interactionSource.interactions.collect {
+                    if (it is PressInteraction.Release) {
+                        onClick?.invoke()
+                    }
+                }
+            }
+        },
         decorationBox = {
             DecorationBoxTextField(
                 value = value.text,
                 innerTextField = it,
-                placeHolder,
-                prefix,
-                postfix
+                placeHolder = placeHolder,
+                prefix = prefix,
+                postfix = postfix
             )
         })
 }
@@ -317,32 +353,33 @@ internal fun DecorationBoxTextField(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        if (prefix != null)
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(Color.Transparent)
-            ) {
-                prefix()
-            }
+        if (prefix != null) Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.Transparent)
+        ) {
+            prefix()
+        }
 
-        Box(Modifier.weight(2f)) {
+        Box(
+            Modifier
+                .weight(2f),
+        ) {
             if (value.isEmpty()) {
                 placeHolder?.invoke()
             }
             innerTextField()
         }
 
-        if (postfix != null)
-            Box(
-                modifier = Modifier
-                    .weight(1f)
+        if (postfix != null) Box(
+            modifier = Modifier
+                .weight(1f)
 
-                    .background(Color.Transparent)
+                .background(Color.Transparent)
 
-            ) {
-                postfix()
-            }
+        ) {
+            postfix()
+        }
     }
 }
 
