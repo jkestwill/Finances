@@ -29,7 +29,11 @@ android {
 
         debug {
             buildConfigField("String", "NBRB_API_BASE_URL", "\"https://api.nbrb.by/exrates/\"")
-
+            buildConfigField(
+                "String",
+                "PREPOPULATE_DB_PATH",
+                "\"transaction_database/prepopulate_database.db\""
+            )
         }
 
         release {

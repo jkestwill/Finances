@@ -103,3 +103,4 @@ kotilinx-serialization={id="org.jetbrains.kotlin.plugin.serialization",version.r
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "jetbrains-kotlin-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrains-kotlin-android" }
 jetbrains-kotlin-parcelize = {id="org.jetbrains.kotlin.plugin.parcelize",version.ref="jetbrains-kotlin-android"}
+androidx-room = {id="androidx.room",version.ref="roomCommon"}

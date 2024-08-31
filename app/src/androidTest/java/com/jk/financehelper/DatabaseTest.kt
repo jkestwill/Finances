@@ -12,7 +12,7 @@ import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -39,6 +39,7 @@ import org.junit.runner.RunWith
 import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 
 @RunWith(AndroidJUnit4::class)
@@ -325,19 +326,19 @@ class DatabaseTest {
             )
         }
 
-        fun testScheduleList(): List<TransactionScheduleDatabaseEntity> {
+        fun testScheduleList(): List<TransactionScheduleEntity> {
             return listOf(
-                TransactionScheduleDatabaseEntity(
-                    id = "zxc1", startDate = LocalDateTime.of(2011, 5, 9, 17, 4), 3, 111111
+                TransactionScheduleEntity(
+                    id = "zxc1", startDate = LocalDateTime.of(2011, 5, 9, 17, 4), 3, LocalTime.now(),1,2,3,111111
                 ),
-                TransactionScheduleDatabaseEntity(
-                    id = "zxc2", startDate = LocalDateTime.of(2015, 5, 9, 17, 4), 0, 0
+                TransactionScheduleEntity(
+                    id = "zxc2", startDate = LocalDateTime.of(2015, 5, 9, 17, 4), 0, LocalTime.now(),1,2,3,111111
                 ),
-                TransactionScheduleDatabaseEntity(
-                    id = "zxc3", startDate = LocalDateTime.of(1990, 1, 2, 13, 26), 1, 1870901
+                TransactionScheduleEntity(
+                    id = "zxc3", startDate = LocalDateTime.of(1990, 1, 2, 13, 26), 1, LocalTime.now(),1,2,3,111111
                 ),
-                TransactionScheduleDatabaseEntity(
-                    id = "zxc4", startDate = LocalDateTime.of(2040, 4, 1, 23, 59), 2, 201981737
+                TransactionScheduleEntity(
+                    id = "zxc4", startDate = LocalDateTime.of(2040, 4, 1, 23, 59), 2, LocalTime.now(),1,2,3,111111
                 ),
             )
         }

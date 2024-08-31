@@ -177,9 +177,9 @@ class YearCalendarState(
             },
             restore = {
                 YearCalendarState(
-                    startYear = it[0] as Year,
-                    endYear = it[1] as Year,
-                    firstVisibleYear = it[2] as Year
+                    startYear = it[0],
+                    endYear = it[1],
+                    firstVisibleYear = it[2]
                 )
             }
         )

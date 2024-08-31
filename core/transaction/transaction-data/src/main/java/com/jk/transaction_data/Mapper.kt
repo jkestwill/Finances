@@ -21,7 +21,7 @@ import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.preview.OperationPreviewEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
@@ -140,11 +140,15 @@ fun Money.toEntity(): TransactionMoneyDatabaseEntity {
     return TransactionMoneyDatabaseEntity(id = id, amount = amount, currencyId = currency.id)
 }
 
-fun Schedule.toEntity(): TransactionScheduleDatabaseEntity {
-    return TransactionScheduleDatabaseEntity(
+fun Schedule.toEntity(): TransactionScheduleEntity {
+    return TransactionScheduleEntity(
         id = id,
         startDate = dateStart,
         countLeft = countLeft,
-        periodMillis = repeatPeriodMillis
+        periodMillis = repeatPeriodMillis,
+        time = time,
+        day = day,
+        week = week,
+        month = month
     )
 }

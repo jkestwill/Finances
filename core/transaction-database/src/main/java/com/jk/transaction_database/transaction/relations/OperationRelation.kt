@@ -7,7 +7,7 @@ import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.list.OperationCategoryList
 import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
@@ -44,5 +44,5 @@ data class OperationRelation(
     @Relation(parentColumn = "id", entityColumn = "id", associateBy = Junction(
         parentColumn = "operation_id", entityColumn = "schedule_id", value = OperationScheduleList::class
     ))
-    val schedule: List<TransactionScheduleDatabaseEntity>
+    val schedule: List<TransactionScheduleEntity>
 )

@@ -3,9 +3,15 @@ package com.jk.transaction_database.transaction.database
 import android.content.Context
 import android.util.Log
 import androidx.room.Database
+import androidx.room.DeleteColumn
+import androidx.room.RenameColumn
+import androidx.room.RenameTable
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.jk.transaction_database.transaction.ExchangeRateEntity
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.LedgerEntity
@@ -17,7 +23,7 @@ import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionScheduleDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -45,6 +51,7 @@ import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
+import com.jk.transaction_database.transaction.typeconverter.LocalTimeTypeConverter
 import java.util.concurrent.Executors
 
 
@@ -59,7 +66,7 @@ import java.util.concurrent.Executors
         TransactionEntity::class,
         OperationGoodsListEntity::class,
         OperationCategoryList::class,
-        TransactionScheduleDatabaseEntity::class,
+        TransactionScheduleEntity::class,
         LedgerEntity::class,
         LedgerTransactionList::class,
         ExchangeRateEntity::class,
@@ -69,9 +76,9 @@ import java.util.concurrent.Executors
         LanguageEntity::class,
         LangMeasureListEntity::class,
         GoodsSpecificationsListEntity::class
-    ], version = 21, exportSchema = false
+    ], version = 23, exportSchema = false
 )
-@TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class])
+@TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getTransactionDao(): TransactionDao
@@ -104,9 +111,10 @@ abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getExchangeRateDao(): ExchangeRateDao
 
     abstract fun getGoodsSpecificationDao(): GoodsSpecificationDao
+
 }
 
-fun transactionDatabase(context: Context): TransactionDatabase {
+fun transactionDatabase(context: Context,dbAssetPath:String): TransactionDatabase {
     return Room.databaseBuilder(
         context = context,
         klass = TransactionDatabase::class.java,
@@ -115,6 +123,7 @@ fun transactionDatabase(context: Context): TransactionDatabase {
         .setQueryCallback({ sqlQuery, bindArgs ->
             Log.e("DATABASE_LOG", "${sqlQuery} ## Args:${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
+        .createFromAsset(dbAssetPath)
         .build()
         .apply {
             query(query = "PRAGMA foreign_keys=ON", args = null)

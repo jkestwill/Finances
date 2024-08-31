@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":common:common-data:money"))
     implementation(project(":common:common-data:category"))
     implementation(project(":common:common-data:transaction"))
+    implementation(project(":common:common-utils"))
 
 
     testImplementation(libs.junit)

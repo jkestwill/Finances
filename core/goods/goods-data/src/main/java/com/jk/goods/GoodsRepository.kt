@@ -5,8 +5,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.SearchParams
+import com.jk.common_goods_data.Goods
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 class GoodsRepository @Inject constructor(
@@ -19,6 +24,21 @@ class GoodsRepository @Inject constructor(
         for (i in goodsList) {
             goodsLocalDataSource.insert(i.toGoodsRelation())
         }
+    }
+
+    suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
+        val start = flowOf(ApiRequest.Loading<List<Goods>>())
+        val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
+            emit(goodsLocalDataSource.getByIdList(idList).map { it.toGoods() })
+        }.map { goodsList ->
+            try {
+                ApiRequest.Success(goodsList)
+            } catch (e: Throwable) {
+                ApiRequest.Error(goodsList, e)
+            }
+        }
+       return merge(start, result)
+
     }
 
 

@@ -37,19 +37,16 @@ fun HorizontalCategoryGrid(
         mutableStateOf<List<CategoryUI>>(items)
     }
 
-
-    LazyHorizontalGrid(modifier = modifier, rows = GridCells.Fixed(2)) {
+    LazyHorizontalGrid(modifier = modifier, rows = GridCells.Adaptive(50.dp)) {
         item {
             IconButton(modifier = Modifier
                 .background(
                     color = FinanceHelperTheme.colors.defaultButtonColor,
                     shape = FinanceHelperTheme.shape.shapeRoundMedium
                 )
-
                 .border(2.dp, color = Color.Black, shape = RoundedCornerShape(20))
                 .padding(5.dp)
-                .width(50.dp)
-                ,
+                .width(50.dp),
                 onClick = {
                     onChooseCategory(items.map { it.id })
                 }) {

@@ -32,7 +32,7 @@ fun Operation.toUI(): OperationUI {
 }
 
 fun Schedule.toUI(): ScheduleUI {
-    return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis)
+    return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis, time, day, week, month)
 }
 
 fun TransactionType.toUI(): TransactionTypeUI {
@@ -67,5 +67,5 @@ fun OperationUI.toOperation(): Operation {
 }
 
 fun ScheduleUI.toSchedule(): Schedule {
-    return Schedule(id, dateStart, countLeft, repeatPeriodMillis)
+    return Schedule(id, dateStart, countLeft, repeatPeriodMillis, time = time, day, week, month)
 }

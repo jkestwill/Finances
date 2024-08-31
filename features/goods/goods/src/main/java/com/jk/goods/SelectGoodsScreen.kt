@@ -15,10 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -33,6 +33,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.jk.common_data.Selectable
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.Red
 import com.jk.common_ui.clickAnimation
@@ -40,16 +41,6 @@ import com.jk.common_ui.loadingAnimation
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.shared_res.R
 
-@Composable
-fun SelectGoodsScreen(
-    viewModel: SelectGoodsViewModel,
-    preselectedId: List<String>,
-    onDismiss: () -> Unit,
-
-    ) {
-
-
-}
 
 @Composable
 fun SelectGoodsDialog(
@@ -59,12 +50,14 @@ fun SelectGoodsDialog(
     onDismiss: () -> Unit
 ) {
     val goodsList = viewModel.goodsListFlow.collectAsLazyPagingItems()
-    SelectableItemsDialog<GoodsUI>(
+
+
+    SelectableItemsDialog(
         viewModel = viewModel,
-        preselectedId = preselectedIdList,
+        preselectedIdList = preselectedIdList,
         items = goodsList,
         onSelect = {
-            onSelect(it.map { goods -> goods.id })
+            onSelect(it.map { goodsId -> goodsId })
         },
         onDismiss = onDismiss,
         itemListContent = { index, item, selected ->
@@ -78,15 +71,22 @@ fun SelectGoodsDialog(
 }
 
 @Composable
-fun <T : Any> SelectableItemsDialog(
+fun  SelectableItemsDialog(
     modifier: Modifier = Modifier,
-    viewModel: Selectable<T>,
-    items: LazyPagingItems<T>,
-    preselectedId: List<String>? = null,
-    onSelect: (List<T>) -> Unit,
-    itemListContent: @Composable LazyItemScope.(Int, T, Boolean) -> Unit,
+    viewModel: SelectableItems<String>,
+    items: LazyPagingItems<out Selectable>,
+    preselectedIdList: List<String>? = null,
+    onSelect: (List<String>) -> Unit,
+    itemListContent: @Composable LazyItemScope.(Int, Selectable, Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
+    LaunchedEffect(key1 = preselectedIdList) {
+        println(preselectedIdList)
+        if(!preselectedIdList.isNullOrEmpty()){
+            viewModel.selectableItems.clear()
+            viewModel.selectableItems.addAll(preselectedIdList)
+        }
+    }
     Dialog(
         onDismissRequest = onDismiss,
     ) {
@@ -125,7 +125,8 @@ fun <T : Any> SelectableItemsDialog(
                             .clickAnimation {
                                 if (viewModel.selectableItems.isEmpty() || viewModel.selectableItems.size < items.itemSnapshotList.items.size) {
                                     viewModel.selectableItems.clear()
-                                    viewModel.selectableItems.addAll(items.itemSnapshotList.items)
+                                    println(items.itemSnapshotList.items)
+                                    viewModel.selectableItems.addAll(items.itemSnapshotList.items.map { it.value })
 
                                 } else
                                     viewModel.selectableItems.clear()
@@ -157,13 +158,15 @@ fun <T : Any> SelectableItemsDialog(
                             isVisible = items.loadState.refresh is LoadState.Loading,
                             color = FinanceHelperTheme.colors.defaultButtonColor
                         ),
-                    items = items.itemSnapshotList.items, onListChanged = { item, selected ->
+                    preselectedItems = viewModel.selectableItems,
+                    items = items.itemSnapshotList.items,
+                    onListChanged = { item, selected ->
                         if (selected) {
-                            viewModel.selectableItems.remove(item)
-                        } else viewModel.selectableItems.add(item)
+                            viewModel.selectableItems.removeIf { item.value == it }
+                        } else viewModel.selectableItems.add(item.value)
                     },
                     contentItem = { index, item, selected ->
-                        itemListContent(index,item,selected)
+                        itemListContent(index, item, selected)
                     })
 
             }
@@ -206,10 +209,10 @@ fun <T : Any> SelectableItemsDialog(
 }
 
 @Composable
-fun <T : Any> ItemVerticalList(
+fun <T : Selectable> ItemVerticalList(
     modifier: Modifier = Modifier,
     items: List<T>,
-    preselectedItems: List<T>? = null,
+    preselectedItems: List<String>? = null,
     onListChanged: (T, Boolean) -> Unit,
     contentItem: @Composable LazyItemScope.(Int, T, Boolean) -> Unit
 ) {
@@ -219,14 +222,17 @@ fun <T : Any> ItemVerticalList(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(items.size) { index ->
-            val selected = rememberSaveable(preselectedItems?.size) {
-                mutableStateOf(value = preselectedItems?.contains(items[index]) ?: false)
+            val selected = remember(preselectedItems?.size) {
+                mutableStateOf(value = preselectedItems?.contains(items[index].value) ?: false)
             }
             // при преселектед айтемах не убирает выделение
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .clickAnimation { onListChanged(items[index], selected.value) }) {
+                    .clickAnimation {
+                        onListChanged(items[index], selected.value)
+                    }
+            ) {
                 contentItem(index, items[index], selected.value)
             }
         }

@@ -13,48 +13,5 @@ class TransactionNameTextLimit(
     error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage)
 )
 
-class CurrencyAmountTextLimit(
-    minTextLengthErrorMessage: String,
-    maxTextLengthErrorMessage: String
-) : TextLimitConfig(
-    textLimit = TextLimit(
-        Limit(1, true),
-        Limit(10, false),
-        allowedSpecialCharacters = Limit(listOf('.'), false),
-        regexPattern = Limit("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)", false),
-        onValueChange = {
-            (if (it.length > 1) {
-                if (it.startsWith("00"))
-                    it[0].toString()
-                else
-                    it.trimStart('0')
-            }
-            else it).format("%.2f")
-        }
-    ),
-    error = TextError(minTextLengthError = minTextLengthErrorMessage, maxTextLengthErrorMessage))
 
-class GoodsCountTextLimit(
-    minTextLengthErrorMessage: String,
-    maxTextLengthErrorMessage: String
-) : TextLimitConfig(
-    textLimit = TextLimit(
-        minLength = Limit(1, true),
-        maxLength = Limit(7, false),
-        regexPattern = Limit("\\d+$", false),
-        onValueChange = {
-            if (it.length > 1) {
-                if (it.startsWith("00"))
-                    it[0].toString()
-                else
-                    it.trimStart('0')
-            }
-            else it
-        }
-    ),
-    error = TextError(
-        minTextLengthError = minTextLengthErrorMessage,
-        maxTextLengthError = maxTextLengthErrorMessage
-    ),
 
-    )

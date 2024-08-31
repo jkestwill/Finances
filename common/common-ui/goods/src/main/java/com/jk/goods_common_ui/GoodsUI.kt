@@ -1,9 +1,12 @@
 package com.jk.goods_common_ui
 
 import android.os.Parcelable
+import com.jk.common_data.Selectable
+import com.jk.common_goods_data.Goods
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import kotlinx.parcelize.Parcelize
+import kotlin.math.cos
 
 
 @Parcelize
@@ -13,7 +16,10 @@ data class GoodsUI(
     val amount: Int,
     val specifications: List<SpecificationsUI>,
     val cost: MoneyUI
-) : Parcelable {
+) : Parcelable, Selectable {
+
+    override val value: String
+        get() = id
 
     fun toBuilder(): Builder {
         return Builder()
@@ -31,6 +37,14 @@ data class GoodsUI(
         private var amount = 0
         private var specifications = listOf<SpecificationsUI>()
         private var cost = MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id = "", name = ""))
+
+        constructor(goods: GoodsUI) : this() {
+            id = goods.id
+            name = goods.name
+            amount = goods.amount
+            specifications = goods.specifications
+            cost = goods.cost
+        }
 
         fun id(id: String): Builder {
             this.id = id
@@ -60,6 +74,24 @@ data class GoodsUI(
 
         fun build(): GoodsUI {
             return GoodsUI(id, name, amount = amount, specifications, cost = cost)
+        }
+
+        override fun hashCode(): Int {
+            return id.hashCode() + name.hashCode() + amount.hashCode() + specifications.hashCode() + cost.hashCode()
+
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other == null) return false
+            if (other is GoodsUI.Builder) {
+                return if (other.id.isEmpty())
+                    other.name == name && other.amount == amount && other.specifications == specifications && other.cost == cost
+                else other.id == id
+            }
+            if (other is Goods) {
+                return other == build()
+            }
+            return false
         }
 
         override fun toString(): String {

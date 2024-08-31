@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
@@ -25,6 +26,7 @@ import com.jk.financehelper.main.HomeScreen
 import com.jk.goods.SelectGoodsDialog
 import com.jk.transaction.TransactionScreen
 
+private const val TAG = "NavHost"
 
 @SuppressLint("RestrictedApi")
 @Composable
@@ -67,21 +69,22 @@ fun MainNavGraph(
             Routes.CREATE_TRANSACTION,
             arguments = listOf(navArgument("categoryIdList") {
                 nullable = true; type = NavType.StringType
+            }, navArgument("preselectedGoodsId") {
+                nullable = true; type = NavType.StringType
             })
         ) {
             val onBack: () -> Unit = { navController.popBackStack() }
-
+            val goodsIdList =
+                it.savedStateHandle.getStateFlow<List<String>?>("preselectedGoodsId", null)
+                    .collectAsState()
             val categoryIdList = it.savedStateHandle.getStateFlow<List<String>>(
                 "categoryIdList",
                 listOf()
             ).collectAsState()
 
-            LaunchedEffect(key1 = categoryIdList) {
-                Log.e("TAG", "MainNavGraph jhjh:${categoryIdList} ")
-            }
-
             TransactionScreen(
                 viewModel = hiltViewModel(),
+                goodsIdList = goodsIdList.value,
                 categoryListId = categoryIdList.value,
                 onBackClick = if (navController.currentBackStack.collectAsState().value.size > 2) {
                     onBack
@@ -96,6 +99,7 @@ fun MainNavGraph(
                     )
                 },
                 onGoodsAdd = { preselectedGoodsIdList ->
+                    Log.e(TAG, "CreateTransaction onGoodsAdd ${preselectedGoodsIdList} ")
                     navController.navigate(
                         "${Routes.SELECT_GOODS}?preselectedGoodsId=${
                             preselectedGoodsIdList?.joinToString(
@@ -104,7 +108,7 @@ fun MainNavGraph(
                         }"
                     )
                 },
-                onBack={
+                onBack = {
                     navController.popBackStack()
                 }
             )
@@ -118,7 +122,6 @@ fun MainNavGraph(
                 viewModel = hiltViewModel(),
                 selectedCategoryIdList = selectedCategoryId,
                 onSelectCategoryIds = { list ->
-
                     navController.previousBackStackEntry?.savedStateHandle?.set(
                         "categoryIdList",
                         list
@@ -163,23 +166,19 @@ fun MainNavGraph(
                 })
         }
 
-        dialog(Routes.SELECT_GOODS) {
-            val preselectedGoodsId = it.savedStateHandle.getStateFlow<List<String>>(
-                "preselectedGoodsId",
-                listOf()
-            ).collectAsState()
+        dialog("${Routes.SELECT_GOODS}?preselectedGoodsId={preselectedGoodsId}") {
+            val preselectedGoodsId = it.arguments?.getString("preselectedGoodsId")?.split(",")
 
-            val prevDestination = navController.previousBackStackEntry?.destination?.route
             SelectGoodsDialog(
                 viewModel = hiltViewModel(),
-                preselectedIdList = preselectedGoodsId.value,
+                preselectedIdList = preselectedGoodsId,
                 onSelect = { idList ->
-                    if (prevDestination != null)
-                        navController.popBackStack(
-                            "${prevDestination}?preselectedGoodsId=${
-                                idList.joinToString(",") { goodsId->goodsId }
-                            }", true
-                        )
+                    Log.e(TAG, "SELECT_GOODS:OnSelect ${idList} ")
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        "preselectedGoodsId",
+                        idList
+                    )
+                    navController.popBackStack()
                 },
                 onDismiss = {
                     navController.popBackStack()

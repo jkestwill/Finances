@@ -27,7 +27,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRoom(@ApplicationContext context: Context): TransactionDatabase =
-        transactionDatabase(context)
+        transactionDatabase(context,if(BuildConfig.DEBUG) BuildConfig.PREPOPULATE_DB_PATH else BuildConfig.PREPOPULATE_DB_PATH)
 
 
     @Provides

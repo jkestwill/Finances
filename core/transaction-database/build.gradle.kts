@@ -3,6 +3,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.androidx.room)
+}
+
+room {
+    schemaDirectory("debug", "$projectDir/schemas/debug")
+    schemaDirectory("$projectDir/schemas/transaction_database")
 }
 
 android {
@@ -17,6 +23,10 @@ android {
     }
 
     buildTypes {
+
+        debug {
+            this.isDefault=true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -25,6 +35,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -46,6 +57,6 @@ dependencies {
     implementation(project(":common:common-utils"))
     ksp(libs.androidx.room.compiler)
 
-    androidTestImplementation( "androidx.test:runner:1.6.1")
+    androidTestImplementation("androidx.test:runner:1.6.1")
 
 }

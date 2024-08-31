@@ -25,8 +25,12 @@ fun rememberIncrement(
     }
     val scope = rememberCoroutineScope()
 
-    val result = rememberSaveable() {
+    val result = remember(startValue) {
         mutableIntStateOf(startValue)
+    }
+
+    LaunchedEffect(key1 = startValue) {
+        result.intValue=startValue
     }
     LaunchedEffect(key1 = isIncrement.value) {
         val job = scope.launch(Dispatchers.Default) {
@@ -58,7 +62,7 @@ fun rememberIncrement(
             isIncrement.value = null
         },
         onTap = {
-            result.intValue = if (it) result.intValue + 1 else result.intValue - 1
+            result.intValue += if (it) 1 else - 1
             onResult(result.intValue)
         }
     )

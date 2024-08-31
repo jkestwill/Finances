@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.common_data.SearchParams
-import com.jk.common_goods_data.Goods
+import com.jk.common_data.Selectable
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.toUI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectGoodsViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
-) : ViewModel(), Selectable<GoodsUI> {
+) : ViewModel(), SelectableItems<String> {
     val goodsListFlow = goodsRepository.getAllFromDatabase(SearchParams.getDefault())
         .map { pagingList ->
             pagingList.map { goods ->
@@ -34,9 +34,12 @@ class SelectGoodsViewModel @Inject constructor(
             PagingData.empty(),
         )
 
-    override val selectableItems: SnapshotStateList<GoodsUI> = mutableStateListOf<GoodsUI>()
+
+
+    override val selectableItems: SnapshotStateList<String> = mutableStateListOf<String>()
 }
 
-interface Selectable<T> {
+interface SelectableItems<T> {
     val selectableItems: SnapshotStateList<T>
 }
+

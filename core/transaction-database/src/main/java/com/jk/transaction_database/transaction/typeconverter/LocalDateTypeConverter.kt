@@ -9,7 +9,7 @@ object LocalDateTypeConverter {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): LocalDate? {
-        return value?.let { LocalDate.ofEpochDay(value / SECONDS_IN_DAY) }
+        return value?.let { LocalDate.ofEpochDay(value * SECONDS_IN_DAY) }
     }
 
     @TypeConverter

@@ -14,6 +14,7 @@ import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
 import com.jk.common_data.sha256
+import com.jk.common_goods_data.Goods
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
@@ -62,7 +63,7 @@ class AddNewTransactionViewModel @Inject constructor(
     val editableCategoriesStateList = mutableStateListOf<CategoryUI>()
 
     // костыль чтобы сравнивать занчения приходящие из параметров composable функции TransactionScreen
-    // для того чтобы после удаления категории при поровороте экрана или его обновлении и не приходили удаленные категории
+    // для того чтобы после удаления категории при поровороте экрана или его обновлении не приходили удаленные категории
     var prevCategoryIdList: List<String>? = null
 
     val currencyListState: StateFlow<State<List<CurrencyUI>>> = currencyRepository.getCurrencyList()
@@ -94,6 +95,9 @@ class AddNewTransactionViewModel @Inject constructor(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
+    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
+    val incomingGoodsFlow: StateFlow<State<List<GoodsUI>>> get() = _incomingGoodsFlow
+
 
     val newGoodsBuilderList = mutableStateListOf<GoodsUI.Builder>()
     val operationBuilder =
@@ -115,6 +119,14 @@ class AddNewTransactionViewModel @Inject constructor(
                             }
                     }
             )
+        }
+    }
+
+    fun getGoodsListById(idList: List<String>) {
+        viewModelScope.launch(dispatchers.io) {
+            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
+                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
+            })
         }
     }
 
@@ -236,7 +248,7 @@ class AddNewTransactionViewModel @Inject constructor(
         val preBuild = scheduleBuilder.build()
         when {
             preBuild.countLeft < 0 -> throw IllegalArgumentException("Schedule count can't be below zero")
-            preBuild.repeatPeriodMillis < 0L -> throw IllegalArgumentException("Schedule repeatPeriodMillis can't be below zero")
+            preBuild.repeatPeriodMillis?.compareTo(0L) == -1 -> throw IllegalArgumentException("Schedule repeatPeriodMillis can't be below zero")
         }
     }
 

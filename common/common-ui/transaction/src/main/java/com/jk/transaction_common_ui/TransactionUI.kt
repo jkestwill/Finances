@@ -5,6 +5,7 @@ import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 data class TransactionUI(
     val id: String,
@@ -12,24 +13,24 @@ data class TransactionUI(
     val date: LocalDateTime,
     val type: TransactionTypeUI
 ) {
-    class Builder():BaseIdBuilder<TransactionUI>() {
+    class Builder() : BaseIdBuilder<TransactionUI>() {
 
         private var operation: OperationUI = OperationUI.Builder().build()
         private var date: LocalDateTime = LocalDateTime.now()
         private var type: TransactionTypeUI =
             TransactionTypeUI(id = "", name = TransactionTypeUI.Type.OFFLINE.value)
 
-        fun setOperation(operationUI: OperationUI):Builder {
+        fun setOperation(operationUI: OperationUI): Builder {
             this.operation = operationUI
             return this
         }
 
-        fun setDate(date: LocalDateTime):Builder {
+        fun setDate(date: LocalDateTime): Builder {
             this.date = date
             return this
         }
 
-        fun setType(type: TransactionTypeUI):Builder {
+        fun setType(type: TransactionTypeUI): Builder {
             this.type = type
             return this
         }
@@ -58,7 +59,7 @@ data class OperationUI(
     val money: MoneyUI
 ) {
 
-    class Builder():BaseIdBuilder<OperationUI>() {
+    class Builder() : BaseIdBuilder<OperationUI>() {
 
         private var name: String = ""
         private var categoryList: List<CategoryUI> = listOf()
@@ -91,7 +92,7 @@ data class OperationUI(
             return this
         }
 
-      override  fun build(): OperationUI {
+        override fun build(): OperationUI {
             return OperationUI(id, name, categoryList, scheduleList, goodsList, money)
         }
     }
@@ -102,29 +103,37 @@ data class ScheduleUI(
     val id: String,
     val dateStart: LocalDateTime,
     val countLeft: Int,
-    val repeatPeriodMillis: Long
+    val repeatPeriodMillis: Long?,
+    val time: LocalTime?,
+    val day: Byte?,
+    val week: Byte?,
+    val month: Byte?
 ) {
     class Builder() : BaseIdBuilder<ScheduleUI>() {
         private var dateStart = LocalDateTime.now()
         private var countLeft: Int = 0
         private var repeatPeriodMillis: Long = 0L
-
-        fun dateStart(dateStart: LocalDateTime):Builder{
-            this.dateStart=dateStart
+        private var time: LocalTime? = null
+        private var day: Byte? = null
+        private var week: Byte? = null
+        private var month: Byte? = null
+        fun dateStart(dateStart: LocalDateTime): Builder {
+            this.dateStart = dateStart
             return this
         }
 
-        fun countLeft(countLeft: Int):Builder{
-            this.countLeft=countLeft
+        fun countLeft(countLeft: Int): Builder {
+            this.countLeft = countLeft
             return this
         }
 
-        fun repeatPeriodMillis(repeatPeriodMillis: Long):Builder{
-            this.repeatPeriodMillis=repeatPeriodMillis
+        fun repeatPeriodMillis(repeatPeriodMillis: Long): Builder {
+            this.repeatPeriodMillis = repeatPeriodMillis
             return this
         }
+
         override fun build(): ScheduleUI {
-            return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis)
+            return ScheduleUI(id, dateStart, countLeft, repeatPeriodMillis, time, day, week, month)
         }
 
     }

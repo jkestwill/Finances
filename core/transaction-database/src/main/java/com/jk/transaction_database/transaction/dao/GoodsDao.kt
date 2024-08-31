@@ -63,6 +63,9 @@ abstract class GoodsDao(
         offset: Int
     ): List<GoodsRelation>
 
+    @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
+    abstract suspend fun getByIdList(idList: List<String>): List<GoodsRelation>
+
     @Insert(entity = TransactionGoodsDatabaseEntity::class)
     abstract suspend fun insert(t: TransactionGoodsDatabaseEntity)
 
