@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.composable.CharacterLimitTextField
 import com.jk.shared_res.R
@@ -32,6 +33,8 @@ fun GoodsCountText(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
         maxLengthPostfixVisibility = false,
-        textStyle = FinanceHelperTheme.typography.h3
+        textStyle = FinanceHelperTheme.typography.h3,
+        minTextSize = 10.sp,
+        maxTextSize = 20.sp
     )
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
+// создать промежуточный класс где стыкуются валюта и обменник
 class CurrencyRepository @Inject constructor(
     private val currencyDao: CurrencyDao
 ) {

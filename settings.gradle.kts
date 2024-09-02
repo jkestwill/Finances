@@ -40,3 +40,4 @@ include(":common:common-ui:category")
 include(":common:common-ui:money")
 
 include(":common:shared_res")
+include(":common:common-data:settings")

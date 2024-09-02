@@ -58,8 +58,6 @@ class NBRBRepository @Inject constructor(
                         rate = notNullApiRequest.rate
                     )
                 }
-                //  getOrNullExchangeRate((notNullApiRequest.currencyIn+notNullApiRequest.date).sha256(),notNullApiRequest)
-
             }
         }.map { result ->
             result.map {

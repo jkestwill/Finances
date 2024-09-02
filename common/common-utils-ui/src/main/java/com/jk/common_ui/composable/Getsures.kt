@@ -1,5 +1,6 @@
 package com.jk.common_ui.composable
 
+import android.util.Log
 import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,10 +12,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @Composable
 fun rememberIncrement(
-    startValue:Int=0,
+    startValue: Int = 0,
     delay: Long = 100L,
     step: Int = 1,
     onChange: (Int) -> Unit,
@@ -23,26 +26,27 @@ fun rememberIncrement(
     val isIncrement = rememberSaveable() {
         mutableStateOf<Boolean?>(null)
     }
-    val scope = rememberCoroutineScope()
 
+    val scope = rememberCoroutineScope()
     val result = remember(startValue) {
         mutableIntStateOf(startValue)
     }
 
-    LaunchedEffect(key1 = startValue) {
-        result.intValue=startValue
-    }
     LaunchedEffect(key1 = isIncrement.value) {
+        val mutex = Mutex()
         val job = scope.launch(Dispatchers.Default) {
+
             while (isIncrement.value != null) {
                 if (isIncrement.value == true) {
-                    result.intValue += step
-                    delay(delay)
+                    mutex.withLock {
+                        result.intValue += step
+                    }
+                } else if (isIncrement.value == false) {
+                    mutex.withLock {
+                        result.intValue = (result.intValue - step).coerceAtLeast(0)
+                    }
                 }
-                if (isIncrement.value == false) {
-                    result.intValue = (result.intValue - step).coerceAtLeast(0)
-                    delay(delay)
-                }
+                delay(delay)
                 onChange(result.intValue)
             }
         }
@@ -62,7 +66,7 @@ fun rememberIncrement(
             isIncrement.value = null
         },
         onTap = {
-            result.intValue += if (it) 1 else - 1
+            result.intValue += (if (it) 1 else -1).coerceAtLeast(0)
             onResult(result.intValue)
         }
     )

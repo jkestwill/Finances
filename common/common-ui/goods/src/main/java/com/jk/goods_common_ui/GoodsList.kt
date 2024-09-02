@@ -106,7 +106,6 @@ fun GoodsList(
         }
         Box(modifier = Modifier
             .clickAnimation {
-
                 onAdd(
                     GoodsUI
                         .Builder()
@@ -150,11 +149,11 @@ fun EditableListItem(
     val goodsName = rememberSaveable() {
         mutableStateOf(preBuild.value.name)
     }
-    val goodsCount = rememberSaveable() {
+    val goodsCount = rememberSaveable(preBuild.value.amount) {
         mutableStateOf(preBuild.value.amount)
     }
-    val goodsCountString = rememberSaveable() {
-        mutableStateOf(goodsCount.value.toString())
+    val goodsCountString = rememberSaveable(preBuild.value.amount) {
+        mutableStateOf(preBuild.value.amount.toString())
     }
     val goodsAmount = rememberSaveable() {
         mutableStateOf(preBuild.value.cost.amount)
@@ -185,13 +184,16 @@ fun EditableListItem(
 
     val iconButtonModifier = defaultModifier.size(32.dp)
 
-    val increment = rememberIncrement(startValue = goodsCount.value, onChange = {
+    val increment = rememberIncrement(startValue =goodsCount.value, onChange = {
         goodsCountString.value = it.toString()
+
     }) {
         goodsCount.value = it
-        Log.e("ZXc", "EditableListItem:${it} ")
     }
 
+    LaunchedEffect(key1 = goodsCountString.value) {
+        Log.d("TAG", "EditableListItem: onChange ${goodsCountString.value}")
+    }
 
     LaunchedEffect(key1 = goodsCount.value) {
         goodsCountString.value = goodsCount.value.toString()
@@ -284,7 +286,8 @@ fun EditableListItem(
         DraggableWidthContent(width = 50) { modifier ->
             GoodsCountText(
                 modifier = modifier
-                    .align(Alignment.CenterVertically),
+                    .align(Alignment.CenterVertically)
+                    .weight(1f),
                 value = goodsCountString.value,
                 onValueChange = {
                     goodsCount.value = try {
@@ -295,7 +298,6 @@ fun EditableListItem(
                         e.printStackTrace()
                         0
                     }
-                    goodsCountString.value = it
                 },
                 onError = {
 
@@ -314,7 +316,7 @@ fun EditableListItem(
                 .focusable(
                     enabled = true,
                     interactionSource = remember { MutableInteractionSource() })
-                .then(modifier),
+                .then(modifier.weight(2f)),
                 value = goodsName.value,
                 onValueChange = {
                     goodsName.value = it
@@ -334,7 +336,7 @@ fun EditableListItem(
                         next = first
                     }
                     .align(Alignment.CenterVertically)
-                    .then(mod),
+                    .then(mod.weight(1f)),
 
                 value = goodsAmountString.value,
                 onValueChange = {
@@ -357,15 +359,15 @@ fun EditableListItem(
 
                 },
                 onDone = {
-                    goodsAmount.value *= goodsCount.value
+                  //  goodsAmount.value *= goodsCount.value
                     goodsAmountString.value = goodsAmount.value.toString()
                 })
         }
-        DraggableWidthContent(width = 100) {
+        DraggableWidthContent(width = 70) {
             CurrencyDropDownMenu(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .then(it),
+                    .then(it.weight(1f)),
                 currencyListState = currencyListState,
                 color = FinanceHelperTheme.colors.defaultButtonColor,
                 placeholderText = currency.value.name.ifEmpty { stringResource(id = com.jk.shared_res.R.string.currency) }

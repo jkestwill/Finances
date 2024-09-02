@@ -26,15 +26,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
+import androidx.compose.ui.unit.sp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.error
 import kotlinx.coroutines.delay
+import kotlin.math.min
 
 
 @Composable
@@ -44,6 +49,8 @@ fun CharacterLimitTextField(
     onValueChange: (String) -> Unit,
     onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
+    minTextSize: TextUnit = textStyle.fontSize,
+    maxTextSize: TextUnit = textStyle.fontSize,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -97,7 +104,9 @@ fun CharacterLimitTextField(
         textLimitConfig = textLimitConfig,
         maxLengthPostfixVisibility = maxLengthPostfixVisibility,
         prefix = prefix,
-        placeHolder = placeHolder
+        placeHolder = placeHolder,
+        minTextSize = minTextSize,
+        maxTextSize = maxTextSize
     )
 }
 
@@ -208,6 +217,8 @@ fun ThemedTextField(
     onValueChange: (String) -> Unit,
     onClick: (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle.Default,
+    minTextSize: TextUnit = textStyle.fontSize,
+    maxTextSize: TextUnit = textStyle.fontSize,
     maxLines: Int = 1,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -234,6 +245,8 @@ fun ThemedTextField(
         modifier = modifier,
         value = value,
         onValueChange = onValueChange,
+        minTextSize = minTextSize,
+        maxTextSize = maxTextSize,
         onClick = onClick,
         placeHolder = {
             placeHolder?.invoke()
@@ -257,6 +270,8 @@ fun ThemedTextField(
     onClick: (() -> Unit)? = null,
     maxLines: Int = 1,
     singleLine: Boolean = true,
+    minTextSize: TextUnit = textStyle.fontSize,
+    maxTextSize: TextUnit = textStyle.fontSize,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChange: (String) -> Unit,
@@ -264,11 +279,18 @@ fun ThemedTextField(
     prefix: @Composable (() -> Unit)? = null,
     postfix: @Composable (() -> Unit)? = null
 ) {
-
-    BasicTextField(modifier = modifier,
+    val textSize = remember {
+        mutableStateOf(textStyle.fontSize.value)
+    }
+    val readyToDraw = remember { mutableStateOf(false) }
+    BasicTextField(
+        modifier = modifier.drawWithContent {
+            if (readyToDraw.value)
+                drawContent()
+        },
         value = value,
         onValueChange = onValueChange,
-        textStyle = textStyle,
+        textStyle = textStyle.copy(fontSize = textSize.value.sp),
         maxLines = maxLines,
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
@@ -290,7 +312,20 @@ fun ThemedTextField(
                 prefix = prefix,
                 postfix = postfix
             )
-        })
+        },
+        onTextLayout = { textLayoutResult ->
+            if (textLayoutResult.hasVisualOverflow) {
+                val widthScale = textLayoutResult.size.width / textLayoutResult.multiParagraph.width
+                val heightScale =
+                    textLayoutResult.size.height / textLayoutResult.multiParagraph.height
+                val scale = min(widthScale, heightScale)
+                textSize.value *= scale
+            } else {
+                readyToDraw.value = true
+
+            }
+        }
+    )
 }
 
 

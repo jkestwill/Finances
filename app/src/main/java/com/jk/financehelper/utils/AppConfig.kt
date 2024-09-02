@@ -1,11 +1,13 @@
 package com.jk.financehelper.utils
 /**
  * Setting that will be saved in SharedPreference
- * @param isAnimeEnabled - on/off anime girl
- * @param mainCurrency - the currency that is displayed by default
+ * @param isAnimeEnabled on/off anime girl
+ * @param mainCurrency the currency that is displayed by default
+ * @param mainCurrencyExchangeService number of default currency exchange service
  * */
 data class AppConfig(
     val isAnimeEnabled:Boolean,
-    val mainCurrency:String
-) {
-}
+    val mainCurrency:String,
+    val mainCurrencyExchangeService:Int?,
+)
+

@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = FinanceHelperTheme.colors.primaryBackground
                 ) {
                     MainNavGraph()
+
                 }
             }
         }

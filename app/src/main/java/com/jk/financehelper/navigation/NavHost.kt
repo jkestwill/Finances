@@ -1,6 +1,7 @@
 package com.jk.financehelper.navigation
 
 import android.annotation.SuppressLint
+import android.app.backup.SharedPreferencesBackupHelper
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +38,7 @@ fun MainNavGraph(
     NavHost(navController = navController, startDestination = Routes.CREATE_TRANSACTION) {
         composable(Routes.MAIN) {
             HomeScreen(viewModel = hiltViewModel(), navController = navController)
+
         }
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(

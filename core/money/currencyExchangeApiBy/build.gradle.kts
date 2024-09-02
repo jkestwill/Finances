@@ -3,10 +3,25 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kotilinx.serialization)
-//    alias(libs.plugins.jetbrains.kotlin.android)
+    id ("com.google.protobuf") version "0.9.3"
 }
 
+protobuf{
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.23.4"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
 
+
+}
 
 
 
@@ -16,6 +31,7 @@ dependencies{
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.serialization.kotlinx.converter)
     implementation(libs.retrofit.adapters.result)
+    implementation  ("com.google.protobuf:protobuf-kotlin-lite:3.23.4")
     implementation( "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation(libs.converter.simplexml)
