@@ -38,6 +38,7 @@ include(":common:common-ui:transaction")
 include(":common:common-ui:goods")
 include(":common:common-ui:category")
 include(":common:common-ui:money")
-
+include(":core:money:exchange-rate:exchange-rate-by")
 include(":common:shared_res")
 include(":common:common-data:settings")
+include(":core:money:exchange-rate-by")

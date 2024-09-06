@@ -70,7 +70,7 @@ class NBRBRepository @Inject constructor(
     }
 
     private fun getFromDatabase(): Flow<ApiRequest<ExchangeRate>> {
-        val dbRequest = flow<ApiRequest<ExchangeRate>> {
+        val dbRequest = flow {
             val dbResult = exchangeRateDao.getRelevantExchangeList()
             val request: ApiRequest<ExchangeRate> = if (dbResult != null) {
                 ApiRequest.Success(dbResult.toExchangeRate())
@@ -81,7 +81,7 @@ class NBRBRepository @Inject constructor(
             emit(request)
         }
         val startEmitFlow = flowOf(ApiRequest.Loading<ExchangeRate>())
-        return merge<ApiRequest<ExchangeRate>>(startEmitFlow, dbRequest)
+        return merge(startEmitFlow, dbRequest)
     }
 
 }
