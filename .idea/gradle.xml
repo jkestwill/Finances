@@ -10,22 +10,42 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/common/common-data" />
+            <option value="$PROJECT_DIR$/common/common-data/category" />
+            <option value="$PROJECT_DIR$/common/common-data/goods" />
+            <option value="$PROJECT_DIR$/common/common-data/money" />
+            <option value="$PROJECT_DIR$/common/common-data/settings" />
+            <option value="$PROJECT_DIR$/common/common-data/transaction" />
+            <option value="$PROJECT_DIR$/common/common-ui" />
+            <option value="$PROJECT_DIR$/common/common-ui/category" />
+            <option value="$PROJECT_DIR$/common/common-ui/goods" />
+            <option value="$PROJECT_DIR$/common/common-ui/money" />
+            <option value="$PROJECT_DIR$/common/common-ui/transaction" />
+            <option value="$PROJECT_DIR$/common/common-utils" />
+            <option value="$PROJECT_DIR$/common/common-utils-ui" />
+            <option value="$PROJECT_DIR$/common/shared_res" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/category" />
             <option value="$PROJECT_DIR$/core/category/category-data" />
-            <option value="$PROJECT_DIR$/core/common-data" />
-            <option value="$PROJECT_DIR$/core/currency" />
-            <option value="$PROJECT_DIR$/core/currency/currency-exchange" />
-            <option value="$PROJECT_DIR$/core/currency/currencyExchangeApiBy" />
-            <option value="$PROJECT_DIR$/core/currency/exchange-rate-data" />
             <option value="$PROJECT_DIR$/core/goods" />
             <option value="$PROJECT_DIR$/core/goods/goods-data" />
+            <option value="$PROJECT_DIR$/core/money" />
+            <option value="$PROJECT_DIR$/core/money/currencyExchangeApi" />
+            <option value="$PROJECT_DIR$/core/money/exchange-rate-data" />
+            <option value="$PROJECT_DIR$/core/money/money-data" />
             <option value="$PROJECT_DIR$/core/transaction" />
             <option value="$PROJECT_DIR$/core/transaction-database" />
             <option value="$PROJECT_DIR$/core/transaction/transaction-data" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/category" />
             <option value="$PROJECT_DIR$/features/category/category-main" />
+            <option value="$PROJECT_DIR$/features/currency" />
+            <option value="$PROJECT_DIR$/features/currency/currency" />
+            <option value="$PROJECT_DIR$/features/currency/currency-exchange" />
+            <option value="$PROJECT_DIR$/features/goods" />
+            <option value="$PROJECT_DIR$/features/goods/goods" />
+            <option value="$PROJECT_DIR$/features/transaction" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -18,6 +18,7 @@ paging-runtime = "3.2.1"
 room-ktx = "2.6.1"
 room-runtime = "2.6.1"
 runner = "1.5.2"
+slf4jSimple = "2.0.16"
 truth = "1.4.0"
 ycharts = "2.1.0"
 
@@ -75,16 +76,23 @@ core-ktx = { module = "androidx.test:core-ktx", version.ref = "core" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
 junit = { module = "junit:junit", version.ref = "junit" }
+
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
+
+squareup-retrofit2-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-serialization-kotlinx-converter={module="com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter",version.ref="retrofit-json-converter"}
 retrofit-adapters-result={module="com.github.skydoves:retrofit-adapters-result",version.ref="retrofit-adapters-result"}
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }

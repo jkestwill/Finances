@@ -99,7 +99,7 @@ dependencies {
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":core:goods:goods-data"))
     implementation(project(":core:money:exchange-rate-data"))
-    implementation(project(":core:money:currencyExchangeApiBy"))
+    implementation(project(":core:money:currencyExchangeApi"))
     implementation(project(":core:transaction-database"))
     implementation(project(":core:category:category-data"))
     implementation(project(":features:currency:currency-exchange"))

@@ -34,10 +34,17 @@ dependencies{
     implementation  ("com.google.protobuf:protobuf-kotlin-lite:3.23.4")
     implementation( "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.slf4j.simple)
     implementation(libs.converter.simplexml)
-   // implementation ("com.github.yujinyan:retrofit-suspend-result-adapter:0.1.0")
-  //  implementation(libs.retrofit.adapters.result)
-    // implementation(libs.kotlinx.coroutines.android)
+    implementation(":core:common:common-utils")
 
 }
 java {

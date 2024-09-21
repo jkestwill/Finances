@@ -1,8 +1,7 @@
 package com.jk.financehelper.di
 
 import android.content.Context
-import com.example.currencyexchangeapi.NBRBApi
-import com.example.currencyexchangeapi.services.by.NBRBApi
+import com.example.currencyexchangeapi.model.NBRBApi
 import com.jk.common_data.Dispatchers
 import com.jk.financehelper.BuildConfig
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
@@ -41,4 +40,9 @@ object AppModule {
     fun provideDispatchers(): Dispatchers {
         return Dispatchers()
     }
+
+    fun provideExchangeService(){
+
+    }
+
 }

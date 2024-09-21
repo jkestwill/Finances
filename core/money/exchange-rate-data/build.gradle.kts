@@ -42,5 +42,7 @@ dependencies {
     implementation(project(":common:common-utils"))
     kapt(libs.hilt.android.compiler)
     implementation(project(":core:transaction-database"))
-    implementation(project(":core:money:currencyExchangeApiBy"))
+    implementation(project(":core:money:currencyExchangeApi"))
+    testImplementation(libs.junit)
+
 }

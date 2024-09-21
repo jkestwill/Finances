@@ -12,6 +12,8 @@ import androidx.room.TypeConverters
 import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.jk.transaction_database.transaction.AddressEntity
+import com.jk.transaction_database.transaction.BankEntity
 import com.jk.transaction_database.transaction.ExchangeRateEntity
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.LedgerEntity
@@ -25,6 +27,8 @@ import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.dao.AddressDao
+import com.jk.transaction_database.transaction.dao.BankDao
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
@@ -75,8 +79,10 @@ import java.util.concurrent.Executors
         MeasureEntity::class,
         LanguageEntity::class,
         LangMeasureListEntity::class,
-        GoodsSpecificationsListEntity::class
-    ], version = 23, exportSchema = false
+        GoodsSpecificationsListEntity::class,
+        BankEntity::class,
+        AddressEntity::class
+    ], version = 24, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {
@@ -111,7 +117,8 @@ abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getExchangeRateDao(): ExchangeRateDao
 
     abstract fun getGoodsSpecificationDao(): GoodsSpecificationDao
-
+    abstract fun getBankDao():BankDao
+    abstract fun getAddressDao():AddressDao
 }
 
 fun transactionDatabase(context: Context,dbAssetPath:String): TransactionDatabase {

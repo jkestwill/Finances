@@ -4,16 +4,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import com.jk.common_data.SearchParams
 import com.jk.transaction_database.transaction.ExchangeRateEntity
+import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.ExchangeRateRelation
 import java.time.LocalDateTime
 
 @Dao
- interface ExchangeRateDao {
-    @Insert(entity = ExchangeRateEntity::class)
-    suspend fun insert(exchangeRateEntity: ExchangeRateEntity)
+abstract class ExchangeRateDao(private val transactionDatabase: TransactionDatabase) {
+    private val bankDao = transactionDatabase.getBankDao()
 
-    @Transaction
+    @Insert(entity = ExchangeRateEntity::class)
+    abstract suspend fun insert(exchangeRateEntity: ExchangeRateEntity)
+
+
     @Query(
         value = "" +
                 "SELECT * FROM exchange_rate " +
@@ -22,9 +26,9 @@ import java.time.LocalDateTime
                 "ORDER BY exchange_rate.date DESC " +
                 "LIMIT 1"
     )
-    suspend fun getRelevantExchangeList(): ExchangeRateRelation?
+    abstract suspend fun getRelevantExchangeList(): ExchangeRateRelation?
 
-    @Transaction
+
     @Query(
         "INSERT INTO exchange_rate VALUES(:id," +
                 "CASE WHEN EXISTS (SELECT * FROM currency WHERE currency.name==:currencyNameIn) THEN (SELECT id FROM currency WHERE name==:currencyNameIn) " +
@@ -33,19 +37,45 @@ import java.time.LocalDateTime
                 "ELSE :currencyNameOut END," +
                 " :date," +
                 " :rate," +
-                ":scale)  "
+                ":scale," +
+                ":bankId) "
     )
-    suspend fun insert(
+
+   abstract  suspend fun insert(
         id: String,
         currencyNameIn: String,
         currencyNameOut: String,
         date: LocalDateTime,
         scale: Int,
-        rate: Double
+        rate: Double,
+        bankId:String
     )
 
-    @Query("SELECT * FROM exchange_rate WHERE exchange_rate.id LIKE :id")
-    suspend fun getOrNull(id: String): ExchangeRateEntity?
+   @Transaction
+   suspend fun insertRelation(exchangeRateRelation: ExchangeRateRelation){
+       if(!bankDao.isExist(exchangeRateRelation.bankRelation.bankEntity.id)) {
+            bankDao.insertRelation(exchangeRateRelation.bankRelation)
+       }
+       with(exchangeRateRelation){
+           insert(
+               id=exchangeRateEntity.id,
+               currencyNameIn =currencyFrom.name,
+               currencyNameOut = currencyTo.name,
+               date=exchangeRateEntity.date,
+               scale=exchangeRateEntity.scale,
+               rate =exchangeRateEntity.rate,
+               bankId=bankRelation.bankEntity.id
+           )
+       }
+    }
 
+    @Query("SELECT * FROM exchange_rate WHERE exchange_rate.id LIKE :id")
+    abstract suspend fun getOrNull(id: String): ExchangeRateEntity?
+
+    @Query("SELECT * FROM exchange_rate " +
+            "INNER JOIN currency as c1 ON c1.id == exchange_rate.currency_from_id " +
+            "INNER JOIN currency as c2 ON c2.id == exchange_rate.currency_to_id" +
+            " WHERE c1.name LIKE :currencyIn AND c2.name LIKE :currencyOut AND exchange_rate.date==:date ")
+    abstract suspend fun getList(currencyIn:String, currencyOut: String, date: LocalDateTime):ExchangeRateRelation
 }
 

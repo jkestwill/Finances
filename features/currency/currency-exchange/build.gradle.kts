@@ -48,7 +48,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":core:money:exchange-rate-data"))
-    implementation(project(":core:money:currencyExchangeApiBy"))
+    implementation(project(":core:money:currencyExchangeApi"))
     implementation(project(":core:transaction-database"))
     implementation(project(":common:common-ui:money"))
     implementation(project(":common:common-utils-ui"))

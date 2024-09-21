@@ -8,8 +8,7 @@ interface MergeStrategy<T> {
     fun merge(right: T, left: T): T
 }
 
-// ДОРАБОТАТЬ ВСЕ СЛУЧАИ
-internal class ApiRequestMergeStrategy<T:Any> : MergeStrategy<ApiRequest<T>> {
+ class ApiRequestMergeStrategy<T:Any> : MergeStrategy<ApiRequest<T>> {
 
     override fun merge(right: ApiRequest<T>, left: ApiRequest<T>): ApiRequest<T> {
         return when {

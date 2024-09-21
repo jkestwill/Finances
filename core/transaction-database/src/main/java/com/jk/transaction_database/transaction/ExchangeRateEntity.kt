@@ -8,14 +8,20 @@ import java.time.LocalDateTime
 
 @Entity(
     tableName = "exchange_rate",
-    foreignKeys = [ForeignKey(
-        entity = TransactionCurrencyDatabaseEntity::class,
-        childColumns = ["currency_from_id"],
-        parentColumns = ["id"]
-    ),
+    foreignKeys = [
+        ForeignKey(
+            entity = TransactionCurrencyDatabaseEntity::class,
+            childColumns = ["currency_from_id"],
+            parentColumns = ["id"]
+        ),
         ForeignKey(
             entity = TransactionCurrencyDatabaseEntity::class,
             childColumns  = ["currency_to_id"],
+            parentColumns = ["id"]
+        ),
+        ForeignKey(
+            entity = BankEntity::class,
+            childColumns  = ["bank_id"],
             parentColumns = ["id"]
         )
     ]
@@ -27,7 +33,12 @@ data class ExchangeRateEntity(
     val currencyFromId: String,
     @ColumnInfo("currency_to_id")
     val currencyToId: String,
+    @ColumnInfo("date")
     val date: LocalDateTime,
+    @ColumnInfo("rate")
     val rate: Double,
-    val scale: Int
+    @ColumnInfo("scale")
+    val scale: Int,
+    @ColumnInfo("bank_id")
+    val bankId:String
 )
