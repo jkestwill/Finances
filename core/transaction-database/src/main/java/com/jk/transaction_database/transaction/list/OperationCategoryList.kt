@@ -3,12 +3,13 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.util.TableInfo
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 
 @Entity(
     tableName = "category_list",
-
     primaryKeys = ["operation_id", "category_id"],
     foreignKeys = [
         ForeignKey(

@@ -27,7 +27,7 @@ abstract class BankDao (
     abstract suspend fun getBankRelationByName(name:String):BankRelation
 
     @Transaction
-    suspend fun insertRelation(bankRelation: BankRelation){
+    open suspend fun insertRelation(bankRelation: BankRelation){
         addressDao.insert(bankRelation.addressEntity)
         insert(bankRelation.bankEntity)
     }

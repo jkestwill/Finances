@@ -3,14 +3,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
-    alias(libs.plugins.androidx.room)
-}
 
-room {
-    schemaDirectory("debug", "$projectDir/schemas/debug")
-    schemaDirectory("$projectDir/schemas/transaction_database")
 }
-
 android {
     namespace = "com.jk.transaction_database"
     compileSdk = 34

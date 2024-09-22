@@ -2,7 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CategoryScreenPreview">
+        <State />
+      </entry>
+      <entry key="Preview">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="sql_transaction_test_with_error()">
+        <State />
+      </entry>
+      <entry key="test()">
         <State />
       </entry>
     </value>

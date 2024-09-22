@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.app.backup.SharedPreferencesBackupHelper
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
@@ -17,9 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.jk.category.list.CategoryListScreen
-import com.jk.category.add_new_category.CategoryDialog
 import com.jk.category.CategoryScreen
+import com.jk.category.add_new_category.CategoryDialog
+import com.jk.category.list.CategoryListScreen
 import com.jk.category.select_category_dialog.SelectCategoryDialog
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
@@ -109,6 +107,7 @@ fun MainNavGraph(
                             )
                         }"
                     )
+                    it.arguments?.remove("preselectedGoodsId")
                 },
                 onBack = {
                     navController.popBackStack()

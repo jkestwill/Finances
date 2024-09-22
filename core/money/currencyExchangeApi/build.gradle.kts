@@ -3,25 +3,23 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kotilinx.serialization)
-    id ("com.google.protobuf") version "0.9.3"
+   // id ("com.google.protobuf") version "0.9.3"
 }
 
-protobuf{
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.23.4"
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.builtins {
-                register("kotlin") {
-                    option("lite")
-                }
-            }
-        }
-    }
-
-
-}
+//protobuf{
+//    protoc {
+//        artifact = "com.google.protobuf:protoc:3.23.4"
+//    }
+//    generateProtoTasks {
+//        all().forEach { task ->
+//            task.builtins {
+//                register("kotlin") {
+//                    option("lite")
+//                }
+//            }
+//        }
+//    }
+//}
 
 
 
@@ -44,7 +42,7 @@ dependencies{
     implementation(libs.ktor.client.logging)
     implementation(libs.slf4j.simple)
     implementation(libs.converter.simplexml)
-    implementation(":core:common:common-utils")
+    //implementation(":common:common-utils")
 
 }
 java {

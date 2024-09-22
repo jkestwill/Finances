@@ -28,7 +28,7 @@ class CurrencyExchangeRepository(
     private val exchangeRateDao: ExchangeRateDao,
     private val bankDao: BankDao,
     // мб присобачить в апп модуль
-    private val appSettings: AppSettings
+    //private val appSettings: AppSettings
 ){
 
 

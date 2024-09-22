@@ -404,10 +404,7 @@ fun GoodsSection(
             when (immutableStateGoodsList) {
                 is State.Success -> {
                     Log.e("GoodsSection", "onAddImmutableList:${immutableStateGoodsList.data} ")
-                    immutableStateGoodsList.data.map { GoodsUI.Builder(it) }.filter {
-                        !deletedImmutables.value.contains(it.build().id)
-                    }
-
+                    immutableStateGoodsList.data.map { GoodsUI.Builder(it) }
                 }
                 else -> {
                     listOf()

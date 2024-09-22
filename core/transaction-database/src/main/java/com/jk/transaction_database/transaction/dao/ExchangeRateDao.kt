@@ -48,12 +48,13 @@ abstract class ExchangeRateDao(private val transactionDatabase: TransactionDatab
         date: LocalDateTime,
         scale: Int,
         rate: Double,
-        bankId:String
+        bankId:String?
     )
 
    @Transaction
-   suspend fun insertRelation(exchangeRateRelation: ExchangeRateRelation){
-       if(!bankDao.isExist(exchangeRateRelation.bankRelation.bankEntity.id)) {
+   open suspend fun insertRelation(exchangeRateRelation: ExchangeRateRelation){
+
+       if(exchangeRateRelation.bankRelation!=null && !bankDao.isExist(exchangeRateRelation.bankRelation.bankEntity.id)) {
             bankDao.insertRelation(exchangeRateRelation.bankRelation)
        }
        with(exchangeRateRelation){
@@ -64,7 +65,7 @@ abstract class ExchangeRateDao(private val transactionDatabase: TransactionDatab
                date=exchangeRateEntity.date,
                scale=exchangeRateEntity.scale,
                rate =exchangeRateEntity.rate,
-               bankId=bankRelation.bankEntity.id
+               bankId=bankRelation?.bankEntity?.id
            )
        }
     }
