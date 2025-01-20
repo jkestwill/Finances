@@ -7,7 +7,9 @@ plugins {
 android {
     namespace = "com.jk.transaction"
     compileSdk = 34
-
+    kotlin {
+        jvmToolchain(17)
+    }
     defaultConfig {
         minSdk = 26
 
@@ -24,10 +26,7 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+
 
     buildFeatures{
         compose=true
@@ -35,10 +34,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.9"
-    }
-    kotlinOptions {
-        jvmTarget = "17"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
 }
 

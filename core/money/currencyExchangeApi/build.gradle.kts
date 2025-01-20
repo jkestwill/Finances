@@ -18,6 +18,9 @@ buildTimeConfig{
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
 
 dependencies{
     implementation(libs.squareup.retrofit2.retrofit)
@@ -40,8 +43,4 @@ dependencies{
     implementation(libs.converter.simplexml)
     //implementation(":common:common-utils")
 
-}
-java {
-    targetCompatibility = JavaVersion.VERSION_17
-    sourceCompatibility=JavaVersion.VERSION_17
 }
