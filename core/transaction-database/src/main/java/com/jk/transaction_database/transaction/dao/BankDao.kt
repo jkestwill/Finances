@@ -9,8 +9,8 @@ import com.jk.transaction_database.transaction.BankEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.BankRelation
 @Dao
-abstract class BankDao (
-    val transactionDatabase:TransactionDatabase
+abstract class BankDao internal constructor(
+    private val transactionDatabase:TransactionDatabase
 ) {
     private val addressDao = transactionDatabase.getAddressDao()
 
@@ -23,6 +23,7 @@ abstract class BankDao (
     @Insert(BankEntity::class, onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(bankEntity: BankEntity)
 
+    @Transaction
     @Query("SELECT * FROM bank WHERE name==:name ")
     abstract suspend fun getBankRelationByName(name:String):BankRelation
 

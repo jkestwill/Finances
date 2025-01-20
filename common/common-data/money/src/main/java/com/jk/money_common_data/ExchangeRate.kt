@@ -1,6 +1,5 @@
-package com.jk.exchange_rate_data
+package com.jk.money_common_data
 
-import com.example.currencyexchangeapi.Bank
 import java.time.LocalDateTime
 
 //scale - currencyIn scale for example 100 RUB == 3.2112

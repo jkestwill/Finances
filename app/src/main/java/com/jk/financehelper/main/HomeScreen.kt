@@ -19,6 +19,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.TransparentTextField
+import com.jk.financehelper.BuildConfig
 import com.jk.financehelper.ui.calendar.data.rememberYearState
 import java.time.LocalDate
 import java.time.Year
@@ -29,9 +30,9 @@ private const val TAG = "MainScreen"
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel,
-    navController: NavController
+        navController: NavController
 ) {
+    BuildConfig.BUILD_TYPE
     Column {
         val date: State<LocalDate> = remember() {
             mutableStateOf(LocalDate.now())
@@ -41,11 +42,11 @@ fun HomeScreen(
             endYear = Year.of(2030),
             firstVisibleYear = Year.of(2024)
         )
-        val data = viewModel.transactionsFlow.collectAsState(initial = listOf())
-        val err = viewModel.transactionErrors.collectAsState(initial = null)
-        val category: LazyPagingItems<CategoryUI> =
-            viewModel.categoryFlow.collectAsLazyPagingItems()
-        Bank(modifier = Modifier, amount = 200f, viewModel = viewModel)
+//        val data = viewModel.transactionsFlow.collectAsState(initial = listOf())
+//        val err = viewModel.transactionErrors.collectAsState(initial = null)
+//        val category: LazyPagingItems<CategoryUI> =
+//            viewModel.categoryFlow.collectAsLazyPagingItems()
+//        Bank(modifier = Modifier, amount = 200f, viewModel = viewModel)
 //        YearCalendar(
 //            modifier = Modifier.height(400.dp),
 //            currentDate = date,
@@ -67,26 +68,26 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun Bank(modifier: Modifier, amount: Float, viewModel: HomeViewModel) {
-    var editableAmount by remember() { mutableStateOf(amount.toString()) }
-    val isFieldEnabled by remember {
-        mutableStateOf(true)
-    }
-    val pattern = remember { Regex(pattern = "([0-9]{1,5})\\.([0-9]{1,2})") }
-    val expenses = viewModel.expensesFLow.collectAsState()
-
-    Row(modifier) {
-        Text(text = expenses.value.toString())
-        TransparentTextField(
-            modifier = Modifier, value = editableAmount, onValueChange = {
-                Log.e("qq", "Bank: ${pattern.matches(it)} ")
-                if (it.isNotEmpty() && pattern.matches(it)) editableAmount = it
-
-            }, isFieldEnabled
-        )
-    }
-}
+//@Composable
+//fun Bank(modifier: Modifier, amount: Float, viewModel: HomeViewModel) {
+//    var editableAmount by remember() { mutableStateOf(amount.toString()) }
+//    val isFieldEnabled by remember {
+//        mutableStateOf(true)
+//    }
+//    val pattern = remember { Regex(pattern = "([0-9]{1,5})\\.([0-9]{1,2})") }
+//    val expenses = viewModel.expensesFLow.collectAsState()
+//
+//    Row(modifier) {
+//        Text(text = expenses.value.toString())
+//        TransparentTextField(
+//            modifier = Modifier, value = editableAmount, onValueChange = {
+//                Log.e("qq", "Bank: ${pattern.matches(it)} ")
+//                if (it.isNotEmpty() && pattern.matches(it)) editableAmount = it
+//
+//            }, isFieldEnabled
+//        )
+//    }
+//}
 
 
 

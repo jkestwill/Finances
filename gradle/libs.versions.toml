@@ -43,7 +43,10 @@ foundationAndroid = "1.6.8"
 uiTooling = "1.6.8"
 protoliteWellKnownTypes = "18.0.0"
 kotlin-parcelize="2.0.20-RC"
-
+protobuf="0.9.3"
+protoc="3.15.0"
+protobuf-java-lite = "3.23.4"
+uiToolingVersion = "1.7.2"
 [libraries]
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -76,11 +79,12 @@ core-ktx = { module = "androidx.test:core-ktx", version.ref = "core" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android" }
 junit = { module = "junit:junit", version.ref = "junit" }
-
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 ycharts = { module = "co.yml:ycharts", version.ref = "ycharts" }
 
+google-protobuf-protoc ={module="com.google.protobuf:protoc",version.ref="protoc"}
+google-protobuf-javalite={module="com.google.protobuf:protobuf-javalite",version.ref="protobuf-java-lite"}
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
@@ -102,7 +106,8 @@ androidx-room-common = { group = "androidx.room", name = "room-common", version.
 junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
-protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiToolingVersion" }
+
 
 [plugins]
 android-application={id="com.android.application",version.ref="android-application"}
@@ -116,3 +121,4 @@ jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "jetbr
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrains-kotlin-android" }
 jetbrains-kotlin-parcelize = {id="org.jetbrains.kotlin.plugin.parcelize",version.ref="jetbrains-kotlin-android"}
 androidx-room = {id="androidx.room",version.ref="roomCommon"}
+google-protobuf = {id="com.google.protobuf",version.ref="protobuf"}

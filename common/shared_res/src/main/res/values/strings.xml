@@ -54,4 +54,6 @@
         <item name="goods_cost">Cost</item>
         <item name="goods_currency">Currency</item>
     </string-array>
+
+    <string name="total">Total</string>
 </resources>

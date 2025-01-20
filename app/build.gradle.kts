@@ -96,18 +96,11 @@ dependencies {
     implementation(project(":common:common-data:transaction"))
     implementation(project(":common:common-ui:transaction"))
     implementation(project(":common:common-ui:category"))
-    implementation(project(":core:transaction:transaction-data"))
-    implementation(project(":core:goods:goods-data"))
-    implementation(project(":core:money:exchange-rate-data"))
-    implementation(project(":core:money:currencyExchangeApi"))
-    implementation(project(":core:transaction-database"))
-    implementation(project(":core:category:category-data"))
     implementation(project(":features:currency:currency-exchange"))
     implementation(project(":features:category:category-main"))
     implementation(project(":features:goods:goods"))
     implementation(project(":common:common-ui:money"))
     implementation(project(":features:transaction"))
-    implementation(project(":core:money:money-data"))
     ksp(libs.androidx.room.compiler)
 
     //dagger hilt

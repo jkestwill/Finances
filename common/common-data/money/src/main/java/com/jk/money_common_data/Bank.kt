@@ -1,11 +1,11 @@
-package com.example.currencyexchangeapi
+package com.jk.money_common_data
 
 data class Bank(
     val id:String,
     val name: String,
     val url: String,
     val abbreviation:String?,
-    val address:Address?,
+    val address: Address?,
     val imageUrl:String?
 )
 

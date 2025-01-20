@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 @Composable
 fun pagedFlingBehavior(state: LazyListState): FlingBehavior {
     val snappingLayout = remember(state) {
-        val provider = SnapLayoutInfoProvider(state) { _, _, _, _, _ -> 0 }
+        val provider = SnapLayoutInfoProvider(state)
         CalendarSnapLayoutInfoProvider(provider)
     }
     return rememberSnapFlingBehavior(snappingLayout)
@@ -25,5 +25,5 @@ private fun CalendarSnapLayoutInfoProvider(
     snapLayoutInfoProvider: SnapLayoutInfoProvider,
 ): SnapLayoutInfoProvider = object : SnapLayoutInfoProvider by snapLayoutInfoProvider {
 
-    override fun calculateApproachOffset(initialVelocity: Float): Float = 0f
+    override fun calculateApproachOffset(velocity: Float, decayOffset: Float): Float = 0f
 }

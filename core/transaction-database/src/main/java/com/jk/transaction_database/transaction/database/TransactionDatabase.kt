@@ -3,15 +3,9 @@ package com.jk.transaction_database.transaction.database
 import android.content.Context
 import android.util.Log
 import androidx.room.Database
-import androidx.room.DeleteColumn
-import androidx.room.RenameColumn
-import androidx.room.RenameTable
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.AutoMigrationSpec
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.jk.transaction_database.transaction.AddressEntity
 import com.jk.transaction_database.transaction.BankEntity
 import com.jk.transaction_database.transaction.ExchangeRateEntity
@@ -82,10 +76,10 @@ import java.util.concurrent.Executors
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
         AddressEntity::class
-    ], version = 24, exportSchema = false
+    ], version = 26, exportSchema = true, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
-abstract class TransactionDatabase : RoomDatabase() {
+internal abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getTransactionDao(): TransactionDao
 
@@ -119,20 +113,105 @@ abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getGoodsSpecificationDao(): GoodsSpecificationDao
     abstract fun getBankDao():BankDao
     abstract fun getAddressDao():AddressDao
+
+
 }
 
-fun transactionDatabase(context: Context,dbAssetPath:String): TransactionDatabase {
-    return Room.databaseBuilder(
+
+fun transactionDatabaseProvider(context: Context, dbAssetPath:String): TransactionDatabaseProvider {
+    val db = Room.databaseBuilder(
         context = context,
         klass = TransactionDatabase::class.java,
         name = "transaction_db"
-    ).fallbackToDestructiveMigration()
+    )
         .setQueryCallback({ sqlQuery, bindArgs ->
-            Log.e("DATABASE_LOG", "${sqlQuery} ## Args:${bindArgs} ")
+            Log.e("DATABASE_LOG", "${sqlQuery} ## Args: ${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
         .createFromAsset(dbAssetPath)
         .build()
         .apply {
+            query(query = "SELECT * FROM currency", args = null)
             query(query = "PRAGMA foreign_keys=ON", args = null)
         }
+
+    return TransactionDatabaseProvider(db)
 }
+// костыль чтобы не делать руму как апи
+class TransactionDatabaseProvider internal constructor (internal val db:TransactionDatabase){
+    fun getCategoryDao(): CategoryDao {
+        return db.getCategoryDao()
+    }
+    fun getTransactionDao(): TransactionDao{
+       return db.getTransactionDao()
+    }
+
+    fun getGoodsDao(): GoodsDao{
+       return db.getGoodsDao()
+    }
+    fun getMeasureDao(): MeasureDao{
+        return db.getMeasureDao()
+    }
+    fun getLanguageDao(): LanguageDao{
+        return db.getLanguageDao()
+    }
+
+    fun getLanguageMeasureListDao(): LanguageMeasureListDao{
+         return db.getLanguageMeasureListDao()
+    }
+
+    fun getMoneyDao(): MoneyDao{
+        return db.getMoneyDao()
+    }
+    fun getOperationDao(): OperationDao{
+        return db.getOperationDao()
+    }
+
+     fun getScheduleDao(): ScheduleDao{
+         return db.getScheduleDao()
+     }
+
+    fun getTypeDao(): TypeDao{
+        return db.getTypeDao()
+    }
+
+    fun getCurrencyDao(): CurrencyDao{
+        return db.getCurrencyDao()
+    }
+
+     fun getOperationCategoryDao(): OperationCategoryDao{
+         return db.getOperationCategoryDao()
+     }
+
+     fun getTransactionGoodsListDao(): TransactionGoodsListDao{
+         return db.getTransactionGoodsListDao()
+     }
+     fun getSpecificationDao(): SpecificationDao{
+         return db.getGoodsDao()
+     }
+     fun getLedgerDao(): LedgerDao{
+         return db.getLedgerDao()
+     }
+
+     fun getLedgerTransactionListDao(): LedgerTransactionListDao{
+         return db.getLedgerTransactionListDao()
+     }
+
+     fun getExchangeRateDao(): ExchangeRateDao{
+         return db.getExchangeRateDao()
+     }
+
+     fun getGoodsSpecificationDao(): GoodsSpecificationDao{
+         return db.getGoodsSpecificationDao()
+     }
+    fun getBankDao():BankDao{
+        return db.getBankDao()
+    }
+
+    fun getAddressDao():AddressDao{
+        return db.getAddressDao()
+    }
+
+}
+
+
+

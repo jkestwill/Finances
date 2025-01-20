@@ -9,14 +9,14 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.relations.GoodsRelation
+import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
 import com.jk.transaction_database.transaction.relations.OperationRelation
 
 @Dao
-abstract class OperationDao(
-
-    private val db: TransactionDatabase
+ abstract class OperationDao internal constructor(
+     db: TransactionDatabase
 ) {
+
     private val goodsDao: GoodsDao = db.getGoodsDao()
     private val moneyDao: MoneyDao = db.getMoneyDao()
     private val scheduleDao: ScheduleDao = db.getScheduleDao()

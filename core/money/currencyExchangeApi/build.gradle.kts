@@ -3,24 +3,20 @@ plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.kotilinx.serialization)
-   // id ("com.google.protobuf") version "0.9.3"
+    id("dev.limebeck.build-time-config") version "2.3.0"
 }
 
-//protobuf{
-//    protoc {
-//        artifact = "com.google.protobuf:protoc:3.23.4"
-//    }
-//    generateProtoTasks {
-//        all().forEach { task ->
-//            task.builtins {
-//                register("kotlin") {
-//                    option("lite")
-//                }
-//            }
-//        }
-//    }
-//}
+buildTimeConfig{
+    config{
+        packageName.set("com.example.currencyexchangeapi")
+        objectName.set("BuildConfig")
+        destination.set(project.buildDir)
 
+        configProperties{
+            val NBRB_API_URL:String by string("https://api.nbrb.by/exrates/")
+        }
+    }
+}
 
 
 dependencies{

@@ -7,8 +7,8 @@ import com.example.currency_exchange.ExchangeRateViewModel
 
 @Composable
 fun ExchangeRate(viewModel: ExchangeRateViewModel) {
-    Button(onClick = { viewModel.getBynToCurrencyExchange("USD") }) {
-        Text(text = "zxc")
-    }
+//    Button(onClick = { viewModel.getBynToCurrencyExchange("USD") }) {
+//        Text(text = "zxc")
+//    }
 
 }

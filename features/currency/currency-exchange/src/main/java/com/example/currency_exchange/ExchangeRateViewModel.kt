@@ -1,10 +1,13 @@
 package com.example.currency_exchange
 
 import androidx.lifecycle.ViewModel
+import com.example.currencyexchangeapi.ExchangeRateRequestParams
+import com.example.currencyexchangeapi.ExchangeRateServices
 import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
-import com.jk.exchange_rate_data.NBRBRepository
+import com.jk.exchange_rate_data.ApiRequestMergeStrategy
+import com.jk.exchange_rate_data.CurrencyExchangeRepository
 import com.jk.money_common_ui.ExchangeRateUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -17,11 +20,12 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class ExchangeRateViewModel @Inject constructor(
-    private val exchangeRateNBRBRepository: NBRBRepository
+    private val exchangeRateRepository:CurrencyExchangeRepository,
 ) : ViewModel() {
     private val job = SupervisorJob()
     private val viewModelScope = CoroutineScope(job + Dispatchers.Default)
@@ -29,10 +33,14 @@ class ExchangeRateViewModel @Inject constructor(
     private var _exchangeRateState = MutableStateFlow<State<ExchangeRateUI>>(State.None)
     val exchangeRateState: StateFlow<State<ExchangeRateUI>> get() = _exchangeRateState
 
-    fun getBynToCurrencyExchange(currency: String) {
+    fun getBynToCurrencyExchange(currencyIn: String,currencyOut:String,currencyName:String) {
         viewModelScope.launch {
             _exchangeRateState.emitAll(
-                exchangeRateNBRBRepository.getLast(currency = currency)
+                exchangeRateRepository.getExchangeRate(
+                    currencyName,
+                    exchangeRateRequestParams = ExchangeRateRequestParams(currencyIn,currencyOut, LocalDateTime.now()),
+                    mergeStrategy = ApiRequestMergeStrategy()
+                )
                     .map { apiRequest ->
                         apiRequest.map { exRate -> exRate.toExchangeRateUI() }.toState()
                     }
@@ -46,9 +54,9 @@ class ExchangeRateViewModel @Inject constructor(
     }
 
 
-    fun forceUpdate(currency: String) {
-        exchangeRateNBRBRepository.fetchLatest(currency)
-    }
+//    fun forceUpdate(currency: String) {
+//        exchangeRateNBRBRepository.fetchLatest(currency)
+//    }
 
     override fun onCleared() {
         job.cancel()

@@ -180,7 +180,6 @@ fun <T : Selectable> ExpandedListItem(
     ) {
         Text(
             modifier = Modifier
-                .padding(4.dp)
                 .fillMaxWidth(),
             text = item.value,
             color = Color.Black,

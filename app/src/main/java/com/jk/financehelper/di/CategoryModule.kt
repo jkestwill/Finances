@@ -3,8 +3,6 @@ package com.jk.financehelper.di
 
 import androidx.compose.ui.graphics.Color
 import com.jk.common_ui.colorPickList
-import com.jk.transaction_database.transaction.dao.CategoryDao
-import com.jk.transaction_database.transaction.database.TransactionDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,14 +14,4 @@ import javax.inject.Singleton
 class CategoryModule {
 
 
-    @Provides
-    @Singleton
-    fun provideCategoryDao(db: TransactionDatabase): CategoryDao {
-        return db.getCategoryDao()
-    }
-    @Provides
-    @Singleton
-    fun provideColorList(): List<Color> {
-        return colorPickList
-    }
 }

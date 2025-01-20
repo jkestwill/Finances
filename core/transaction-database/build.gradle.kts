@@ -3,23 +3,28 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
-
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
+
+ksp {
+    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+}
+
 android {
     namespace = "com.jk.transaction_database"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
+   // schemaDirectory("$projectDir/schemas")
     buildTypes {
-
         debug {
-            this.isDefault=true
+            isMinifyEnabled = false
+
+            this.buildConfigField("String","PREPOPULATE_DB_PATH","\"transaction_database/transaction_db.db\"")
         }
         release {
             isMinifyEnabled = false
@@ -27,7 +32,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            this.isDefault = true
+            this.buildConfigField("String","PREPOPULATE_DB_PATH","\"transaction_database/transaction_db.db\"")
+
         }
+
     }
 
     compileOptions {
@@ -36,6 +45,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    buildFeatures{
+        buildConfig = true
     }
 }
 
@@ -47,10 +59,25 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.junit.ktx)
-    implementation(project(":common:common-utils"))
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
     ksp(libs.androidx.room.compiler)
 
     androidTestImplementation("androidx.test:runner:1.6.1")
 
+}
+
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        // Note: If you're using KAPT and javac, change the line below to
+        // return listOf("-Aroom.schemaLocation=${schemaDir.path}").
+        return listOf("room.schemaLocation=${schemaDir.path}")
+    }
 }

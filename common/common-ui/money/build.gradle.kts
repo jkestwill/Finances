@@ -52,7 +52,6 @@ dependencies {
     implementation(project(":common:common-utils"))
     implementation(project(":common:common-utils-ui"))
     implementation(project(":common:shared_res"))
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

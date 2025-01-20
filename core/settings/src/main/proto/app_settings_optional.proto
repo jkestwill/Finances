@@ -1,0 +1,47 @@
+syntax = "proto3";
+option java_package = "com.jk.settings";
+option java_multiple_files = true;
+
+message AppSettingsProto {
+    bool isAnimeEnabled = 1;
+    optional LocaleProto  locale = 2;
+    optional CurrencyConfigProto  currencyConfig = 3;
+    optional SecurityProto  security = 4;
+}
+
+message LocaleProto {
+    optional string country = 1;
+    optional string language = 2;
+}
+
+message CurrencyConfigProto {
+     optional string defaultCurrency = 1;
+     optional BankConfigProto  bankConfig = 2;
+}
+
+message BankConfigProto {
+    optional string name = 1;
+    optional string abbreviation = 2;
+    optional string address = 3;
+    optional CoordinatesProto  coordinates = 4;
+    optional string imageUrl = 5;
+}
+
+message CoordinatesProto {
+    optional float lang = 1;
+    optional float lat = 2;
+}
+
+message SecurityProto {
+    optional string password = 1;
+    optional bool canScreenshot = 2;
+    optional bool screenAppMenuVisibility = 3;
+    optional SecurityMethodProto  securityMethod = 4;
+}
+
+enum SecurityMethodProto {
+    PASSWORD = 0;
+    PASSWORD_STRING = 1;
+    FINGERPRINT = 2;
+    NONE = 3;
+}

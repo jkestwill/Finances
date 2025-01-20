@@ -11,7 +11,7 @@ import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.MoneyRelation
 
 @Dao
-abstract class MoneyDao(
+abstract class MoneyDao internal constructor(
     private val db: TransactionDatabase
 
 ) {

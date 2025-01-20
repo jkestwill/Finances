@@ -40,6 +40,8 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
+    implementation(project(":core:settings"))
+    implementation(project(":common:common-data:money"))
 
     kapt(libs.hilt.android.compiler)
     testImplementation(libs.junit)

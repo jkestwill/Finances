@@ -41,7 +41,7 @@
     <string name="minLengthError">Используйте %d символов или больше</string>
     <string name="allowedCharacters">Разрешенные символы: %s</string>
     <string name="error">Ошибка</string>
-    <string name="all_transactions">All transactions</string>
+    <string name="all_transactions">Транзакции</string>
     <string name="amount">Сумма</string>
     <string name="goods">Товары</string>
     <string name="general">Главное</string>
@@ -54,5 +54,6 @@
         <item name="goods_cost">Цена</item>
         <item name="goods_currency">Валюта</item>
     </string-array>
+    <string name="total">Итого</string>
 
 </resources>

@@ -18,9 +18,7 @@ class GoodsRepository @Inject constructor(
     private val goodsLocalDataSource: GoodsDao,
     private val goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory
 ) {
-
-
-    suspend fun add(goodsList: List<com.jk.common_goods_data.Goods>) {
+    suspend fun add(goodsList: List<Goods>) {
         for (i in goodsList) {
             goodsLocalDataSource.insert(i.toGoodsRelation())
         }
@@ -44,7 +42,7 @@ class GoodsRepository @Inject constructor(
 
     fun getAllFromDatabase(
         searchParams: SearchParams
-    ): Flow<PagingData<com.jk.common_goods_data.Goods>> {
+    ): Flow<PagingData<Goods>> {
         return Pager(PagingConfig(20)) {
             goodsPagingSource.create(
                 sortBy = searchParams.sortBy,

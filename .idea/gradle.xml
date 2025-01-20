@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/common/common-data/category" />
             <option value="$PROJECT_DIR$/common/common-data/goods" />
             <option value="$PROJECT_DIR$/common/common-data/money" />
-            <option value="$PROJECT_DIR$/common/common-data/settings" />
             <option value="$PROJECT_DIR$/common/common-data/transaction" />
             <option value="$PROJECT_DIR$/common/common-ui" />
             <option value="$PROJECT_DIR$/common/common-ui/category" />
@@ -34,6 +33,7 @@
             <option value="$PROJECT_DIR$/core/money/currencyExchangeApi" />
             <option value="$PROJECT_DIR$/core/money/exchange-rate-data" />
             <option value="$PROJECT_DIR$/core/money/money-data" />
+            <option value="$PROJECT_DIR$/core/settings" />
             <option value="$PROJECT_DIR$/core/transaction" />
             <option value="$PROJECT_DIR$/core/transaction-database" />
             <option value="$PROJECT_DIR$/core/transaction/transaction-data" />

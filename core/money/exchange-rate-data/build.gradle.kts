@@ -40,11 +40,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.hilt.android)
     implementation(libs.junit.ktx)
+    implementation(project(":common:common-data:money"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(project(":core:transaction-database"))
     implementation(project(":common:common-utils"))
-    implementation(project(":core:money:currencyExchangeApi"))
+    api(project(":core:money:currencyExchangeApi"))
     testImplementation("androidx.test:runner:1.6.2")
     testImplementation(libs.junit)
 

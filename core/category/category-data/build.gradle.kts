@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
+    implementation(project(":common:common-utils-ui"))
     kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
     implementation(project(":common:common-data:category"))

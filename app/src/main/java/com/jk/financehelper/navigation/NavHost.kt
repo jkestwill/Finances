@@ -34,10 +34,7 @@ fun MainNavGraph(
 ) {
 
     NavHost(navController = navController, startDestination = Routes.CREATE_TRANSACTION) {
-        composable(Routes.MAIN) {
-            HomeScreen(viewModel = hiltViewModel(), navController = navController)
 
-        }
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(
                 viewModel = hiltViewModel(),

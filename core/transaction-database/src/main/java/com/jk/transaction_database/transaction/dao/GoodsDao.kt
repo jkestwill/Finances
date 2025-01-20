@@ -8,13 +8,14 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 
 @Dao
-abstract class GoodsDao(
-    val db: TransactionDatabase
-) {
+abstract class GoodsDao internal constructor(
+  private  val db: TransactionDatabase
+) : SpecificationDao {
     private val measureDao: MeasureDao = db.getMeasureDao()
     private val languageDao: LanguageDao = db.getLanguageDao()
     private val languageMeasureListDao: LanguageMeasureListDao = db.getLanguageMeasureListDao()

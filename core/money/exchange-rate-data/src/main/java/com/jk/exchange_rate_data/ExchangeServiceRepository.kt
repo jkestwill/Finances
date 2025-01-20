@@ -5,9 +5,9 @@ import com.example.currencyexchangeapi.ExchangeRateRequestParams
 import com.example.currencyexchangeapi.ExchangeRateServices
 import com.example.currencyexchangeapi.ExchangeServiceFactory
 import com.jk.common_data.ApiRequest
-import com.jk.common_data.AppSettings
 import com.jk.common_data.map
 import com.jk.common_data.sha256
+import com.jk.money_common_data.ExchangeRate
 import com.jk.transaction_database.transaction.ExchangeRateEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.dao.BankDao
@@ -20,26 +20,23 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 
-class CurrencyExchangeRepository(
+class CurrencyExchangeRepository @Inject constructor(
     private val currencyExchangeServiceFactory: ExchangeServiceFactory,
     private val exchangeRateDao: ExchangeRateDao,
     private val bankDao: BankDao,
     // мб присобачить в апп модуль
     //private val appSettings: AppSettings
 ){
-
-
-    fun getExchangeRate(exchangeRateRequestParams: ExchangeRateRequestParams, exchangeRateServices: ExchangeRateServices,mergeStrategy: ApiRequestMergeStrategy<ExchangeRate>): Flow<ApiRequest<ExchangeRate>> {
-        val apiResult = fetchFromApi(exchangeRateRequestParams, exchangeRateServices)
+    fun getExchangeRate(exchangeRateServiceName:String,exchangeRateRequestParams: ExchangeRateRequestParams, mergeStrategy: ApiRequestMergeStrategy<com.jk.money_common_data.ExchangeRate>): Flow<ApiRequest<com.jk.money_common_data.ExchangeRate>> {
+        val apiResult = fetchFromApi(exchangeRateRequestParams, ExchangeRateServices.getByName(exchangeRateServiceName))
         val dbResult = getFromDatabase(exchangeRateRequestParams)
-
         return dbResult.combine(apiResult,mergeStrategy::merge)
     }
 
-    private fun fetchFromApi(exchangeRateRequestParams: ExchangeRateRequestParams, exchangeRateServices: ExchangeRateServices): Flow<ApiRequest<ExchangeRate>> {
+    private fun fetchFromApi(exchangeRateRequestParams: ExchangeRateRequestParams, exchangeRateServices: ExchangeRateServices): Flow<ApiRequest<com.jk.money_common_data.ExchangeRate>> {
         val start = flowOf(ApiRequest.Loading<ExchangeRate>())
 
         val currencyService  = currencyExchangeServiceFactory.create(exchangeRateServices)
@@ -74,8 +71,6 @@ class CurrencyExchangeRepository(
         }
         return merge(start,result)
     }
-
-
 
 
 //merge

@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(
-    val transactionDao: TransactionDao,
-    val currencyDao: CurrencyDao,
+    private val transactionDao: TransactionDao,
+    private val currencyDao: CurrencyDao,
     private val transactionPagingSource: TransactionPagingSourceFactory
 ) {
     fun getTransactionPreviewByCategoryId(

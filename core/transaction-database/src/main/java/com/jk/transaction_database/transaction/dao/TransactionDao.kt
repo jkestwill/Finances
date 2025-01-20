@@ -15,7 +15,7 @@ import com.jk.transaction_database.transaction.relations.TransactionRelation
 import java.time.LocalDateTime
 
 @Dao
-abstract class TransactionDao(
+abstract class TransactionDao internal constructor(
   private val db:TransactionDatabase,
 ) {
     private val operationDao:OperationDao = db.getOperationDao()

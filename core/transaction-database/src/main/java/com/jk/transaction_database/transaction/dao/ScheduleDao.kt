@@ -25,5 +25,4 @@ interface ScheduleDao {
     @Query(value = "SELECT * FROM schedule")
     suspend fun getAll(): List<TransactionScheduleEntity>
 
-
 }

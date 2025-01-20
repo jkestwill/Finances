@@ -7,13 +7,21 @@ interface ExchangeServiceFactory{
 }
 
 
-sealed class ExchangeRateServices(val baseUrl: String,val countryTag:String){
-    class NBRB(baseUrl: String):ExchangeRateServices(baseUrl, countryTag = "BY")
+ sealed class ExchangeRateServices(val baseUrl: String,val countryTag:String){
+    class NBRB():ExchangeRateServices(BuildConfig.NBRB_API_URL, countryTag = "BY")
     class DefaultRU(baseUrl: String):ExchangeRateServices(baseUrl, countryTag = "RU")
 
+    companion object {
+        fun getByName(serviceName:String): ExchangeRateServices {
+           return when(serviceName){
+               "NBRB"->NBRB()
+               else -> throw IllegalArgumentException("No such exchange service: $serviceName")
+           }
+        }
+    }
 }
 
-interface ExchangeRateService{
+ interface ExchangeRateService{
     suspend fun exchange(exchangeRateRequestParams:ExchangeRateRequestParams):ExchangeRateApiRequest?
 }
 

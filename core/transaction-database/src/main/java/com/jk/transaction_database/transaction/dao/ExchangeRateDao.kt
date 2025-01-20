@@ -11,7 +11,9 @@ import com.jk.transaction_database.transaction.relations.ExchangeRateRelation
 import java.time.LocalDateTime
 
 @Dao
-abstract class ExchangeRateDao(private val transactionDatabase: TransactionDatabase) {
+abstract class ExchangeRateDao internal constructor (
+    private val transactionDatabase: TransactionDatabase
+) {
     private val bankDao = transactionDatabase.getBankDao()
 
     @Insert(entity = ExchangeRateEntity::class)
