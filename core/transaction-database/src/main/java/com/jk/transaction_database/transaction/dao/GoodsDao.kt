@@ -13,7 +13,7 @@ import com.jk.transaction_database.transaction.relations.GoodsRelation
 
 @Dao
 abstract class GoodsDao internal constructor(
-  private  val db: TransactionDatabase
+    private val db: TransactionDatabase
 ) : SpecificationDao {
     private val measureDao: MeasureDao = db.getMeasureDao()
     private val languageDao: LanguageDao = db.getLanguageDao()
@@ -30,9 +30,11 @@ abstract class GoodsDao internal constructor(
         for (i in goodsRelation.specificationList) {
             val lang = i.measure.lang
             val measure = i.measure.measureEntity
-            measureDao.insert(measure)
-            languageDao.insert(lang)
-            languageMeasureListDao.insert(measure.id, lang.id)
+            for (i in measure) {
+                measureDao.insert(i)
+                languageDao.insert(lang)
+                languageMeasureListDao.insert(i.id, lang.id)
+            }
             specificationDao.insert(i.specificationEntity)
             goodsSpecificationDao.insert(
                 GoodsSpecificationsListEntity(

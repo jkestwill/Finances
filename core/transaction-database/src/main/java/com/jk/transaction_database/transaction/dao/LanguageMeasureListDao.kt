@@ -10,7 +10,7 @@ interface LanguageMeasureListDao {
     @Query(
         "SELECT * FROM lang_measure_list " +
                 "INNER JOIN measure ON measure.id == measure_id " +
-                "INNER JOIN language ON language.id == language.id"
+                "INNER JOIN language ON language.id == lang_id"
     )
    suspend fun getMeasureRelation():MeasureRelation
 

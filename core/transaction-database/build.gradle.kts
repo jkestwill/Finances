@@ -14,6 +14,7 @@ android {
     namespace = "com.jk.transaction_database"
     compileSdk = 34
 
+
     defaultConfig {
         minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -38,9 +39,15 @@ android {
         }
 
     }
-
+    compileOptions{
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
     kotlin {
         jvmToolchain(17)
+    }
+    kotlinOptions {
+        jvmTarget = "17"
     }
     buildFeatures{
         buildConfig = true
