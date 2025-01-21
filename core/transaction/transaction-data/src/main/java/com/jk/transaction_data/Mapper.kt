@@ -19,10 +19,10 @@ import com.jk.transaction_database.transaction.SpecificationsEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
-import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionTypeEntity
 import com.jk.transaction_database.transaction.preview.OperationPreviewEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 import com.jk.transaction_database.transaction.relations.GoodsRelation
@@ -75,7 +75,7 @@ fun Transaction.toRelation(): TransactionRelation {
     return TransactionRelation(
         this.toEntity(),
         operation = this.operation.toRelation(),
-        type = TransactionTypeDatabaseEntity(id = type.id, name = type.name)
+        type = TransactionTypeEntity(id = type.id, name = type.name)
     )
 }
 
@@ -105,8 +105,8 @@ fun Goods.toRelation(): GoodsRelation {
     )
 }
 
-fun Goods.toEntity(): TransactionGoodsDatabaseEntity {
-    return TransactionGoodsDatabaseEntity(id = id, name = name, amount = amount, costId = cost.id)
+fun Goods.toEntity(): GoodsEntity {
+    return GoodsEntity(id = id, name = name, amount = amount, costId = cost.id)
 }
 
 fun Specification.toEntity(): SpecificationsEntity {
@@ -136,8 +136,8 @@ fun Money.toRelation(): MoneyRelation {
     )
 }
 
-fun Money.toEntity(): TransactionMoneyDatabaseEntity {
-    return TransactionMoneyDatabaseEntity(id = id, amount = amount, currencyId = currency.id)
+fun Money.toEntity(): MoneyEntity {
+    return MoneyEntity(id = id, amount = amount, currencyId = currency.id)
 }
 
 fun Schedule.toEntity(): TransactionScheduleEntity {

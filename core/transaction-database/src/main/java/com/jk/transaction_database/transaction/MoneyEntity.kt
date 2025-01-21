@@ -4,12 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "goods")
-data class TransactionGoodsDatabaseEntity(
+@Entity(tableName = "money")
+data class MoneyEntity(
     @PrimaryKey
     val id: String,
-    val name: String,
-    val amount: Int,
-    @ColumnInfo("cost_id")
-    val costId: String
+    val amount: Double,
+    @ColumnInfo("currency_id")
+    val currencyId:String
 )

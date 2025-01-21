@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.MoneyRelation
 
@@ -17,17 +17,17 @@ abstract class MoneyDao internal constructor(
 ) {
     private val currencyDao: CurrencyDao = db.getCurrencyDao()
 
-    @Delete(entity = TransactionMoneyDatabaseEntity::class)
-    abstract suspend fun delete(t: TransactionMoneyDatabaseEntity)
+    @Delete(entity = MoneyEntity::class)
+    abstract suspend fun delete(t: MoneyEntity)
 
-    @Update(entity = TransactionMoneyDatabaseEntity::class)
-    abstract suspend fun update(t: TransactionMoneyDatabaseEntity)
+    @Update(entity = MoneyEntity::class)
+    abstract suspend fun update(t: MoneyEntity)
 
-    @Insert(entity = TransactionMoneyDatabaseEntity::class)
-    abstract suspend fun insert(t: TransactionMoneyDatabaseEntity)
+    @Insert(entity = MoneyEntity::class)
+    abstract suspend fun insert(t: MoneyEntity)
 
     @Query(value = "SELECT * FROM money")
-    abstract suspend fun getAll(): List<TransactionMoneyDatabaseEntity>
+    abstract suspend fun getAll(): List<MoneyEntity>
 
     @Transaction
     open suspend fun insert(money: MoneyRelation) {

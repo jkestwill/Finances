@@ -3,11 +3,11 @@ package com.jk.transaction_database.transaction.relations
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 
 data class MoneyRelation(
     @Embedded
-    val money: TransactionMoneyDatabaseEntity,
+    val money: MoneyEntity,
     @Relation(
         parentColumn = "currency_id",
         entityColumn = "id"

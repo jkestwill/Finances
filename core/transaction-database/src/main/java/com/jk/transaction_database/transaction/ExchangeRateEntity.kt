@@ -22,7 +22,8 @@ import java.time.LocalDateTime
         ForeignKey(
             entity = BankEntity::class,
             childColumns  = ["bank_id"],
-            parentColumns = ["id"]
+            parentColumns = ["id"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

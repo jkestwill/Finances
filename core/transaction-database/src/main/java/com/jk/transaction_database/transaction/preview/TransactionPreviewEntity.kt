@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionTypeEntity
 
 class TransactionPreviewEntity(
     @Embedded
@@ -15,7 +15,7 @@ class TransactionPreviewEntity(
         entityColumn = "id",
         parentColumn = "type_id"
     )
-    val typeRelation: TransactionTypeDatabaseEntity
+    val typeRelation: TransactionTypeEntity
 
 ) {
 }

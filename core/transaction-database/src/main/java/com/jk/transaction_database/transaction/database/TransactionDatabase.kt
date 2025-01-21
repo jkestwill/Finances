@@ -17,10 +17,10 @@ import com.jk.transaction_database.transaction.SpecificationsEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
-import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionTypeEntity
 import com.jk.transaction_database.transaction.dao.AddressDao
 import com.jk.transaction_database.transaction.dao.BankDao
 import com.jk.transaction_database.transaction.dao.CategoryDao
@@ -58,9 +58,9 @@ import java.util.concurrent.Executors
         OperationEntity::class,
         TransactionCategoryDatabaseEntity::class,
         TransactionCurrencyDatabaseEntity::class,
-        TransactionGoodsDatabaseEntity::class,
-        TransactionMoneyDatabaseEntity::class,
-        TransactionTypeDatabaseEntity::class,
+        GoodsEntity::class,
+        MoneyEntity::class,
+        TransactionTypeEntity::class,
         TransactionEntity::class,
         OperationGoodsListEntity::class,
         OperationCategoryList::class,

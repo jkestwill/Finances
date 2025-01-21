@@ -8,8 +8,8 @@ import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 import com.jk.transaction_database.transaction.relations.MeasureRelation
@@ -100,7 +100,7 @@ class GoodsTest {
         )
         val goodsRelation = listOf(
             GoodsRelation(
-                goodsEntity = TransactionGoodsDatabaseEntity("qq", "bread", 1,"qq"),
+                goodsEntity = GoodsEntity("qq", "bread", 1,"qq"),
                 specificationList = listOf(
                     SpecificationRelation(
                         specificationEntity = SpecificationsEntity("ss", "weight", 10f, "mm"),
@@ -111,7 +111,7 @@ class GoodsTest {
                     )
                 ),
                 cost = MoneyRelation(
-                    money = TransactionMoneyDatabaseEntity("mo", 2.0, "cc"),
+                    money = MoneyEntity("mo", 2.0, "cc"),
                     currency = TransactionCurrencyDatabaseEntity("cc", "BYN")
                 )
             )

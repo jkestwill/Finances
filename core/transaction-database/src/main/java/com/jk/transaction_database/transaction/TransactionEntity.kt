@@ -2,20 +2,34 @@ package com.jk.transaction_database.transaction
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-@Entity(tableName = "transaction")
+@Entity(tableName = "transaction",foreignKeys = [
+    ForeignKey(
+        entity = OperationEntity::class,
+        childColumns  = ["operation_id"],
+        parentColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+    ),
+    ForeignKey(
+        entity = TransactionTypeEntity::class,
+        childColumns  = ["type_id"],
+        parentColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+    ),
+])
 data class TransactionEntity(
-    @PrimaryKey()
+    @PrimaryKey
     val id: String,
     val date: LocalDateTime,
     @ColumnInfo(name="operation_id")
     val operationId: String,
     @ColumnInfo(name="type_id")
     val typeId: String,
-) {
-}
+)
+
 
 
 

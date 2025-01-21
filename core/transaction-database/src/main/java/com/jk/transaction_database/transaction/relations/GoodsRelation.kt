@@ -4,13 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 
 data class GoodsRelation(
     @Embedded
-    val goodsEntity: TransactionGoodsDatabaseEntity,
+    val goodsEntity: GoodsEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "id",
@@ -26,7 +26,7 @@ data class GoodsRelation(
     @Relation(
         parentColumn = "cost_id",
         entityColumn = "id",
-        entity = TransactionMoneyDatabaseEntity::class
+        entity = MoneyEntity::class
     )
     val cost: MoneyRelation,
 ) {

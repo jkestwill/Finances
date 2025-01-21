@@ -12,13 +12,11 @@ import com.jk.transaction_database.transaction.TransactionScheduleEntity
         entity = TransactionScheduleEntity::class,
         parentColumns = ["id"],
         childColumns = ["schedule_id"],
-        onDelete = ForeignKey.CASCADE
     ),ForeignKey(
         entity = OperationEntity::class,
         parentColumns = ["id"],
-        childColumns = ["operation_id"],
-        onDelete = ForeignKey.CASCADE)
-
+        childColumns = ["operation_id"]
+    )
     ]
 )
 data class OperationScheduleList(

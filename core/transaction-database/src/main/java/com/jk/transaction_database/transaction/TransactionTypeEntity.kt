@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "type")
-data class TransactionTypeDatabaseEntity(
+data class TransactionTypeEntity(
     @PrimaryKey
     val id: String,
     val name: String

@@ -2,9 +2,17 @@ package com.jk.transaction_database.transaction
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity("specifications")
+@Entity("specifications",foreignKeys = [
+    ForeignKey(
+        entity = MeasureEntity::class,
+        childColumns  = ["measure_id"],
+        parentColumns = ["id"],
+        onDelete = ForeignKey.CASCADE
+    )
+])
 data class SpecificationsEntity(
     @PrimaryKey
     val id:String,

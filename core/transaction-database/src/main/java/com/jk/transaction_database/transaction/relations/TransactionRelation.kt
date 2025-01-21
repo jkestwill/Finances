@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionTypeEntity
 
 data class TransactionRelation(
     @Embedded
@@ -17,6 +17,6 @@ data class TransactionRelation(
         entityColumn = "id",
         parentColumn = "type_id"
     )
-    val type: TransactionTypeDatabaseEntity
+    val type: TransactionTypeEntity
 ) {
 }

@@ -21,7 +21,6 @@ import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
             TransactionCategoryDatabaseEntity::class,
             parentColumns = ["id"],
             childColumns = ["category_id"],
-            onDelete = ForeignKey.CASCADE
         ),
     ]
 )

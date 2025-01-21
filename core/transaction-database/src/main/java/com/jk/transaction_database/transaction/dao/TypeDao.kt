@@ -6,28 +6,28 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
+import com.jk.transaction_database.transaction.TransactionTypeEntity
 
 @Dao
 interface TypeDao {
-    @Delete(entity = TransactionTypeDatabaseEntity::class)
-    suspend fun delete(t: TransactionTypeDatabaseEntity)
+    @Delete(entity = TransactionTypeEntity::class)
+    suspend fun delete(t: TransactionTypeEntity)
 
-    @Insert(entity = TransactionTypeDatabaseEntity::class)
-    suspend fun insert(t: TransactionTypeDatabaseEntity)
+    @Insert(entity = TransactionTypeEntity::class)
+    suspend fun insert(t: TransactionTypeEntity)
 
     @Transaction
-    suspend fun insertIfNotExist(transactionTypeDatabaseEntity: TransactionTypeDatabaseEntity) {
-        if (getByName(transactionTypeDatabaseEntity.name) == null) {
-            insert(transactionTypeDatabaseEntity)
+    suspend fun insertIfNotExist(transactionTypeEntity: TransactionTypeEntity) {
+        if (getByName(transactionTypeEntity.name) == null) {
+            insert(transactionTypeEntity)
         }
     }
 
-    @Update(entity = TransactionTypeDatabaseEntity::class)
-    suspend fun update(t: TransactionTypeDatabaseEntity)
+    @Update(entity = TransactionTypeEntity::class)
+    suspend fun update(t: TransactionTypeEntity)
 
     @Query(value = "SELECT * FROM type")
-    suspend fun getAll(): List<TransactionTypeDatabaseEntity>
+    suspend fun getAll(): List<TransactionTypeEntity>
 
     @Query("SELECT name FROM type WHERE name=:name")
     suspend fun getByName(name: String): String?

@@ -10,7 +10,7 @@ fun List<TransactionCategoryDatabaseEntity>.toOperationCategoryList(operationId:
     }
 }
 
-fun List<TransactionGoodsDatabaseEntity>.toTransactionGoodsList(transactionId: String): List<OperationGoodsListEntity> {
+fun List<GoodsEntity>.toTransactionGoodsList(transactionId: String): List<OperationGoodsListEntity> {
     return this.map {
         OperationGoodsListEntity(transactionId, it.id)
     }

@@ -11,7 +11,5 @@ data class LanguageEntity(
     @ColumnInfo("lang_name")
     val langName:String,
     @ColumnInfo("short_lang_name")
-    val langShortName:String,
-    @ColumnInfo("text")
-    val text:String
+    val langShortName:String
 )
