@@ -122,13 +122,13 @@ class AddNewTransactionViewModel @Inject constructor(
         }
     }
 
-    fun getGoodsListById(idList: List<String>) {
-        viewModelScope.launch(dispatchers.io) {
-            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
-                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
-            })
-        }
-    }
+//    fun getGoodsListById(idList: List<String>) {
+//        viewModelScope.launch(dispatchers.io) {
+//            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
+//                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
+//            })
+//        }
+//    }
 
     fun addTransaction(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch(dispatchers.io) {

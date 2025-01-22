@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class MeasureEntity(
     @PrimaryKey
     val id:String,
-    @ColumnInfo(name="lang_id")
-    val langId:String
+    @ColumnInfo(name="name")
+    val name:String
 ) {
 }

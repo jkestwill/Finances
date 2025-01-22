@@ -9,9 +9,9 @@ import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.CurrencyEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.relations.GoodsRelation
 import com.jk.transaction_database.transaction.relations.MeasureRelation
 import com.jk.transaction_database.transaction.relations.MoneyRelation
@@ -19,7 +19,7 @@ import com.jk.transaction_database.transaction.relations.SpecificationRelation
 
 fun Goods.toGoodsRelation(): GoodsRelation {
     return GoodsRelation(
-        goodsEntity = TransactionGoodsDatabaseEntity(
+        goodsEntity = GoodsEntity(
             id = id,
             name = name,
             costId = cost.id,
@@ -27,12 +27,12 @@ fun Goods.toGoodsRelation(): GoodsRelation {
         ),
         specificationList = specifications.map { it.toSpecificationRelation() },
         cost = MoneyRelation(
-            money = TransactionMoneyDatabaseEntity(
+            money = MoneyEntity(
                 id = cost.id,
                 cost.amount,
                 cost.currency.id
             ),
-            currency = TransactionCurrencyDatabaseEntity(id = cost.currency.id, cost.currency.name)
+            currency = CurrencyEntity(id = cost.currency.id, cost.currency.name)
         ),
     )
 }

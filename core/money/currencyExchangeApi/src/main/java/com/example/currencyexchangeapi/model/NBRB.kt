@@ -34,7 +34,7 @@ class NBRBApi(val httpClient: HttpClient,val baseUrl: String): ExchangeRateServi
             in 200..299->{
                 return response.body<NBRBExchangeResponse>().map()
             }
-            else->throw ServerResponseException(response,"err")
+            else->throw ServerResponseException(response,"error")
         }
     }
 

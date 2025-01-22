@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.relations.GoodsRelation
@@ -22,17 +22,19 @@ abstract class GoodsDao(
     private val specificationDao: SpecificationDao = db.getSpecificationDao()
     private val goodsSpecificationDao: GoodsSpecificationDao = db.getGoodsSpecificationDao()
 
-    @Update(entity = TransactionGoodsDatabaseEntity::class)
-    abstract suspend fun update(t: TransactionGoodsDatabaseEntity)
+    @Update(entity = GoodsEntity::class)
+    abstract suspend fun update(t: GoodsEntity)
 
     @Transaction
     open suspend fun insert(goodsRelation: GoodsRelation) {
         for (i in goodsRelation.specificationList) {
             val lang = i.measure.lang
             val measure = i.measure.measureEntity
-            measureDao.insert(measure)
-            languageDao.insert(lang)
-            languageMeasureListDao.insert(measure.id, lang.id)
+            for (j in measure) {
+                measureDao.insert(j)
+                languageDao.insert(lang)
+                languageMeasureListDao.insert(j.id, lang.id)
+            }
             specificationDao.insert(i.specificationEntity)
             goodsSpecificationDao.insert(
                 GoodsSpecificationsListEntity(
@@ -45,8 +47,8 @@ abstract class GoodsDao(
         insert(goodsRelation.goodsEntity)
     }
 
-    @Delete(entity = TransactionGoodsDatabaseEntity::class)
-    abstract suspend fun delete(t: TransactionGoodsDatabaseEntity)
+    @Delete(entity = GoodsEntity::class)
+    abstract suspend fun delete(t: GoodsEntity)
 
     @Query(
         value = "SELECT * FROM goods " +
@@ -66,9 +68,9 @@ abstract class GoodsDao(
     @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
     abstract suspend fun getByIdList(idList: List<String>): List<GoodsRelation>
 
-    @Insert(entity = TransactionGoodsDatabaseEntity::class)
-    abstract suspend fun insert(t: TransactionGoodsDatabaseEntity)
+    @Insert(entity = GoodsEntity::class)
+    abstract suspend fun insert(t: GoodsEntity)
 
-    @Insert(entity = TransactionGoodsDatabaseEntity::class)
-    abstract suspend fun insert(t: List<TransactionGoodsDatabaseEntity>)
+    @Insert(entity = GoodsEntity::class)
+    abstract suspend fun insert(t: List<GoodsEntity>)
 }

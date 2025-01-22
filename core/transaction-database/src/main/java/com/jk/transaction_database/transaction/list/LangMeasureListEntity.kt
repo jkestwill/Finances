@@ -8,6 +8,7 @@ data class LangMeasureListEntity(
     @ColumnInfo("measure_id")
     val measureId:String,
     @ColumnInfo("lang_id")
-    val langId:String
+    val langId:String,
+    val text:String
 ) {
 }

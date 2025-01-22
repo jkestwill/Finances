@@ -17,11 +17,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Provides
-    @Singleton
-    fun provideNBRBApi(): NBRBApi {
-        return NBRBApi(baseUrl = BuildConfig.NBRB_API_BASE_URL)
-    }
+
+
 
     @Provides
     @Singleton
@@ -41,8 +38,5 @@ object AppModule {
         return Dispatchers()
     }
 
-    fun provideExchangeService(){
-
-    }
 
 }

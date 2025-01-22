@@ -3,15 +3,9 @@ package com.jk.transaction_database.transaction.database
 import android.content.Context
 import android.util.Log
 import androidx.room.Database
-import androidx.room.DeleteColumn
-import androidx.room.RenameColumn
-import androidx.room.RenameTable
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.AutoMigrationSpec
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.jk.transaction_database.transaction.AddressEntity
 import com.jk.transaction_database.transaction.BankEntity
 import com.jk.transaction_database.transaction.ExchangeRateEntity
@@ -21,10 +15,10 @@ import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
+import com.jk.transaction_database.transaction.CurrencyEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.dao.AddressDao
@@ -63,9 +57,9 @@ import java.util.concurrent.Executors
     entities = [
         OperationEntity::class,
         TransactionCategoryDatabaseEntity::class,
-        TransactionCurrencyDatabaseEntity::class,
-        TransactionGoodsDatabaseEntity::class,
-        TransactionMoneyDatabaseEntity::class,
+        CurrencyEntity::class,
+        GoodsEntity::class,
+        MoneyEntity::class,
         TransactionTypeDatabaseEntity::class,
         TransactionEntity::class,
         OperationGoodsListEntity::class,
@@ -82,7 +76,7 @@ import java.util.concurrent.Executors
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
         AddressEntity::class
-    ], version = 24, exportSchema = false
+    ], version = 25, exportSchema = false
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 abstract class TransactionDatabase : RoomDatabase() {

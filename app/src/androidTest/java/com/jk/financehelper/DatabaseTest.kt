@@ -10,8 +10,8 @@ import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CategoryDao
@@ -377,34 +377,34 @@ class DatabaseTest {
             )
         }
 
-        fun testGoodsList(): List<TransactionGoodsDatabaseEntity> {
+        fun testGoodsList(): List<GoodsEntity> {
             return listOf(
-                TransactionGoodsDatabaseEntity(id = "111", name = "Oil", amount = 1,"c1"),
-                TransactionGoodsDatabaseEntity(id = "122", name = "Bread", amount = 1,"c2"),
-                TransactionGoodsDatabaseEntity(id = "133", name = "Ham", amount = 1,"c2"),
-                TransactionGoodsDatabaseEntity(id = "144", name = "Coffee", amount = 1,"c2"),
-                TransactionGoodsDatabaseEntity(id = "155", name = "Tea", amount = 1,"c3"),
-                TransactionGoodsDatabaseEntity(id = "166", name = "Sugar", amount = 1,"c1"),
-                TransactionGoodsDatabaseEntity(id = "177", name = "RTX 3060 TI", amount = 1,"c4"),
-                TransactionGoodsDatabaseEntity(id = "188", name = "LG Ultragear 27", amount = 1,"c5"),
+                GoodsEntity(id = "111", name = "Oil", amount = 1,"c1"),
+                GoodsEntity(id = "122", name = "Bread", amount = 1,"c2"),
+                GoodsEntity(id = "133", name = "Ham", amount = 1,"c2"),
+                GoodsEntity(id = "144", name = "Coffee", amount = 1,"c2"),
+                GoodsEntity(id = "155", name = "Tea", amount = 1,"c3"),
+                GoodsEntity(id = "166", name = "Sugar", amount = 1,"c1"),
+                GoodsEntity(id = "177", name = "RTX 3060 TI", amount = 1,"c4"),
+                GoodsEntity(id = "188", name = "LG Ultragear 27", amount = 1,"c5"),
             )
         }
 
-        fun testCostList(): List<TransactionMoneyDatabaseEntity> {
+        fun testCostList(): List<MoneyEntity> {
             return listOf(
-                TransactionMoneyDatabaseEntity(
+                MoneyEntity(
                     id = "c1", amount = 20.0, currencyId = "qwe1"
                 ),
-                TransactionMoneyDatabaseEntity(
+                MoneyEntity(
                     id = "c2", amount = 20.0, currencyId = "qwe2"
                 ),
-                TransactionMoneyDatabaseEntity(
+                MoneyEntity(
                     id = "c3", amount = 50.0, currencyId = "qwe3"
                 ),
-                TransactionMoneyDatabaseEntity(
+                MoneyEntity(
                     id = "c4", amount = 1030.56, currencyId = "qwe2"
                 ),
-                TransactionMoneyDatabaseEntity(
+                MoneyEntity(
                     id = "c5", amount = 100.0, currencyId = "qwe2"
                 ),
             )

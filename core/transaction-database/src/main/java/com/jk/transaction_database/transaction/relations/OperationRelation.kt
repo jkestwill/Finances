@@ -5,8 +5,8 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionGoodsDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionMoneyDatabaseEntity
+import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.TransactionScheduleEntity
 import com.jk.transaction_database.transaction.list.OperationCategoryList
 import com.jk.transaction_database.transaction.list.OperationScheduleList
@@ -30,7 +30,7 @@ data class OperationRelation(
     @Relation(
         parentColumn  = "id",
         entityColumn = "id",
-        entity=TransactionGoodsDatabaseEntity::class,
+        entity=GoodsEntity::class,
         associateBy = Junction(
             parentColumn  = "operation_id",
             entityColumn = "goods_id",
@@ -39,7 +39,7 @@ data class OperationRelation(
     )
     val goodsList: List<GoodsRelation>,
 
-    @Relation(entity = TransactionMoneyDatabaseEntity::class,parentColumn = "money_id", entityColumn = "id")
+    @Relation(entity = MoneyEntity::class,parentColumn = "money_id", entityColumn = "id")
     val cost: MoneyRelation,
     @Relation(parentColumn = "id", entityColumn = "id", associateBy = Junction(
         parentColumn = "operation_id", entityColumn = "schedule_id", value = OperationScheduleList::class
