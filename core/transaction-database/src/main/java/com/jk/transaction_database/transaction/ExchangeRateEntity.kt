@@ -10,12 +10,12 @@ import java.time.LocalDateTime
     tableName = "exchange_rate",
     foreignKeys = [
         ForeignKey(
-            entity = TransactionCurrencyDatabaseEntity::class,
+            entity = CurrencyEntity::class,
             childColumns = ["currency_from_id"],
             parentColumns = ["id"]
         ),
         ForeignKey(
-            entity = TransactionCurrencyDatabaseEntity::class,
+            entity = CurrencyEntity::class,
             childColumns  = ["currency_to_id"],
             parentColumns = ["id"]
         ),

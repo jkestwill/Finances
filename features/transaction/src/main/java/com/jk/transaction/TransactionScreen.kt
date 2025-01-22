@@ -92,7 +92,7 @@ fun TransactionScreen(
     LaunchedEffect(key1 = goodsIdList) {
         println(goodsIdList?.size)
         if (goodsIdList != null) {
-            viewModel.getGoodsListById(goodsIdList ?: listOf())
+           // viewModel.getGoodsListById(goodsIdList ?: listOf())
         }
     }
 

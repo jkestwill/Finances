@@ -17,7 +17,7 @@ import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
 import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
+import com.jk.transaction_database.transaction.CurrencyEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.MoneyEntity
@@ -59,7 +59,7 @@ fun MoneyRelation.toMoney(): Money {
     )
 }
 
-fun TransactionCurrencyDatabaseEntity.toCurrency(): Currency {
+fun CurrencyEntity.toCurrency(): Currency {
     return Currency(id = id, name = name)
 }
 
@@ -132,7 +132,7 @@ fun Language.toEntity(): LanguageEntity {
 fun Money.toRelation(): MoneyRelation {
     return MoneyRelation(
         money = toEntity(),
-        currency = TransactionCurrencyDatabaseEntity(id = currency.id, name = currency.name)
+        currency = CurrencyEntity(id = currency.id, name = currency.name)
     )
 }
 

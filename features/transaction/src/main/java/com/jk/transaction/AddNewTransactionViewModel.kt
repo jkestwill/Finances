@@ -1,13 +1,11 @@
 package com.jk.transaction
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.example.currencyexchangeapi.ExchangeRateRequestParams
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_common_ui.toUI
 import com.jk.category_data.CategoryRepository
@@ -16,39 +14,32 @@ import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
 import com.jk.common_data.sha256
+import com.jk.common_goods_data.Goods
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
-import com.jk.exchange_rate_data.ApiRequestMergeStrategy
-import com.jk.exchange_rate_data.CurrencyExchangeRepository
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.toUI
 import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.ExchangeRateUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
-import com.jk.settings.AppSettingsRepository
-import com.jk.transaction.mapper.toUI
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.ScheduleUI
 import com.jk.transaction_common_ui.TransactionUI
 import com.jk.transaction_common_ui.toTransaction
 import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.util.logging.Logger
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,18 +51,15 @@ class AddNewTransactionViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val goodsRepository: GoodsRepository,
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
-    private val dispatchers: Dispatchers,
-    private val appSettingsRepository:AppSettingsRepository,
-    private val exchangeRepository: CurrencyExchangeRepository
+    private val dispatchers: Dispatchers
 ) : ViewModel() {
-    // удалить
+
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())
     val transactionState: StateFlow<PagingData<TransactionUI>> get() = _transactionState
 
     private var _categoryList = MutableStateFlow<State<List<CategoryUI>>>(State.None)
     val categoryList: StateFlow<State<List<CategoryUI>>> = _categoryList
 
-    // созданные категории
     val editableCategoriesStateList = mutableStateListOf<CategoryUI>()
 
     // костыль чтобы сравнивать занчения приходящие из параметров composable функции TransactionScreen
@@ -107,24 +95,17 @@ class AddNewTransactionViewModel @Inject constructor(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
-
-    // товары из поиска
     private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
     val incomingGoodsFlow: StateFlow<State<List<GoodsUI>>> get() = _incomingGoodsFlow
-    // созадаваемые товары
-    // !!!!!изменить тип на флоу!!!!
-    val newGoodsBuilderList = MutableStateFlow<List<GoodsUI.Builder>>(listOf())
-    val operationBuilder = MutableStateFlow<OperationUI.Builder>(OperationUI.Builder())
-    //создаваемая транзакция
+
+
+    val newGoodsBuilderList = mutableStateListOf<GoodsUI.Builder>()
+    val operationBuilder =
+        MutableStateFlow<OperationUI.Builder>(OperationUI.Builder())
+
     val newTransactionState = MutableStateFlow(TransactionUI.Builder())
 
     val scheduleListBuilder = mutableStateListOf(ScheduleUI.Builder())
-
-    var exchageRateTotalFlow: Flow<State<ExchangeRateUI>> = MutableStateFlow(State.None)
-
-    private var _totalSumWithExchangeRate:Flow<Double> = MutableStateFlow(0.0)
-    val totalSumWithExchangeRate:Flow<Double> get() = _totalSumWithExchangeRate
-
     fun getCategoryListById(idList: List<String>) {
         viewModelScope.launch(dispatchers.io) {
             _categoryList.emitAll(
@@ -141,66 +122,13 @@ class AddNewTransactionViewModel @Inject constructor(
         }
     }
 
-    fun getTotalSum(serviceName: String?,currencyOut:String?){
-     _totalSumWithExchangeRate = newGoodsBuilderList.map {list->
-           list.map {
-                it.build()
-           }.groupingBy{it.cost.currency}
-               .fold(0.0){acc,el->
-                    el.cost.amount+acc
-               }
-        }.onEach {
-            val settings = appSettingsRepository.appSettingsFlow.first()
-            it.onEach {total->
-                getExchangeRate(
-                    serviceName,
-                    exchangeRate = ExchangeRateRequestParams(
-                        currencyOut=currencyOut?:total.key.name,
-                        currencyIn =settings.currencyConfig.defaultCurrency,
-                        date = LocalDateTime.now())
-                )
-            }
-        }.combine(exchageRateTotalFlow){f1:Map<CurrencyUI, Double>,f2:State<ExchangeRateUI>->
-            f1.map {
-                when(f2) {
-                    is State.Success -> it.value * f2.data.rate
-                    is State.Error ->  error(f2.message)
-                    else -> it.value
-                }
-            }.sum()
-        }.stateIn(viewModelScope, started = SharingStarted.Lazily,0.0)
-    }
-
-    fun getExchangeRate(serviceName:String?,exchangeRate: ExchangeRateRequestParams){
-        // использовать параметры
-        var service = serviceName
-        if(serviceName==null) {
-            viewModelScope.launch {
-                val appSettings =  appSettingsRepository.appSettingsFlow.first()
-            exchageRateTotalFlow =  exchangeRepository.getExchangeRate(
-                    exchangeRateServiceName = appSettings.currencyConfig.bankConfig.name,
-                    exchangeRateRequestParams =exchangeRate,
-                    mergeStrategy = ApiRequestMergeStrategy()
-                ).map {
-                    it.map {exRate->exRate.toUI()  }.toState()
-                }
-            }
-        }else{
-            exchangeRepository.getExchangeRate(
-                exchangeRateServiceName = serviceName,
-                exchangeRateRequestParams =exchangeRate,
-                mergeStrategy = ApiRequestMergeStrategy()
-            )
-        }
-    }
-
-    fun getGoodsListById(idList: List<String>) {
-        viewModelScope.launch(dispatchers.io) {
-            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
-                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
-            })
-        }
-    }
+//    fun getGoodsListById(idList: List<String>) {
+//        viewModelScope.launch(dispatchers.io) {
+//            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
+//                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
+//            })
+//        }
+//    }
 
     fun addTransaction(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch(dispatchers.io) {
@@ -246,16 +174,16 @@ class AddNewTransactionViewModel @Inject constructor(
         )
         return newTransactionState.value.setOperation(operation).build()
     }
-    //преобразовать все в флоу
+
     private fun checkAndBuild(
         operationBuilder: OperationUI.Builder,
-        goodsBuilderList: Flow<List<GoodsUI.Builder>>,
+        goodsBuilderList: List<GoodsUI.Builder>,
         categoryList: List<CategoryUI>,
         scheduleBuilder: List<ScheduleUI.Builder>
     ): OperationUI {
         val preBuild = operationBuilder.build()
         checkMoney(preBuild.money)
-        val goodsList = check(goodsBuilderList).stateIn(viewModelScope, SharingStarted.Lazily, listOf())
+        val goodsList = check(goodsBuilderList)
         val scheduleList = check(scheduleBuilder)
         when {
             preBuild.id.isEmpty() -> {
@@ -267,7 +195,7 @@ class AddNewTransactionViewModel @Inject constructor(
             }
         }
         return operationBuilder
-            .setGoodsList(goodsList.value)
+            .setGoodsList(goodsList)
             .setCategoryList(categoryList)
             //.setScheduleList(scheduleList)
             .build()
@@ -287,10 +215,8 @@ class AddNewTransactionViewModel @Inject constructor(
     }
 
     @JvmName("goods_list")
-    private fun check(goodsBuilder: Flow<List<GoodsUI.Builder>>): Flow<List<GoodsUI>> =
-        goodsBuilder
-            .onEach {list->list.fastForEach { check(it)} }
-            .map {list-> list.map { it.build() } }
+    private fun check(goodsBuilder: List<GoodsUI.Builder>): List<GoodsUI> =
+        goodsBuilder.onEach { check(it) }.map { it.build() }
 
     @JvmName("goods")
     private fun check(goodsBuilder: GoodsUI.Builder) {

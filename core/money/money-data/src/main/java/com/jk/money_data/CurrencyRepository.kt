@@ -2,7 +2,6 @@ package com.jk.money_data
 
 import com.jk.common_data.ApiRequest
 import com.jk.money_common_data.Currency
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

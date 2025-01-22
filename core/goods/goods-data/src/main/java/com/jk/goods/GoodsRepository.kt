@@ -24,20 +24,20 @@ class GoodsRepository @Inject constructor(
         }
     }
 
-    suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
-        val start = flowOf(ApiRequest.Loading<List<Goods>>())
-        val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
-            emit(goodsLocalDataSource.getByIdList(idList).map { it.toGoods() })
-        }.map { goodsList ->
-            try {
-                ApiRequest.Success(goodsList)
-            } catch (e: Throwable) {
-                ApiRequest.Error(goodsList, e)
-            }
-        }
-       return merge(start, result)
-
-    }
+//    suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
+//        val start = flowOf(ApiRequest.Loading<List<Goods>>())
+//        val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
+//            emit(goodsLocalDataSource.getByIdList(idList).map { it.toGoods() })
+//        }.map { goodsList ->
+//            try {
+//                ApiRequest.Success(goodsList)
+//            } catch (e: Throwable) {
+//                ApiRequest.Error(goodsList, e)
+//            }
+//        }
+//       return merge(start, result)
+//
+//    }
 
 
     fun getAllFromDatabase(
