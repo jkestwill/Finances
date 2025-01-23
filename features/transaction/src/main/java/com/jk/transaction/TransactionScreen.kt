@@ -145,7 +145,7 @@ fun TransactionScreen(
     }, bottomBar = {
         Column(modifier=Modifier.fillMaxWidth()) {
             // !!!!!!!!!!!!!!!!!поменять!!!!!!!!!!!!!!!!!!!!!!
-            TotalSection(modifier=Modifier.fillMaxWidth(), totalSum = viewModel.totalSumWithExchangeRate.collectAsState(initial = 0.0).value, currency = CurrencyUI("zxc","BYN"))
+            TotalSection(modifier=Modifier.fillMaxWidth(), totalSum =0.0, currency = CurrencyUI("zxc","BYN"))
             // add/cancel/save buttons
             Row(
                 modifier = Modifier.padding(FinanceHelperTheme.shape.headerPadding),

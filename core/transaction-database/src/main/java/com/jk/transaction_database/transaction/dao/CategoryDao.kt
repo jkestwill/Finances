@@ -8,38 +8,38 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 
-import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
+import com.jk.transaction_database.transaction.CategoryEntity
 
 @Dao
 interface CategoryDao {
-    @Delete(entity = TransactionCategoryDatabaseEntity::class)
-    suspend fun delete(t: TransactionCategoryDatabaseEntity)
+    @Delete(entity = CategoryEntity::class)
+    suspend fun delete(t: CategoryEntity)
 
     @Query("DELETE FROM category " +
             "WHERE category.id IN (:idList)" +
             "")
     suspend fun delete(idList: List<String>)
     @Transaction
-   suspend fun checkIfNoExistNInsert(t:TransactionCategoryDatabaseEntity){
+   suspend fun checkIfNoExistNInsert(t:CategoryEntity){
         if(getByName(t.name)==null){
             insert(t)
         }
     }
 
     @Insert(
-        entity = TransactionCategoryDatabaseEntity::class,
+        entity = CategoryEntity::class,
         onConflict = OnConflictStrategy.ABORT
     )
-    suspend fun insert(t: TransactionCategoryDatabaseEntity): Long
+    suspend fun insert(t: CategoryEntity): Long
 
     @Insert(
-        entity = TransactionCategoryDatabaseEntity::class,
+        entity = CategoryEntity::class,
         onConflict = OnConflictStrategy.ABORT
     )
-    suspend fun insert(t: List<TransactionCategoryDatabaseEntity>)
+    suspend fun insert(t: List<CategoryEntity>)
 
-    @Update(entity = TransactionCategoryDatabaseEntity::class)
-    suspend fun update(t: TransactionCategoryDatabaseEntity)
+    @Update(entity = CategoryEntity::class)
+    suspend fun update(t: CategoryEntity)
 
     @Query(
         value = "SELECT * FROM category  WHERE LOWER(category.name) LIKE '%'||:q||'%'  ORDER BY " +
@@ -53,13 +53,13 @@ interface CategoryDao {
         isAsc: Boolean,
         offset: Int,
         limit: Int
-    ): List<TransactionCategoryDatabaseEntity>
+    ): List<CategoryEntity>
 
     @Query(value = "SELECT * FROM category WHERE category.id LIKE :id")
-    suspend fun getById(id: String): TransactionCategoryDatabaseEntity?
+    suspend fun getById(id: String): CategoryEntity?
 
     @Query(value = "SELECT * FROM category WHERE category.id IN (:id)")
-    suspend fun getByListId(id: List<String>): List<TransactionCategoryDatabaseEntity>?
+    suspend fun getByListId(id: List<String>): List<CategoryEntity>?
 
     @Query(value = "SELECT name FROM category WHERE name==:name")
     suspend fun getByName(name: String): String?

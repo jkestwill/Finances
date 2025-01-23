@@ -7,7 +7,7 @@ import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.MoneyEntity
 
-@Entity(tableName = "lang_measure_list", foreignKeys =  [
+@Entity(tableName = "lang_measure_list",primaryKeys = ["measure_id","lang_id"], foreignKeys =  [
     ForeignKey(
         entity = MeasureEntity::class,
         childColumns  = ["measure_id"],
@@ -15,7 +15,7 @@ import com.jk.transaction_database.transaction.MoneyEntity
     ),
     ForeignKey(
         entity = LanguageEntity::class,
-        childColumns  = ["language_id"],
+        childColumns  = ["lang_id"],
         parentColumns = ["id"],
     )
 ])

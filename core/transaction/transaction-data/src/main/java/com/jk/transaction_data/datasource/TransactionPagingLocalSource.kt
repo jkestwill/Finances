@@ -3,11 +3,9 @@ package com.jk.transaction_data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.jk.transaction_common_data.TransactionPreview
-import com.jk.transaction_data.toPreview
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class TransactionPagingLocalSource @AssistedInject constructor(
     private val transactionLocalDataSource: TransactionDao,
@@ -41,7 +39,7 @@ class TransactionPagingLocalSource @AssistedInject constructor(
         )
 
         return if (response.isNotEmpty()) {
-            val data = response.map { s -> s.toPreview() }
+            val data = listOf<TransactionPreview>()
 
             val nextKey = if (data.size < pageSize) null else page + 1
             val prevKey = if (page == 1) null else page - 1

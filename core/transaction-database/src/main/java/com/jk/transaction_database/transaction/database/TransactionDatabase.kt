@@ -8,14 +8,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jk.transaction_database.transaction.AddressEntity
 import com.jk.transaction_database.transaction.BankEntity
+import com.jk.transaction_database.transaction.CurrencyEntity
 import com.jk.transaction_database.transaction.ExchangeRateEntity
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.LedgerEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
+import com.jk.transaction_database.transaction.CategoryEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.MoneyEntity
@@ -56,8 +56,8 @@ import java.util.concurrent.Executors
 @Database(
     entities = [
         OperationEntity::class,
-        TransactionCategoryDatabaseEntity::class,
-        TransactionCurrencyDatabaseEntity::class,
+        CategoryEntity::class,
+        CurrencyEntity::class,
         GoodsEntity::class,
         MoneyEntity::class,
         TransactionTypeEntity::class,
@@ -128,6 +128,7 @@ fun transactionDatabaseProvider(context: Context, dbAssetPath:String): Transacti
             Log.e("DATABASE_LOG", "${sqlQuery} ## Args: ${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
         .createFromAsset(dbAssetPath)
+        .fallbackToDestructiveMigration()
         .build()
         .apply {
             query(query = "SELECT * FROM currency", args = null)

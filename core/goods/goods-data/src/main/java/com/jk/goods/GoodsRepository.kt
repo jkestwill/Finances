@@ -20,7 +20,7 @@ class GoodsRepository @Inject constructor(
 ) {
     suspend fun add(goodsList: List<Goods>) {
         for (i in goodsList) {
-            goodsLocalDataSource.insert(i.toGoodsRelation())
+            //goodsLocalDataSource.insert(i.toGoodsRelation())
         }
     }
 

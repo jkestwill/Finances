@@ -33,10 +33,5 @@ class MoneyModule {
         return db.getMoneyDao()
     }
 
-    @Singleton
-    @Provides
-    fun provideBankDao(db: TransactionDatabaseProvider):BankDao{
-        return  db.getBankDao()
-    }
 
 }

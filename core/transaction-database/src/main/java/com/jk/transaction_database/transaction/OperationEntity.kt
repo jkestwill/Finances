@@ -5,10 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "operation", foreignKeys = [
+@Entity(
+    tableName = "operation", foreignKeys = [
         ForeignKey(
             entity = MoneyEntity::class,
-            childColumns  = ["money_id"],
+            childColumns = ["money_id"],
             parentColumns = ["id"],
             onDelete = ForeignKey.CASCADE
         )
@@ -16,8 +17,10 @@ import androidx.room.PrimaryKey
 )
 data class OperationEntity(
     @PrimaryKey
-    val id: String ,
+    val id: String,
     val name: String,
     @ColumnInfo("money_id")
-    val moneyId:String
+    val moneyId: String,
+    @ColumnInfo(name = "is_expenses")
+    val isExpenses: Boolean,
 )

@@ -11,10 +11,6 @@ import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.relations.GoodsRelation
-import com.jk.transaction_database.transaction.relations.MeasureRelation
-import com.jk.transaction_database.transaction.relations.MoneyRelation
-import com.jk.transaction_database.transaction.relations.SpecificationRelation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

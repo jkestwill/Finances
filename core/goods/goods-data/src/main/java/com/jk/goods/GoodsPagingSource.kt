@@ -23,20 +23,21 @@ class GoodsPagingSource @AssistedInject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Goods> {
         val pageSize = params.loadSize.coerceAtMost(20)
         val page = params.key ?: 0
-        val result = goodsRepository.getAll(
-            q = q,
-            sortBy = sortBy,
-            isAsc = isAsc,
-            limit = pageSize,
-            offset = page * pageSize
-        )
+//        val result = goodsRepository.getAll(
+//            q = q,
+//            sortBy = sortBy,
+//            isAsc = isAsc,
+//            limit = pageSize,
+//            offset = page * pageSize
+//        )
+        val result = listOf<Goods>()
 
         return try {
             if (result.isNotEmpty()) {
                 val nextKey = if (result.size < pageSize) null else page + 1
                 val prevKey = if (page == 0) null else page - 1
                 LoadResult.Page(
-                    data = result.map { it.toGoods() },
+                    data = result,
                     prevKey = prevKey,
                     nextKey = nextKey
                 )

@@ -34,7 +34,7 @@ fun Measure.toUI(): MeasureUI {
 
 fun Language.toUI(): LanguageUI {
     return LanguageUI(
-        id, text,lanName, lanShortName
+        id,lanName, lanShortName
     )
 }
 
@@ -51,6 +51,6 @@ fun MeasureUI.toMeasure():Measure{
 }
 
 fun LanguageUI.toLanguage(): Language {
-    return Language(id, text, lanName, lanShortName)
+    return Language(id, lanName, lanShortName)
 }
 

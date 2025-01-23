@@ -11,7 +11,6 @@ import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
-import com.jk.transaction_database.transaction.relations.TransactionRelation
 import java.time.LocalDateTime
 
 @Dao
@@ -24,19 +23,19 @@ abstract class TransactionDao internal constructor(
     @Query(value = "SELECT * FROM `transaction`")
    abstract suspend fun getAll(): List<TransactionEntity>
 
-    @Transaction
-    @Query(value = "SELECT * FROM `transaction`")
-    abstract suspend fun getRelation(): List<TransactionRelation>
-
-    @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
-    abstract suspend fun insert(transaction: TransactionEntity)
-    @Transaction
-    open suspend fun insert(transaction:TransactionRelation){
-        operationDao.insert(transaction.operation)
-        insert(transaction.transaction)
-        typeDao.insertIfNotExist(transaction.type)
-
-    }
+//    @Transaction
+//    @Query(value = "SELECT * FROM `transaction`")
+//    abstract suspend fun getRelation(): List<TransactionRelation>
+//
+//    @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
+//    abstract suspend fun insert(transaction: TransactionEntity)
+//    @Transaction
+//    open suspend fun insert(transaction:TransactionRelation){
+//        operationDao.insert(transaction.operation)
+//        insert(transaction.transaction)
+//        typeDao.insertIfNotExist(transaction.type)
+//
+//    }
     @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract  suspend fun update(transaction: TransactionEntity)
 
@@ -81,7 +80,7 @@ abstract class TransactionDao internal constructor(
                 "LEFT JOIN exchange_rate ex ON ex.currency_from_id == currency.id " +
                 "LEFT JOIN exchange_rate ex2 ON ex2.currency_to_id == :currencyTo " +
                 "WHERE `transaction`.date >= :dateFrom AND `transaction`.date <= :dateTo " +
-                "AND category.is_expenses==1 "
+                " "
     )
     abstract fun getExpenses(
         dateFrom: LocalDateTime,

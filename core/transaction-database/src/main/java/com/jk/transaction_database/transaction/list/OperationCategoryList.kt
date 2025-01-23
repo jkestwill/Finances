@@ -3,10 +3,8 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.util.TableInfo
 import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
+import com.jk.transaction_database.transaction.CategoryEntity
 
 @Entity(
     tableName = "category_list",
@@ -18,7 +16,7 @@ import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
             childColumns = ["operation_id"]
         ),
         ForeignKey(
-            TransactionCategoryDatabaseEntity::class,
+            CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["category_id"],
         ),

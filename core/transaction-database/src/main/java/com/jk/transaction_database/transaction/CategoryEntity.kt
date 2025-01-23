@@ -7,12 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "category"
 )
-data class TransactionCategoryDatabaseEntity(
+data class CategoryEntity(
     @PrimaryKey
     val id:String,
     val name:String,
-    @ColumnInfo(name="is_expenses")
-    val isExpenses:Boolean,
+
     val color:String
 ) {
 }

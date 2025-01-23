@@ -32,6 +32,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -46,6 +49,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
     implementation(libs.hilt.android)
+    implementation(project(":common:common-data:money"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.junit.ktx)
     implementation(libs.androidx.room.ktx)

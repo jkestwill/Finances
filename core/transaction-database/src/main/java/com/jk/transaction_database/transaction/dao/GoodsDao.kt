@@ -9,7 +9,6 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
-import com.jk.transaction_database.transaction.relations.GoodsRelation
 
 @Dao
 abstract class GoodsDao internal constructor(
@@ -25,48 +24,48 @@ abstract class GoodsDao internal constructor(
     @Update(entity = GoodsEntity::class)
     abstract suspend fun update(t: GoodsEntity)
 
-    @Transaction
-    open suspend fun insert(goodsRelation: GoodsRelation) {
-        for (i in goodsRelation.specificationList) {
-            val lang = i.measure.lang
-            val measure = i.measure.measureEntity
-            for (i in measure) {
-                measureDao.insert(i)
-                languageDao.insert(lang)
-                languageMeasureListDao.insert(i.id, lang.id)
-            }
-            specificationDao.insert(i.specificationEntity)
-            goodsSpecificationDao.insert(
-                GoodsSpecificationsListEntity(
-                    goodsId = goodsRelation.goodsEntity.id,
-                    specificationsId = i.specificationEntity.id
-                )
-            )
-        }
-        moneyDao.insert(goodsRelation.cost)
-        insert(goodsRelation.goodsEntity)
-    }
+//    @Transaction
+//    open suspend fun insert(goodsRelation: GoodsRelation) {
+//        for (i in goodsRelation.specificationList) {
+//            val lang = i.measure.lang
+//            val measure = i.measure.measureEntity
+//            for (i in measure) {
+//                measureDao.insert(i)
+//                languageDao.insert(lang)
+//                languageMeasureListDao.insert(i.id, lang.id)
+//            }
+//            specificationDao.insert(i.specificationEntity)
+//            goodsSpecificationDao.insert(
+//                GoodsSpecificationsListEntity(
+//                    goodsId = goodsRelation.goodsEntity.id,
+//                    specificationsId = i.specificationEntity.id
+//                )
+//            )
+//        }
+//        moneyDao.insert(goodsRelation.cost)
+//        insert(goodsRelation.goodsEntity)
+//    }
 
     @Delete(entity = GoodsEntity::class)
     abstract suspend fun delete(t: GoodsEntity)
-
-    @Query(
-        value = "SELECT * FROM goods " +
-                " WHERE LOWER(goods.name) LIKE  '%'||:q||'%' " +
-                "ORDER BY CASE WHEN :isAsc ==1 THEN :sortBy END ASC, " +
-                "CASE WHEN :isAsc ==0 THEN :sortBy END DESC " +
-                "LIMIT :limit OFFSET :offset"
-    )
-    abstract suspend fun getAll(
-        q: String,
-        sortBy: String,
-        isAsc: Boolean,
-        limit: Int,
-        offset: Int
-    ): List<GoodsRelation>
-
-    @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
-    abstract suspend fun getByIdList(idList: List<String>): List<GoodsRelation>
+//
+//    @Query(
+//        value = "SELECT * FROM goods " +
+//                " WHERE LOWER(goods.name) LIKE  '%'||:q||'%' " +
+//                "ORDER BY CASE WHEN :isAsc ==1 THEN :sortBy END ASC, " +
+//                "CASE WHEN :isAsc ==0 THEN :sortBy END DESC " +
+//                "LIMIT :limit OFFSET :offset"
+//    )
+//    abstract suspend fun getAll(
+//        q: String,
+//        sortBy: String,
+//        isAsc: Boolean,
+//        limit: Int,
+//        offset: Int
+//    ): List<GoodsRelation>
+//
+//    @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
+//    abstract suspend fun getByIdList(idList: List<String>): List<GoodsRelation>
 
     @Insert(entity = GoodsEntity::class)
     abstract suspend fun insert(t: GoodsEntity)

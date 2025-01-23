@@ -4,11 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.jk.transaction_database.transaction.LedgerEntity
-import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.TransactionCategoryDatabaseEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 
-@Entity(tableName = "ledger_transaction_list",  foreignKeys = [
+@Entity(tableName = "ledger_transaction_list", primaryKeys = ["transaction_id","ledger_id"], foreignKeys = [
     ForeignKey(
         TransactionEntity::class,
         parentColumns = ["id"],

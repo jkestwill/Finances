@@ -34,7 +34,6 @@ data class Measure(
  * */
 data class Language(
     val id: String,
-    val text: String,
     val lanName: String,
     val lanShortName: String
 )

@@ -48,7 +48,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-
+    // mapper
+    runtimeOnly(libs.mapstruct.kotlin)
 
     androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.core.ktx)

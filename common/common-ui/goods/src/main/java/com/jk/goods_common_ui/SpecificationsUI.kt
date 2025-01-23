@@ -20,7 +20,6 @@ data class MeasureUI(
 @Parcelize
 data class LanguageUI(
     val id: String,
-    val text: String,
     val lanName: String,
     val lanShortName: String
 ) : Parcelable

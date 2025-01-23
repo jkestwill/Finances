@@ -52,6 +52,7 @@ android {
     buildFeatures{
         buildConfig = true
     }
+
 }
 
 dependencies {
@@ -63,6 +64,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.junit.ktx)
     implementation(libs.hilt.android)
+
     kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
     ksp(libs.androidx.room.compiler)

@@ -10,7 +10,6 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
-import com.jk.transaction_database.transaction.relations.OperationRelation
 
 @Dao
  abstract class OperationDao internal constructor(
@@ -34,21 +33,21 @@ import com.jk.transaction_database.transaction.relations.OperationRelation
     @Query("SELECT * FROM operation")
     abstract suspend fun getAll(): List<OperationEntity>
 
-    @Transaction
-    @Query("SELECT * FROM operation")
-    abstract fun getRelation(): List<OperationRelation>
-
-    @Transaction
-    open suspend fun insert(operationRelation: OperationRelation) {
-        moneyDao.insert(operationRelation.cost)
-        scheduleDao.insert(operationRelation.schedule)
-        for (category in operationRelation.categoryList) {
-            categoryDao.checkIfNoExistNInsert(category)
-        }
-        Log.e("TAG", "insert:${operationRelation.goodsList} ", )
-        for (goods in operationRelation.goodsList) {
-            goodsDao.insert(goods)
-        }
-        insert(operationRelation.operation)
-    }
+//    @Transaction
+//    @Query("SELECT * FROM operation")
+//    abstract fun getRelation(): List<OperationRelation>
+//
+//    @Transaction
+//    open suspend fun insert(operationRelation: OperationRelation) {
+//        moneyDao.insert(operationRelation.cost)
+//        scheduleDao.insert(operationRelation.schedule)
+//        for (category in operationRelation.categoryList) {
+//            categoryDao.checkIfNoExistNInsert(category)
+//        }
+//        Log.e("TAG", "insert:${operationRelation.goodsList} ", )
+//        for (goods in operationRelation.goodsList) {
+//            goodsDao.insert(goods)
+//        }
+//        insert(operationRelation.operation)
+//    }
 }

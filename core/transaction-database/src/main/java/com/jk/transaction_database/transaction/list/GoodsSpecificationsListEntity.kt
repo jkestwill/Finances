@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
 
-@Entity("goods_specifications_list", foreignKeys = [
+@Entity("goods_specifications_list", primaryKeys = ["goods_id","specifications_id"], foreignKeys = [
     ForeignKey(
         entity = GoodsEntity::class,
         childColumns  = ["goods_id"],

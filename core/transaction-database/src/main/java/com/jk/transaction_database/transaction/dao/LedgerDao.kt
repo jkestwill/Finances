@@ -7,7 +7,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.LedgerEntity
-import com.jk.transaction_database.transaction.relations.LedgerRelation
 
 @Dao
 interface LedgerDao {
@@ -24,7 +23,7 @@ interface LedgerDao {
     @Query(value = "SELECT * FROM ledger")
     suspend fun getAll(): List<LedgerEntity>
 
-    @Transaction
-    @Query(value = "SELECT * FROM ledger")
-    suspend fun getRelation(): List<LedgerRelation>
+//    @Transaction
+//    @Query(value = "SELECT * FROM ledger")
+//    suspend fun getRelation(): List<LedgerRelation>
 }
