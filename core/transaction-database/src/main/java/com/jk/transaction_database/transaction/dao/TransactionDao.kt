@@ -11,31 +11,42 @@ import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
+import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import java.time.LocalDateTime
 
 @Dao
-abstract class TransactionDao internal constructor(
+ abstract class TransactionDao internal constructor(
   private val db:TransactionDatabase,
 ) {
     private val operationDao:OperationDao = db.getOperationDao()
     private val typeDao:TypeDao = db.getTypeDao()
+    private val goodsDao:GoodsDao = db.getGoodsDao()
+    private val categoryDao:CategoryDao = db.getCategoryDao()
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
    abstract suspend fun getAll(): List<TransactionEntity>
 
-//    @Transaction
-//    @Query(value = "SELECT * FROM `transaction`")
-//    abstract suspend fun getRelation(): List<TransactionRelation>
-//
-//    @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
-//    abstract suspend fun insert(transaction: TransactionEntity)
-//    @Transaction
-//    open suspend fun insert(transaction:TransactionRelation){
-//        operationDao.insert(transaction.operation)
-//        insert(transaction.transaction)
-//        typeDao.insertIfNotExist(transaction.type)
-//
-//    }
+    @Transaction
+    @Query("SELECT * FROM `transaction` " +
+            "INNER JOIN type ON `transaction`.type_id == type.id " +
+            "INNER JOIN operation ON `transaction`.operation_id==operation.id " +
+            "INNER JOIN category_list ON operation.id == category_list.operation_id " +
+            "INNER JOIN category ON category_list.category_id == category.id " +
+            "LEFT JOIN goods_list ON operation.id == operation.id " +
+            "LEFT JOIN goods ON goods_list.goods_id = goods.id")
+    public abstract fun getRelation(): List<TransactionxCategoriesxTypexGoods>
+
+    @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
+    abstract suspend fun insert(transaction: TransactionEntity)
+    @Transaction
+    open suspend fun insert(transaction:TransactionxCategoriesxTypexGoods){
+        operationDao.insert(transaction.operation)
+        categoryDao.insert(transaction.categoryList)
+        goodsDao.insert(transaction.goodsList)
+        typeDao.insertIfNotExist(transaction.type)
+        insert(transaction.transactionEntity)
+
+    }
     @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract  suspend fun update(transaction: TransactionEntity)
 

@@ -7,10 +7,10 @@ fun TransactionCategory.toEntity(): CategoryEntity {
     return CategoryEntity(
         id = id,
         name = name,
-        color = color.toString()
+        color = color.toString(),
     )
 }
 
 fun CategoryEntity.toCategory(): TransactionCategory {
-    return TransactionCategory(id, name, color.toULong(), isExpenses = false)
+    return TransactionCategory(id, name, color.toULong())
 }

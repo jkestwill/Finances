@@ -57,7 +57,7 @@ class AddCategoryViewModel @Inject constructor(
                             "$name $color $isExpenses".sha256(),
                             name,
                             color ?: colorList.random().value,
-                            isExpenses
+
                         )
                     )
                 }

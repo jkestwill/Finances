@@ -4,12 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.TransactionScheduleEntity
+import com.jk.transaction_database.transaction.ScheduleEntity
 
 @Entity(
     "schedule_operation_list", primaryKeys = ["schedule_id", "operation_id"],
     foreignKeys = [ForeignKey(
-        entity = TransactionScheduleEntity::class,
+        entity = ScheduleEntity::class,
         parentColumns = ["id"],
         childColumns = ["schedule_id"],
     ),ForeignKey(

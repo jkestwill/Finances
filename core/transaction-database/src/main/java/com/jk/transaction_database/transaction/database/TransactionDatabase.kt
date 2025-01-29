@@ -19,7 +19,7 @@ import com.jk.transaction_database.transaction.CategoryEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.MoneyEntity
-import com.jk.transaction_database.transaction.TransactionScheduleEntity
+import com.jk.transaction_database.transaction.ScheduleEntity
 import com.jk.transaction_database.transaction.TransactionTypeEntity
 import com.jk.transaction_database.transaction.dao.AddressDao
 import com.jk.transaction_database.transaction.dao.BankDao
@@ -64,7 +64,7 @@ import java.util.concurrent.Executors
         TransactionEntity::class,
         OperationGoodsListEntity::class,
         OperationCategoryList::class,
-        TransactionScheduleEntity::class,
+        ScheduleEntity::class,
         LedgerEntity::class,
         LedgerTransactionList::class,
         ExchangeRateEntity::class,
@@ -76,7 +76,7 @@ import java.util.concurrent.Executors
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
         AddressEntity::class
-    ], version = 26, exportSchema = true, autoMigrations = []
+    ], version = 27, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {

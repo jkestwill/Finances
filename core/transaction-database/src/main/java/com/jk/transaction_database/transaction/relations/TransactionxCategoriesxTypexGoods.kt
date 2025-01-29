@@ -4,12 +4,14 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.CategoryEntity
+import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.OperationEntity
 import com.jk.transaction_database.transaction.TransactionEntity
 import com.jk.transaction_database.transaction.TransactionTypeEntity
 import com.jk.transaction_database.transaction.list.OperationCategoryList
+import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 
-data class OperationTransactionRelation(
+data class TransactionxCategoriesxTypexGoods(
     @Embedded
     val transactionEntity: TransactionEntity,
 
@@ -26,5 +28,12 @@ data class OperationTransactionRelation(
             "category_id"
         )
     )
-    val categoryList:List<CategoryEntity>
+    val categoryList:List<CategoryEntity>,
+    @Relation(GoodsEntity::class,
+        entityColumn = "id",
+        parentColumn = "operation_id",
+        associateBy = Junction(OperationGoodsListEntity::class,"operation_id","goods_id")
+    )
+
+    val goodsList:List<GoodsEntity>
 )

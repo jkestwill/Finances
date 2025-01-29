@@ -5,24 +5,24 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.jk.transaction_database.transaction.TransactionScheduleEntity
+import com.jk.transaction_database.transaction.ScheduleEntity
 
 @Dao
 interface ScheduleDao {
 
-    @Update(entity = TransactionScheduleEntity::class)
-    suspend fun update(t: TransactionScheduleEntity)
+    @Update(entity = ScheduleEntity::class)
+    suspend fun update(t: ScheduleEntity)
 
 
-    @Insert(entity = TransactionScheduleEntity::class)
-    suspend fun insert(t: List<TransactionScheduleEntity>)
+    @Insert(entity = ScheduleEntity::class)
+    suspend fun insert(t: List<ScheduleEntity>)
 
 
-    @Delete(entity = TransactionScheduleEntity::class)
-    suspend fun delete(t: TransactionScheduleEntity)
+    @Delete(entity = ScheduleEntity::class)
+    suspend fun delete(t: ScheduleEntity)
 
 
     @Query(value = "SELECT * FROM schedule")
-    suspend fun getAll(): List<TransactionScheduleEntity>
+    suspend fun getAll(): List<ScheduleEntity>
 
 }

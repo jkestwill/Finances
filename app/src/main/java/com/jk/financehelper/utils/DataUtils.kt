@@ -26,8 +26,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6U,
-                            true
+                            color = 0xFF0094C6U
                         )
                     ),
                     scheduleList = listOf(),
@@ -50,8 +49,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6U,
-                            true
+                            color = 0xFF0094C6U
                         )
                     ),
                     scheduleList = listOf(),

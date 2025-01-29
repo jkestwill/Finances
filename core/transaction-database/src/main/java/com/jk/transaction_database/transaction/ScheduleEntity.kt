@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 @Entity("schedule")
-data class TransactionScheduleEntity(
+data class ScheduleEntity(
     @PrimaryKey
     val id:String,
     @ColumnInfo("start_date")

@@ -11,7 +11,7 @@ import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 /**
  * Operations with goods list
  * */
-data class OperationGoodsRelation(
+data class OperationAndGoodsListRelation(
     @Embedded
     val operation: OperationEntity,
     @Relation(
