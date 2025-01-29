@@ -50,6 +50,8 @@ dependencies {
     implementation(libs.material)
     // mapper
     runtimeOnly(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
 
     androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.core.ktx)

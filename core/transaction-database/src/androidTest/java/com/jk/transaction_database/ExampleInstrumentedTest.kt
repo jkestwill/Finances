@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jk.transaction_database.transaction.LanguageEntity
 import com.jk.transaction_database.transaction.MeasureEntity
 import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.TransactionCurrencyDatabaseEntity
 import com.jk.transaction_database.transaction.GoodsEntity
 import com.jk.transaction_database.transaction.MoneyEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
@@ -46,9 +45,9 @@ class GoodsTest {
         val dao = db!!.getGoodsDao()
         scope.launch {
             try {
-                for (i in goodsRelation.indices) {
-                    dao.insert(goodsRelation = goodsRelation[0])
-                }
+//                for (i in goodsRelation.indices) {
+//                    dao.insert(goodsRelation = goodsRelation[0])
+//                }
                 //  Log.e("zxc", "sql_transaction_test_with_error: ${db!!.getGoodsDao().getAll()}")
             } catch (e: Throwable) {
                 // println(db!!.getGoodsDao().getAll())
@@ -71,15 +70,15 @@ class GoodsTest {
         val scope = CoroutineScope(Job())
         val dao = db!!.getGoodsDao()
 
-        scope.launch {
-            try {
-                for (i in goodsRelation.indices) {
-                    dao.insert(goodsRelation = goodsRelation[0])
-                }
-            } catch (e: Throwable) {
-                println(db!!.getLanguageMeasureListDao().getMeasureRelation())
-            }
-        }
+//        scope.launch {
+//            try {
+//                for (i in goodsRelation.indices) {
+//                    dao.insert(goodsRelation = goodsRelation[0])
+//                }
+//            } catch (e: Throwable) {
+//                println(db!!.getLanguageMeasureListDao().getMeasureRelation())
+//            }
+//        }
 
     }
 
@@ -90,28 +89,28 @@ class GoodsTest {
             MeasureEntity("zxc", "qq2"),
         )
 
-        val testDataLang = listOf(
-            LanguageEntity("qq", "english", "eng", "huuui"),
-            LanguageEntity("qq2", "english", "eng", "huuui"),
-        )
-        val goodsRelation = listOf(
-            GoodsRelation(
-                goodsEntity = GoodsEntity("qq", "bread", 1,"qq"),
-                specificationList = listOf(
-                    SpecificationRelation(
-                        specificationEntity = SpecificationsEntity("ss", "weight", 10f, "mm"),
-                        measure = MeasureRelation(
-                            MeasureEntity("mm", "ll"),
-                            lang = LanguageEntity("ll", "english", "ENG", "kg")
-                        )
-                    )
-                ),
-                cost = MoneyRelation(
-                    money = MoneyEntity("mo", 2.0, "cc"),
-                    currency = TransactionCurrencyDatabaseEntity("cc", "BYN")
-                )
-            )
-        )
+//        val testDataLang = listOf(
+//            LanguageEntity("qq", "english", "eng", "huuui"),
+//            LanguageEntity("qq2", "english", "eng", "huuui"),
+
+//        val goodsRelation = listOf(
+//            GoodsRelation(
+//                goodsEntity = GoodsEntity("qq", "bread", 1,"qq"),
+//                specificationList = listOf(
+//                    SpecificationRelation(
+//                        specificationEntity = SpecificationsEntity("ss", "weight", 10f, "mm"),
+//                        measure = MeasureRelation(
+//                            MeasureEntity("mm", "ll"),
+//                            lang = LanguageEntity("ll", "english", "ENG", "kg")
+//                        )
+//                    )
+//                ),
+//                cost = MoneyRelation(
+//                    money = MoneyEntity("mo", 2.0, "cc"),
+//                    currency = TransactionCurrencyDatabaseEntity("cc", "BYN")
+//                )
+//            )
+//        )
 
     }
 }
