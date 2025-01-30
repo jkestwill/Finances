@@ -14,7 +14,6 @@ import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
 import com.jk.common_data.sha256
-import com.jk.common_goods_data.Goods
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
@@ -31,7 +30,6 @@ import com.jk.transaction_common_ui.TransactionUI
 import com.jk.transaction_common_ui.toTransaction
 import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -106,6 +104,7 @@ class AddNewTransactionViewModel @Inject constructor(
     val newTransactionState = MutableStateFlow(TransactionUI.Builder())
 
     val scheduleListBuilder = mutableStateListOf(ScheduleUI.Builder())
+
     fun getCategoryListById(idList: List<String>) {
         viewModelScope.launch(dispatchers.io) {
             _categoryList.emitAll(
@@ -139,12 +138,7 @@ class AddNewTransactionViewModel @Inject constructor(
                 return@launch
             }
             transactionRepository.addTransaction(transaction.toTransaction())
-                .onSuccess {
-                    onSuccess()
-                }
-                .onFailure {
-                    onFailure(it.message ?: "Add transaction: error")
-                }
+
 
         }
     }
@@ -201,18 +195,7 @@ class AddNewTransactionViewModel @Inject constructor(
             .build()
     }
 
-    private fun checkMoney(moneyUI: MoneyUI) {
-        when {
-            moneyUI.amount < 0 -> {
-                throw IllegalArgumentException("Money amount can't be below zero")
-            }
 
-            moneyUI.currency.name.isEmpty() -> {
-                // provide default value in config
-                throw IllegalArgumentException("Currency name can't be empty")
-            }
-        }
-    }
 
     @JvmName("goods_list")
     private fun check(goodsBuilder: List<GoodsUI.Builder>): List<GoodsUI> =

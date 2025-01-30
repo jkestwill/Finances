@@ -3,12 +3,9 @@ package com.jk.transaction_database.transaction.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.GoodsEntity
+import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 
 @Dao
 abstract class GoodsDao internal constructor(

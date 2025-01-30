@@ -58,7 +58,7 @@ import com.jk.transaction_common_ui.TransactionPreviewUI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
+// скрин категории где показываются все транзакции в категории
 @Composable
 fun CategoryScreen(
     viewModel: CategoryViewModel,
@@ -108,7 +108,7 @@ fun CategoryScreen(
                             navController.popBackStack()
                         },
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "zxc"
+                    contentDescription = "ic_back"
                 )
 
                 CategoryHeader(

@@ -1,8 +1,7 @@
-package com.jk.transaction_database.transaction
+package com.jk.transaction_database.transaction.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "address")

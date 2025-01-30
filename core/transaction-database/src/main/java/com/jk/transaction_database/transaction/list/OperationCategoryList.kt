@@ -3,8 +3,8 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.CategoryEntity
+import com.jk.transaction_database.transaction.entity.OperationEntity
+import com.jk.transaction_database.transaction.entity.CategoryEntity
 
 @Entity(
     tableName = "category_list",

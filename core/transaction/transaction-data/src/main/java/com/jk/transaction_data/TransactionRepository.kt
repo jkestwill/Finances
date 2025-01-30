@@ -3,10 +3,10 @@ package com.jk.transaction_data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.jk.common_data.Response
-import com.jk.common_data.apiRequest
+import com.jk.common_data.sourceRequest
 import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionPreview
+import com.jk.transaction_data.mapper.TransactionMapper
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import dagger.assisted.Assisted
@@ -17,7 +17,8 @@ import javax.inject.Inject
 class TransactionRepository @Inject constructor(
     private val transactionDao: TransactionDao,
     private val currencyDao: CurrencyDao,
-    private val transactionPagingSource: TransactionPagingSourceFactory
+    private val transactionPagingSource: TransactionPagingSourceFactory,
+    private val transactionMapper: TransactionMapper
 ) {
     fun getTransactionPreviewByCategoryId(
         categoryId: String,
@@ -36,11 +37,10 @@ class TransactionRepository @Inject constructor(
     }
 
 
-    suspend fun addTransaction(transaction: Transaction): Response<Unit> {
-        return apiRequest {
-        // transactionDao.insert(transaction.toRelation())
+    suspend fun addTransaction(transaction: Transaction) {
+        sourceRequest {
+            transactionDao.insert(transactionMapper.toTransactionxCategoryXTypeXGoods(transaction))
         }
-
     }
 }
 

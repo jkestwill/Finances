@@ -4,8 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.jk.transaction_database.transaction.BankEntity
+import com.jk.transaction_database.transaction.entity.BankEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 
 @Dao

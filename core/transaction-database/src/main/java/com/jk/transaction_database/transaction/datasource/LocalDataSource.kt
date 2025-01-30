@@ -1,7 +1,7 @@
 package com.jk.transaction_database.transaction.datasource
 
 import com.jk.common_data.Response
-import com.jk.transaction_database.transaction.CategoryEntity
+import com.jk.transaction_database.transaction.entity.CategoryEntity
 
 interface LocalDataSource<G, I> {
 

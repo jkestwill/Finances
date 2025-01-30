@@ -3,8 +3,7 @@ package com.jk.category_data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
-import com.jk.category_common_data.TransactionCategory
+import com.jk.category_common_data.Category
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.SearchParams
 import com.jk.transaction_database.transaction.dao.CategoryDao
@@ -24,7 +23,7 @@ class CategoryRepository @Inject constructor(
 ) {
     fun getList(
         searchParams: SearchParams
-    ): Flow<PagingData<TransactionCategory>> {
+    ): Flow<PagingData<Category>> {
         return Pager(PagingConfig(20)) {
             categoryPagingSource.create(
                 sortBy = searchParams.sortBy,
@@ -46,7 +45,7 @@ class CategoryRepository @Inject constructor(
         return merge(startFlow, result)
     }
 
-    fun add(category:TransactionCategory): Flow<ApiRequest<Long>> {
+    fun add(category:Category): Flow<ApiRequest<Long>> {
         val startFlow = flowOf(ApiRequest.Loading<Long>())
         val result: Flow<ApiRequest<Long>> = flow<Long> {
             emit(categoryDao.insert(category.toEntity()))
@@ -65,8 +64,8 @@ class CategoryRepository @Inject constructor(
 //        categoryLocalDataSource.update(category.toEntity())
 //    )
 
-    fun getById(categoryId: String): Flow<ApiRequest<TransactionCategory>> {
-        val startEmitFlow = flowOf(ApiRequest.Loading<TransactionCategory>())
+    fun getById(categoryId: String): Flow<ApiRequest<Category>> {
+        val startEmitFlow = flowOf(ApiRequest.Loading<Category>())
 
         val result = flow {
             emit(categoryDao.getById(categoryId))
@@ -74,7 +73,7 @@ class CategoryRepository @Inject constructor(
             if (it != null) {
                 ApiRequest.Success(it.toCategory())
             } else {
-                ApiRequest.Error<TransactionCategory>(
+                ApiRequest.Error<Category>(
                     it,
                     NoSuchElementException("Category with id $categoryId doesn't exists")
                 )
@@ -86,8 +85,8 @@ class CategoryRepository @Inject constructor(
         return merge(startEmitFlow, result)
     }
 
-    fun getByCategoryListId(categoryId:List<String>): Flow<ApiRequest<List<TransactionCategory>>> {
-        val startEmitFlow = flowOf(ApiRequest.Loading<List<TransactionCategory>>())
+    fun getByCategoryListId(categoryId:List<String>): Flow<ApiRequest<List<Category>>> {
+        val startEmitFlow = flowOf(ApiRequest.Loading<List<Category>>())
 
         val result = flow {
             emit(categoryDao.getByListId(categoryId))
@@ -96,7 +95,7 @@ class CategoryRepository @Inject constructor(
             if (category != null) {
                 ApiRequest.Success(category )
             } else {
-                ApiRequest.Error<List<TransactionCategory>>(
+                ApiRequest.Error<List<Category>>(
                     category,
                     NoSuchElementException("Category with id $categoryId doesn't exists")
                 )

@@ -7,8 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.TransactionEntity
+import com.jk.transaction_database.transaction.entity.OperationEntity
+import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods

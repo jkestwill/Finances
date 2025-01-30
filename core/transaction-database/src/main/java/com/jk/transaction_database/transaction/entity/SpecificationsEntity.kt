@@ -1,4 +1,4 @@
-package com.jk.transaction_database.transaction
+package com.jk.transaction_database.transaction.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

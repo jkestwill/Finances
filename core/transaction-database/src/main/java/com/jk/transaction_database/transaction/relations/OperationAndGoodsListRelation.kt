@@ -3,8 +3,8 @@ package com.jk.transaction_database.transaction.relations
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.jk.transaction_database.transaction.GoodsEntity
-import com.jk.transaction_database.transaction.OperationEntity
+import com.jk.transaction_database.transaction.entity.GoodsEntity
+import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 
 

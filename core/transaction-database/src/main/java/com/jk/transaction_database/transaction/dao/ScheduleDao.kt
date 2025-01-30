@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.jk.transaction_database.transaction.ScheduleEntity
+import com.jk.transaction_database.transaction.entity.ScheduleEntity
 
 @Dao
 interface ScheduleDao {

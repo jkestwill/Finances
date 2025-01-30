@@ -4,11 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.jk.transaction_database.transaction.LanguageEntity
-import com.jk.transaction_database.transaction.MeasureEntity
-import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.GoodsEntity
-import com.jk.transaction_database.transaction.MoneyEntity
+import com.jk.transaction_database.transaction.entity.MeasureEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

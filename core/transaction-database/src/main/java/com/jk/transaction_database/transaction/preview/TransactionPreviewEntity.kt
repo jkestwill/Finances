@@ -2,9 +2,9 @@ package com.jk.transaction_database.transaction.preview
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.jk.transaction_database.transaction.OperationEntity
-import com.jk.transaction_database.transaction.TransactionEntity
-import com.jk.transaction_database.transaction.TransactionTypeEntity
+import com.jk.transaction_database.transaction.entity.OperationEntity
+import com.jk.transaction_database.transaction.entity.TransactionEntity
+import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
 
 class TransactionPreviewEntity(
     @Embedded

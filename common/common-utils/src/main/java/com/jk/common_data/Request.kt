@@ -1,6 +1,6 @@
 package com.jk.common_data
 
-inline fun <reified T> apiRequest(block: () -> T): Response<T> = try {
+inline fun <reified T> sourceRequest(block: () -> T): Response<T> = try {
     Response.success(block())
 } catch (e: Throwable) {
     Response.failure(e)

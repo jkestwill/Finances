@@ -2,7 +2,7 @@ package com.jk.transaction_database.transaction.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import com.jk.transaction_database.transaction.MeasureEntity
+import com.jk.transaction_database.transaction.entity.MeasureEntity
 
 @Dao
 interface MeasureDao {

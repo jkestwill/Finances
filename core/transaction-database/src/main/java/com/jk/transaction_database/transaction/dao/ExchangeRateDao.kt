@@ -3,9 +3,7 @@ package com.jk.transaction_database.transaction.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Transaction
-import com.jk.common_data.SearchParams
-import com.jk.transaction_database.transaction.ExchangeRateEntity
+import com.jk.transaction_database.transaction.entity.ExchangeRateEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import java.time.LocalDateTime
 

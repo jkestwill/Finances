@@ -58,6 +58,15 @@ data class OperationUI(
     val goodsList: List<GoodsUI>,
     val money: MoneyUI
 ) {
+    fun builder(): OperationUI.Builder {
+        return Builder()
+            .setName(name)
+            .setCategoryList(categoryList)
+            .setScheduleList(scheduleList)
+            .setGoodsList(goodsList)
+            .setMoney(money)
+
+    }
 
     class Builder() : BaseIdBuilder<OperationUI>() {
 

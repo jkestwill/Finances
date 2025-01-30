@@ -89,9 +89,7 @@ class CategoryViewModel @Inject constructor(
     private fun limitString(text: String, limit: Int): String {
         return if (text.length > limit)
             "${
-                text.substring(
-                    0..limit
-                )
+                text.substring(0..limit)
             }..."
         else text
     }

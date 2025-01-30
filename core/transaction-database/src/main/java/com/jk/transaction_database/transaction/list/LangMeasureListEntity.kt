@@ -3,9 +3,8 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.jk.transaction_database.transaction.LanguageEntity
-import com.jk.transaction_database.transaction.MeasureEntity
-import com.jk.transaction_database.transaction.MoneyEntity
+import com.jk.transaction_database.transaction.entity.LanguageEntity
+import com.jk.transaction_database.transaction.entity.MeasureEntity
 
 @Entity(tableName = "lang_measure_list",primaryKeys = ["measure_id","lang_id"], foreignKeys =  [
     ForeignKey(

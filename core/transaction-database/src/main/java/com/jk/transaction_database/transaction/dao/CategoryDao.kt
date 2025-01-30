@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 
-import com.jk.transaction_database.transaction.CategoryEntity
+import com.jk.transaction_database.transaction.entity.CategoryEntity
 
 @Dao
 interface CategoryDao {
@@ -20,7 +20,7 @@ interface CategoryDao {
             "")
     suspend fun delete(idList: List<String>)
     @Transaction
-   suspend fun checkIfNoExistNInsert(t:CategoryEntity){
+   suspend fun checkIfNoExistNInsert(t: CategoryEntity){
         if(getByName(t.name)==null){
             insert(t)
         }

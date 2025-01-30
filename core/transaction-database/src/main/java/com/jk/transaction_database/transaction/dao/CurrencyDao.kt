@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.common_data.sha256
-import com.jk.transaction_database.transaction.CurrencyEntity
+import com.jk.transaction_database.transaction.entity.CurrencyEntity
 
 @Dao
 interface CurrencyDao {

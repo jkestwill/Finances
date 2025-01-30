@@ -1,26 +1,24 @@
-package com.jk.transaction_database.transaction
+package com.jk.transaction_database.transaction.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "operation", foreignKeys = [
+@Entity(tableName = "goods",foreignKeys = [
         ForeignKey(
             entity = MoneyEntity::class,
-            childColumns = ["money_id"],
+            childColumns  = ["cost_id"],
             parentColumns = ["id"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class OperationEntity(
+data class GoodsEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    @ColumnInfo("money_id")
-    val moneyId: String,
-    @ColumnInfo(name = "is_expenses")
-    val isExpenses: Boolean,
+    val amount: Int,
+    @ColumnInfo("cost_id")
+    val costId: String
 )

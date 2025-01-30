@@ -1,4 +1,4 @@
-package com.jk.transaction_database.transaction
+package com.jk.transaction_database.transaction.entity
 
 import com.jk.transaction_database.transaction.list.OperationCategoryList
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity

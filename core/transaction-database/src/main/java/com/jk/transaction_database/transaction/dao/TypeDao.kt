@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.jk.transaction_database.transaction.TransactionTypeEntity
+import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
 
 @Dao
 interface TypeDao {

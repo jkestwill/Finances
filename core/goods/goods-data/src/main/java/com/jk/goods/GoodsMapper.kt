@@ -1,17 +1,7 @@
 package com.jk.goods
 
-import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.Language
-import com.jk.common_goods_data.Measure
-import com.jk.common_goods_data.Specification
-import com.jk.money_common_data.Currency
-import com.jk.money_common_data.Money
-import com.jk.transaction_database.transaction.LanguageEntity
-import com.jk.transaction_database.transaction.MeasureEntity
-import com.jk.transaction_database.transaction.SpecificationsEntity
-import com.jk.transaction_database.transaction.CurrencyEntity
-import com.jk.transaction_database.transaction.GoodsEntity
-import com.jk.transaction_database.transaction.MoneyEntity
+import com.jk.transaction_database.transaction.entity.LanguageEntity
 
 //fun Goods.toGoodsRelation(): GoodsRelation {
 //    return GoodsRelation(

@@ -3,8 +3,8 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.jk.transaction_database.transaction.LedgerEntity
-import com.jk.transaction_database.transaction.TransactionEntity
+import com.jk.transaction_database.transaction.entity.LedgerEntity
+import com.jk.transaction_database.transaction.entity.TransactionEntity
 
 @Entity(tableName = "ledger_transaction_list", primaryKeys = ["transaction_id","ledger_id"], foreignKeys = [
     ForeignKey(

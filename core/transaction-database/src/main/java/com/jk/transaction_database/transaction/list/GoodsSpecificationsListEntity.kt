@@ -3,8 +3,8 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.jk.transaction_database.transaction.GoodsEntity
-import com.jk.transaction_database.transaction.SpecificationsEntity
+import com.jk.transaction_database.transaction.entity.GoodsEntity
+import com.jk.transaction_database.transaction.entity.SpecificationsEntity
 
 @Entity("goods_specifications_list", primaryKeys = ["goods_id","specifications_id"], foreignKeys = [
     ForeignKey(
