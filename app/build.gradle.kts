@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.jk.financehelper"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.jk.financehelper"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -122,7 +122,7 @@ dependencies {
     androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.core.ktx)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.junit.ktx)
+    androidTestImplementation(libs.junit.ktx)
     androidTestImplementation(libs.androidx.truth)
 
     androidTestImplementation(libs.androidx.espresso.core)

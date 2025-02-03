@@ -24,7 +24,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.clickAnimation
 

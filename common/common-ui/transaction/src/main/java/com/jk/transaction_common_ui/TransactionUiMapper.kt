@@ -1,4 +1,4 @@
-package com.jk.transaction.mapper
+package com.jk.transaction_common_ui
 
 import com.jk.transaction_common_data.Transaction
 import com.jk.transaction_common_data.TransactionPreview
@@ -8,7 +8,7 @@ import org.mapstruct.Mapper
 
 @Mapper
 interface TransactionUiMapper {
-    fun toTransacionUI(transaction:Transaction):TransactionUI
+    fun toTransactionUI(transaction:Transaction):TransactionUI
 
     fun toTransaction(transactionUI: TransactionUI):Transaction
 

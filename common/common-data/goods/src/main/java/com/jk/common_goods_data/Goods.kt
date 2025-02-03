@@ -27,7 +27,7 @@ data class Specification(
  * Ед измерения*/
 data class Measure(
     val id: String,
-    val language: Language
+    val name: String
 )
 /**
  * Вариации текста на разных языках

@@ -17,8 +17,8 @@ data class GoodsxSpecificationsxMoneyRelation (
             parentColumn = "goods_id",
             value = GoodsSpecificationsListEntity::class)
     )
-    val specificationList:List<SpecificationsEntity>,
+    val specifications:List<SpecificationsEntity>,
     @Relation(entity = MoneyEntity::class, entityColumn = "id", parentColumn = "cost_id")
-    val money:MoneyEntity,
+    val cost:MoneyEntity,
 
-)
+    )

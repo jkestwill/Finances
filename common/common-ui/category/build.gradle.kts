@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
@@ -33,6 +34,10 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
     implementation(project(":common:common-data:category"))
 
     implementation(project(":common:common-ui:money"))

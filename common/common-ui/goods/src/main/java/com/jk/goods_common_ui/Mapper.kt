@@ -4,10 +4,6 @@ import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.Language
 import com.jk.common_goods_data.Measure
 import com.jk.common_goods_data.Specification
-import com.jk.money_common_data.Currency
-import com.jk.money_common_data.Money
-import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.MoneyUI
 import com.jk.money_common_ui.toMoney
 import com.jk.money_common_ui.toUI
 
@@ -28,7 +24,7 @@ fun Specification.toUI(): SpecificationsUI {
 
 fun Measure.toUI(): MeasureUI {
     return MeasureUI(
-        id = id, language = language.toUI()
+        id = id, name = name
     )
 }
 
@@ -47,7 +43,7 @@ fun SpecificationsUI.toSpecification(): Specification {
 }
 
 fun MeasureUI.toMeasure():Measure{
-    return Measure(id=id,language.toLanguage())
+    return Measure(id=id,name)
 }
 
 fun LanguageUI.toLanguage(): Language {

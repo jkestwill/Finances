@@ -1,6 +1,5 @@
 package com.jk.financehelper.utils
 
-import com.jk.category_common_ui.CategoryUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.transaction_common_ui.OperationUI

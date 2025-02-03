@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 class GoodsRepository @Inject constructor(
     private val goodsLocalDataSource: GoodsDao,
-    private val goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory
+    private val goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory,
+    private val goodsMapper: GoodsMapper
 ) {
     suspend fun add(goodsList: List<Goods>) {
         for (i in goodsList) {
@@ -27,7 +28,7 @@ class GoodsRepository @Inject constructor(
     suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
         val start = flowOf(ApiRequest.Loading<List<Goods>>())
         val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
-            emit(goodsLocalDataSource.getByIdList(idList).map { it.toGoods() })
+            emit(goodsLocalDataSource.getByIdList(idList).map { goodsMapper.toGoods(it) })
         }.map { goodsList ->
             try {
                 ApiRequest.Success(goodsList)

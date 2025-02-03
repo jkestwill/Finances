@@ -14,7 +14,7 @@ data class SpecificationsUI(
 @Parcelize
 data class MeasureUI(
     val id: String,
-    val language: LanguageUI
+    val name: String
 ) : Parcelable
 
 @Parcelize

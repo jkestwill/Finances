@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.TransparentTextField
 import com.jk.financehelper.BuildConfig
 import com.jk.financehelper.ui.calendar.data.rememberYearState

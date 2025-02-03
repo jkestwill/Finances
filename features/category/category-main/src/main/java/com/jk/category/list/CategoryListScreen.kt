@@ -57,7 +57,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category.R
-import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.composable.Limit
 import com.jk.common_ui.composable.Search

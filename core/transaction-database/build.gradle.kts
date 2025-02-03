@@ -12,13 +12,15 @@ ksp {
 
 android {
     namespace = "com.jk.transaction_database"
-    compileSdk = 34
+    compileSdk = 35
 
 
     defaultConfig {
         minSdk = 26
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
     }
    // schemaDirectory("$projectDir/schemas")
     buildTypes {
@@ -62,15 +64,16 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.junit.ktx)
     implementation(libs.hilt.android)
 
     kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
     ksp(libs.androidx.room.compiler)
-
-    androidTestImplementation("androidx.test:runner:1.6.1")
-
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.junit.ktx)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation (libs.core.ktx)
 }
 
 

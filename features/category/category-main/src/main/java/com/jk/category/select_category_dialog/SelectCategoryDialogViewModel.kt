@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.CategoryUI
 import com.jk.category_common_ui.toUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.SearchParams

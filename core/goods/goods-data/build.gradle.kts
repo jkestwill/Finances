@@ -34,6 +34,11 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
+    // mapper
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
+
     implementation(libs.hilt.android)
     implementation(project(":common:common-data:goods"))
     implementation(project(":common:common-data:money"))

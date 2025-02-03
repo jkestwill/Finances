@@ -1,5 +1,6 @@
 package com.jk.goods.di
 
+import com.jk.goods.GoodsMapperImpl
 import com.jk.goods.GoodsPagingSource
 import com.jk.goods.GoodsRepository
 import com.jk.transaction_database.transaction.dao.GoodsDao
@@ -26,7 +27,7 @@ class GoodsDataModule {
     @Provides
     @Singleton
     fun provideGoodsRepository(goodsDao: GoodsDao, goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory): GoodsRepository {
-        return GoodsRepository(goodsDao,goodsPagingSource)
+        return GoodsRepository(goodsDao,goodsPagingSource,GoodsMapperImpl())
     }
 
     @Provides

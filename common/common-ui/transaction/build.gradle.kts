@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.parcelize)
-
+    alias(libs.plugins.jetbrains.kotlin.kapt)
 }
 
 android {
@@ -35,6 +35,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
+
+    // mapper
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
+
     implementation(project(":common:common-ui:category"))
     implementation(project(":common:common-ui:goods"))
     implementation(project(":common:common-data:goods"))

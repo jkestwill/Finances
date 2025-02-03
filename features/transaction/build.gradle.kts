@@ -75,7 +75,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.androidx.ui.tooling)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)

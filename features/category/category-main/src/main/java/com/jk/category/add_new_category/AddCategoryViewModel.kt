@@ -5,7 +5,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category_common_ui.toCategory
-import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.sha256
 import com.jk.common_ui.State

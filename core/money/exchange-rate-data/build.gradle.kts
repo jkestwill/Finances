@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":common:common-data:money"))
     kapt(libs.hilt.android.compiler)
     implementation(libs.junit.ktx)
+    implementation(libs.junit.ktx)
     implementation(libs.androidx.room.ktx)
     implementation(libs.ktor.client.core)
     testImplementation("androidx.test:runner:1.6.2")

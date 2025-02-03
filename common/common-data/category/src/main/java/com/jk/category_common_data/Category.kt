@@ -2,10 +2,11 @@ package com.jk.category_common_data
 
 /**
  * Business logic layer transaction category*/
-data class Category(
-    val id:String,
+
+data class Category public constructor(
+    val id:String?,
     val name:String,
-    val color:ULong,
+    val color:Long,
 )
 
 
