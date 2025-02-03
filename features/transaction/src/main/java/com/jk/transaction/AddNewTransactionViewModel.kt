@@ -21,13 +21,13 @@ import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.toUI
 import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.MoneyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
+import com.jk.transaction.mapper.TransactionUiMapper
+import com.jk.transaction.validator.TransactionValidator
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.ScheduleUI
 import com.jk.transaction_common_ui.TransactionUI
-import com.jk.transaction_common_ui.toTransaction
 import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,7 +49,9 @@ class AddNewTransactionViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val goodsRepository: GoodsRepository,
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
-    private val dispatchers: Dispatchers
+    private val dispatchers: Dispatchers,
+    private val transactionValidator: TransactionValidator,
+    private val transactionMapper:TransactionUiMapper
 ) : ViewModel() {
 
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())
@@ -121,105 +123,34 @@ class AddNewTransactionViewModel @Inject constructor(
         }
     }
 
-//    fun getGoodsListById(idList: List<String>) {
-//        viewModelScope.launch(dispatchers.io) {
-//            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
-//                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
-//            })
-//        }
-//    }
+    fun getGoodsListById(idList: List<String>) {
+        viewModelScope.launch(dispatchers.io) {
+            _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
+                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
+            })
+        }
+    }
 
     fun addTransaction(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch(dispatchers.io) {
-            val transaction = try {
-                checkAndBuild()
+            try {
+                val transactionUI:TransactionUI.Builder = newTransactionState.value.setOperation(
+                    operationBuilder.value
+                        .setGoodsList(
+                            newGoodsBuilderList.map { it.build() }
+                        ).setCategoryList(editableCategoriesStateList)
+                        .build()
+                )
+                transactionValidator.validate(newTransactionState.value)
+                transactionRepository.addTransaction(transactionMapper.toTransaction(transactionUI.build()))
             } catch (e: IllegalArgumentException) {
                 logger?.info(e.message)
                 return@launch
             }
-            transactionRepository.addTransaction(transaction.toTransaction())
-
 
         }
     }
 
-    private fun check(transactionUI: TransactionUI.Builder): TransactionUI {
-        val preBuild = transactionUI.build()
-        when {
-            preBuild.type.name.isEmpty() -> {
-                throw IllegalArgumentException("Transaction type must not be empty")
-            }
-
-            preBuild.id.isEmpty() -> {
-                transactionUI.id("${preBuild.date}${preBuild.operation.name}${preBuild.operation.money.amount}".sha256())
-            }
-        }
-        return transactionUI.build()
-    }
-
-
-    private fun checkAndBuild(): TransactionUI {
-        check(newTransactionState.value)
-        val operation = checkAndBuild(
-            operationBuilder.value,
-            newGoodsBuilderList,
-            editableCategoriesStateList,
-            scheduleListBuilder
-        )
-        return newTransactionState.value.setOperation(operation).build()
-    }
-
-    private fun checkAndBuild(
-        operationBuilder: OperationUI.Builder,
-        goodsBuilderList: List<GoodsUI.Builder>,
-        categoryList: List<CategoryUI>,
-        scheduleBuilder: List<ScheduleUI.Builder>
-    ): OperationUI {
-        val preBuild = operationBuilder.build()
-        checkMoney(preBuild.money)
-        val goodsList = check(goodsBuilderList)
-        val scheduleList = check(scheduleBuilder)
-        when {
-            preBuild.id.isEmpty() -> {
-                operationBuilder.id("${preBuild.categoryList.size}${preBuild.goodsList.size}${preBuild.name}${preBuild.scheduleList.size}".sha256())
-            }
-
-            preBuild.name.isEmpty() -> {
-                throw IllegalArgumentException("Transaction name can't be empty")
-            }
-        }
-        return operationBuilder
-            .setGoodsList(goodsList)
-            .setCategoryList(categoryList)
-            //.setScheduleList(scheduleList)
-            .build()
-    }
-
-
-
-    @JvmName("goods_list")
-    private fun check(goodsBuilder: List<GoodsUI.Builder>): List<GoodsUI> =
-        goodsBuilder.onEach { check(it) }.map { it.build() }
-
-    @JvmName("goods")
-    private fun check(goodsBuilder: GoodsUI.Builder) {
-        val preBuild = goodsBuilder.build()
-        checkMoney(preBuild.cost)
-        when {
-            preBuild.name.isEmpty() -> {
-                throw IllegalArgumentException("Goods name can't be empty")
-            }
-
-            preBuild.amount < 0 -> {
-                throw IllegalArgumentException("Goods count can't be empty")
-            }
-
-            preBuild.id.isEmpty() -> {
-                goodsBuilder.id("${preBuild.name}${preBuild.cost}${preBuild.amount}".sha256())
-            }
-
-        }
-    }
 
     @JvmName("schedule_list")
     private fun check(scheduleBuilderList: List<ScheduleUI.Builder>): List<ScheduleUI> {

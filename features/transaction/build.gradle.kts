@@ -67,6 +67,12 @@ dependencies {
     implementation(project(":core:goods:goods-data"))
     implementation(project(":core:settings"))
     implementation(project(":core:money:exchange-rate-data"))
+
+    // mapper
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
+
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     debugImplementation(libs.ui.tooling)

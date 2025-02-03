@@ -3,9 +3,12 @@ package com.jk.transaction_database.transaction.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 
 @Dao
 abstract class GoodsDao internal constructor(
@@ -61,8 +64,9 @@ abstract class GoodsDao internal constructor(
 //        offset: Int
 //    ): List<GoodsRelation>
 //
-//    @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
-//    abstract suspend fun getByIdList(idList: List<String>): List<GoodsRelation>
+    @Transaction
+    @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
+    abstract suspend fun getByIdList(idList: List<String>): List<GoodsxSpecificationsxMoneyRelation>
 
     @Insert(entity = GoodsEntity::class)
     abstract suspend fun insert(t: GoodsEntity)

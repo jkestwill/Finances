@@ -1,4 +1,4 @@
-package com.jk.transaction
+package com.jk.transaction.validator
 
 import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.Validator

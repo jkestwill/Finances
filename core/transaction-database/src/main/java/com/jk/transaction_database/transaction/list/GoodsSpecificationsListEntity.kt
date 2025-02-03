@@ -3,6 +3,7 @@ package com.jk.transaction_database.transaction.list
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
 
@@ -17,7 +18,7 @@ import com.jk.transaction_database.transaction.entity.SpecificationsEntity
         childColumns  = ["specifications_id"],
         parentColumns = ["id"],
     )
-])
+], indices = [Index(value = ["specifications_id","goods_id"])])
 data class GoodsSpecificationsListEntity(
     @ColumnInfo("goods_id")
     val goodsId:String,
