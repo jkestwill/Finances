@@ -177,7 +177,7 @@ val test = listOf(
                 id = "sp", text = "weight", amount = 2f,
                 measure = MeasureUI(
                     "mm",
-                    LanguageUI("ll", "english", "eng")
+                    "kg"
                 )
             )
         ),
@@ -192,7 +192,7 @@ val test = listOf(
                 id = "sp", text = "weight", amount = 2f,
                 measure = MeasureUI(
                     "mm",
-                    LanguageUI("ll", "english", "eng")
+                   "kg"
                 )
             )
         ),

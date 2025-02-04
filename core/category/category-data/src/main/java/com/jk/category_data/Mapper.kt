@@ -12,5 +12,5 @@ fun Category.toEntity(): CategoryEntity {
 }
 
 fun CategoryEntity.toCategory(): Category {
-    return Category(id, name, color.toULong())
+    return Category(id, name, color.toLong())
 }

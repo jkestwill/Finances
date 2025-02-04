@@ -36,7 +36,7 @@ android {
                 "proguard-rules.pro"
             )
             this.isDefault = true
-            this.buildConfigField("String","PREPOPULATE_DB_PATH","\"transaction_database/transaction_db.db\"")
+            this.buildConfigField("String","PREPOPULATE_DB_PATH","\"transaction_db.db\"")
 
         }
 

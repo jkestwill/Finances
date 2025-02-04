@@ -24,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.clickAnimation
 
@@ -73,7 +74,7 @@ fun CategoryVerticalListItem(
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .background(
-                color = Color(category.color),
+                color = Color(category.color?:0xffffffff),
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)

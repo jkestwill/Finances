@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.jk.category_common_ui.toUI
+import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.CategoryUIMapper
 import com.jk.category_data.CategoryRepository
 import com.jk.category_data.CategorySortBy
 import com.jk.common_ui.toState
@@ -16,7 +17,6 @@ import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.transaction_common_ui.OperationPreviewUI
 import com.jk.transaction_common_ui.TransactionPreviewUI
-import com.jk.transaction_common_ui.toUI
 import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,8 @@ import kotlin.random.Random
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val categoryUIMapper: CategoryUIMapper
 ) : ViewModel() {
 
     private var _categoryFlow =
@@ -48,7 +49,7 @@ class CategoryViewModel @Inject constructor(
 
     companion object {
         const val NAME_LENGTH_VISIBILITY_THRESHOLD = 10
-        val test = List(20){
+        val test = List(20) {
             TransactionPreviewUI(
                 id = "qq",
                 operation = OperationPreviewUI(
@@ -60,7 +61,13 @@ class CategoryViewModel @Inject constructor(
                         currency = CurrencyUI(id = "qwe", name = "BYN")
                     ),
                 ),
-                date = LocalDateTime.of(Random.nextInt(1988,2023),Random.nextInt(1,12),Random.nextInt(1,28),Random.nextInt(1,24),Random.nextInt(1,59)),
+                date = LocalDateTime.of(
+                    Random.nextInt(1988, 2023),
+                    Random.nextInt(1, 12),
+                    Random.nextInt(1, 28),
+                    Random.nextInt(1, 24),
+                    Random.nextInt(1, 59)
+                ),
                 type = "online"
             )
         }.sortedBy {
@@ -73,12 +80,14 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _categoryFlow.emitAll(categoryRepository.getById(categoryId).map { apiRequest ->
                 apiRequest.toState().map { category ->
-                    category.copy(
-                        name = limitString(
-                            category.name,
-                            limit = NAME_LENGTH_VISIBILITY_THRESHOLD
+                    categoryUIMapper.toCategoryUI(
+                        category.copy(
+                            name = limitString(
+                                category.name,
+                                limit = NAME_LENGTH_VISIBILITY_THRESHOLD
+                            )
                         )
-                    ).toUI()
+                    )
                 }
             })
         }
@@ -100,31 +109,31 @@ class CategoryViewModel @Inject constructor(
         isAsc: Boolean = true
     ) {
         viewModelScope.launch {
-            _transactionPagingList.emitAll(
-                transactionRepository.getTransactionPreviewByCategoryId(
-                    categoryId,
-                    q,
-                    sortBy,
-                    isAsc
-                )
-                    .map { pagingData ->
-                        pagingData.map { transactionPreview ->
-                            transactionPreview.copy(
-                                operation = transactionPreview.operation.copy(
-                                    name = limitString(
-                                        transactionPreview.operation.name,
-                                        NAME_LENGTH_VISIBILITY_THRESHOLD
-                                    )
-                                )
-                            ).toUI()
-                        }
-                    }.onEach {
-                        it.map {
-                            Log.e("TAG", "getAllTransactionsPreviewByCategoryId: ${it}", )
-                            it
-                        }
-                    }
-            )
+//            _transactionPagingList.emitAll(
+//                transactionRepository.getTransactionPreviewByCategoryId(
+//                    categoryId,
+//                    q,
+//                    sortBy,
+//                    isAsc
+//                )
+//                    .map { pagingData ->
+//                        pagingData.map { transactionPreview ->
+//                            transactionPreview.copy(
+//                                operation = transactionPreview.operation.copy(
+//                                    name = limitString(
+//                                        transactionPreview.operation.name,
+//                                        NAME_LENGTH_VISIBILITY_THRESHOLD
+//                                    )
+//                                )
+//                            )
+//                        }
+//                    }.onEach {
+//                        it.map {
+//                            Log.e("TAG", "getAllTransactionsPreviewByCategoryId: ${it}")
+//                            it
+//                        }
+//                    }
+//            )
         }
 
     }
@@ -133,7 +142,7 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             categoryRepository.getList(SearchParams(q, sortBy.fieldName, isAsc)).map {
                 it.map { category ->
-                    category.toUI().copy(
+                    category.copy(
                         name = limitString(category.name, NAME_LENGTH_VISIBILITY_THRESHOLD)
                     )
                 }

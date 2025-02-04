@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.toUI
+import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.CategoryUIMapper
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryListViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val categoryUIMapper: CategoryUIMapper
 ) : ViewModel() {
 
     companion object {
@@ -73,7 +75,7 @@ class CategoryListViewModel @Inject constructor(
                     .map { pagingData ->
                         pagingData.map { category ->
                             Log.e(TAG, "getAllCategories: ${category}")
-                            category.toUI()
+                            categoryUIMapper.toCategoryUI(category)
                         }
                     }
                     .cachedIn(viewModelScope)

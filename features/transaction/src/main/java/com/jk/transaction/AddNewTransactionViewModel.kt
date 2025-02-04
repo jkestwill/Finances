@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.toUI
+import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.CategoryUIMapper
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
-import com.jk.common_data.sha256
 import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
@@ -22,11 +22,11 @@ import com.jk.goods_common_ui.toUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
-import com.jk.transaction.mapper.TransactionUiMapper
 import com.jk.transaction.validator.TransactionValidator
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.ScheduleUI
 import com.jk.transaction_common_ui.TransactionUI
+import com.jk.transaction_common_ui.TransactionUiMapper
 import com.jk.transaction_data.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +50,8 @@ class AddNewTransactionViewModel @Inject constructor(
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
     private val dispatchers: Dispatchers,
     private val transactionValidator: TransactionValidator,
-    private val transactionMapper:TransactionUiMapper
+    private val transactionMapper: TransactionUiMapper,
+    private val categoryMapper:CategoryUIMapper
 ) : ViewModel() {
 
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())
@@ -110,7 +111,7 @@ class AddNewTransactionViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             _categoryList.emitAll(
                 categoryRepository.getByCategoryListId(idList)
-                    .map { req -> req.map { list -> list.map { cat -> cat.toUI() } }.toState() }
+                    .map { req -> req.map { list -> list.map { cat -> categoryMapper.toCategoryUI(cat)} }.toState() }
                     .onEach { state ->
                         if (state is State.Success)
                             state.map { list ->

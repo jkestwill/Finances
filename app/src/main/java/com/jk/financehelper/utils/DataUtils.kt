@@ -1,5 +1,6 @@
 package com.jk.financehelper.utils
 
+import com.jk.category_common_ui.CategoryUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.transaction_common_ui.OperationUI
@@ -25,7 +26,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6U
+                            color = 0xFF0094C6
                         )
                     ),
                     scheduleList = listOf(),
@@ -48,7 +49,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6U
+                            color = 0xFF0094C6
                         )
                     ),
                     scheduleList = listOf(),

@@ -1,5 +1,6 @@
 package com.jk.transaction_common_ui
 
+import com.jk.category_common_ui.CategoryUI
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI

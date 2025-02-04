@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jk.category_common_ui.toCategory
+import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.CategoryUIMapper
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.sha256
 import com.jk.common_ui.State
@@ -24,7 +25,8 @@ import com.jk.common_ui.toState
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
-    private val colorList:List<Color>
+    private val colorList: List<Color>,
+    private val categoryUIMapper: CategoryUIMapper
 ) : ViewModel() {
 
     companion object {
@@ -55,9 +57,9 @@ class AddCategoryViewModel @Inject constructor(
                         CategoryUI(
                             "$name $color $isExpenses".sha256(),
                             name,
-                            color ?: colorList.random().value,
+                            color?.toLong() ?: colorList.random().value.toLong(),
 
-                        )
+                            )
                     )
                 }
             }
@@ -66,9 +68,10 @@ class AddCategoryViewModel @Inject constructor(
 
     private fun addCategory(category: CategoryUI) {
         viewModelScope.launch(Dispatchers.IO) {
-            _addCategoryResponse.emitAll(categoryRepository.add(category.toCategory()).map { apiRequest ->
-                apiRequest.toState()
-            })
+            _addCategoryResponse.emitAll(
+                categoryRepository.add(categoryUIMapper.toCategory(category)).map { apiRequest ->
+                    apiRequest.toState()
+                })
         }
     }
 

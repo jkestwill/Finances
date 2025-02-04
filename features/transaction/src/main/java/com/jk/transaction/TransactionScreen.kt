@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.jk.category_common_ui.CategoryUI
 import com.jk.common_data.sha256
 import com.jk.common_goods_data.Goods
 import com.jk.common_ui.ExpandedSection

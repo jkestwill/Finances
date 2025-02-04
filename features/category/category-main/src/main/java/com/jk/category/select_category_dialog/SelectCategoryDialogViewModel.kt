@@ -6,14 +6,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.toUI
+import com.jk.category_common_ui.CategoryUI
+import com.jk.category_common_ui.CategoryUIMapper
+
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,13 +27,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCategoryDialogViewModel @Inject constructor(
-    val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val categoryUIMapper: CategoryUIMapper
 ) : ViewModel() {
 
     val allCategoryListFlow = categoryRepository.getList(SearchParams.getDefault())
         .map {
             it.map { category ->
-                category.toUI()
+                categoryUIMapper.toCategoryUI(category)
             }
         }
         .cachedIn(viewModelScope)
@@ -44,11 +47,19 @@ class SelectCategoryDialogViewModel @Inject constructor(
         MutableStateFlow(State.None)
     val preselectedCategoryFlow: StateFlow<State<List<CategoryUI>>> get() = _preselectedCategoryFlow
 
-    var selectedCategoryList =  mutableStateListOf<CategoryUI>()
+    var selectedCategoryList = mutableStateListOf<CategoryUI>()
     fun getCategoryListById(listId: List<String>) {
         viewModelScope.launch {
             _preselectedCategoryFlow.emitAll(categoryRepository.getByCategoryListId(listId)
-                .map { req -> req.map { list -> list.map { cat -> cat.toUI() } }.toState() }
+                .map { req ->
+                    req.map { list ->
+                        list.map { cat ->
+                            categoryUIMapper.toCategoryUI(
+                                cat
+                            )
+                        }
+                    }.toState()
+                }
             )
         }
     }

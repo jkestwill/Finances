@@ -48,6 +48,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.Celadon
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.State
@@ -78,7 +79,7 @@ fun CategoryScreen(
             when (category.value) {
                 is State.Success -> (category.value as State.Success<CategoryUI>).data.color
                 else -> {
-                    Celadon.value
+                    Celadon.value.toLong()
                 }
             }
         }
@@ -114,7 +115,7 @@ fun CategoryScreen(
                     modifier = Modifier
                         .fillMaxWidth(0.5f),
                     categoryState = category.value,
-                    color = Color(color),
+                    color = Color(color?:0xffff),
                     onSearchTranslationY = {
                         contentTranslationY.floatValue = it
                     }
@@ -152,7 +153,7 @@ fun CategoryScreen(
                 .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             TransactionList(
-                transactionList = CategoryViewModel.test, Color(color)
+                transactionList = CategoryViewModel.test, Color(0xffffffff)
             )
         }
     }

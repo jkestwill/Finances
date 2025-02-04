@@ -24,6 +24,13 @@ abstract class GoodsDao internal constructor(
     @Update(entity = GoodsEntity::class)
     abstract suspend fun update(t: GoodsEntity)
 
+    @Query("SELECT * FROM goods WHERE goods.id == :id")
+    abstract fun getById(id:String):GoodsEntity
+
+    @Transaction
+    fun insert(goods:List<GoodsxSpecificationsxMoneyRelation>){
+
+    }
 //    @Transaction
 //    open suspend fun insert(goodsRelation: GoodsRelation) {
 //        for (i in goodsRelation.specificationList) {

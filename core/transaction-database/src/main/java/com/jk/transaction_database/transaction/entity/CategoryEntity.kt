@@ -10,7 +10,6 @@ data class CategoryEntity(
     @PrimaryKey
     val id:String,
     val name:String,
-
     val color:String
 ) {
 }

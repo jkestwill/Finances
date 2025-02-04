@@ -7,7 +7,8 @@ import javax.inject.Inject
 class GoodsValidator @Inject constructor(private val moneyValidator: MoneyValidator) :
     Validator<GoodsUI.Builder> {
     override fun validate(target: GoodsUI.Builder) {
-        val preBuild =  target.build()
+        val preBuild = target.build()
+        moneyValidator.validate(preBuild.cost)
         when {
             preBuild.name.isEmpty() -> {
                 throw IllegalArgumentException("Goods name can't be empty")

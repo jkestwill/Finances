@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.AutoSizeText
@@ -79,7 +80,7 @@ fun HorizontalCategoryGridItem(
     Row(
         modifier = modifier
             .background(
-                color = Color(categoryUI.color),
+                color = Color(categoryUI.color?:0x000000),
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)
