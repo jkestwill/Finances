@@ -151,20 +151,4 @@ class AddNewTransactionViewModel @Inject constructor(
         }
     }
 
-
-    @JvmName("schedule_list")
-    private fun check(scheduleBuilderList: List<ScheduleUI.Builder>): List<ScheduleUI> {
-        return scheduleBuilderList.onEach { check(it) }.map { it.build() }
-    }
-
-    @JvmName("schedule")
-    private fun check(scheduleBuilder: ScheduleUI.Builder) {
-        val preBuild = scheduleBuilder.build()
-        when {
-            preBuild.countLeft < 0 -> throw IllegalArgumentException("Schedule count can't be below zero")
-            preBuild.repeatPeriodMillis?.compareTo(0L) == -1 -> throw IllegalArgumentException("Schedule repeatPeriodMillis can't be below zero")
-        }
-    }
-
-
 }

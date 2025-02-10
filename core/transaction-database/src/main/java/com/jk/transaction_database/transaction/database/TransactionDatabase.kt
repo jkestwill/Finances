@@ -76,7 +76,7 @@ import java.util.concurrent.Executors
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
         AddressEntity::class
-    ], version = 28, exportSchema = false, autoMigrations = []
+    ], version = 1, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -128,7 +128,7 @@ fun transactionDatabaseProvider(context: Context, dbAssetPath:String): Transacti
             Log.e("DATABASE_LOG", "${sqlQuery} ## Args: ${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
         .createFromAsset(dbAssetPath)
-    //    .fallbackToDestructiveMigration()
+       .fallbackToDestructiveMigration()
         .build()
         .apply {
             query(query = "SELECT * FROM currency", args = null)

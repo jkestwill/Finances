@@ -10,7 +10,9 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.preview.TransactionPreviewEntity
+import com.jk.transaction_database.transaction.entity.MoneyEntity
+import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
+import com.jk.transaction_database.transaction.preview.TransactionPreviewRelation
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import java.time.LocalDateTime
 
@@ -22,9 +24,14 @@ import java.time.LocalDateTime
     private val typeDao:TypeDao = db.getTypeDao()
     private val goodsDao:GoodsDao = db.getGoodsDao()
     private val categoryDao:CategoryDao = db.getCategoryDao()
+
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
-   abstract suspend fun getAll(): List<TransactionEntity>
+    abstract suspend fun getAll(): List<TransactionEntity>
+
+    @Query("SELECT * FROM `transaction`")
+   abstract suspend fun getAllPreview():List<TransactionPreviewRelation>
+
 
     @Transaction
     @Query("SELECT * FROM `transaction` " +
@@ -34,10 +41,11 @@ import java.time.LocalDateTime
             "INNER JOIN category ON category_list.category_id == category.id " +
             "LEFT JOIN goods_list ON operation.id == operation.id " +
             "LEFT JOIN goods ON goods_list.goods_id = goods.id")
-    public abstract fun getRelation(): List<TransactionxCategoriesxTypexGoods>
+    abstract suspend fun getRelation(): List<TransactionxCategoriesxTypexGoods>
 
     @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract suspend fun insert(transaction: TransactionEntity)
+
     @Transaction
     open suspend fun insert(transaction:TransactionxCategoriesxTypexGoods){
         operationDao.insert(transaction.operation)
@@ -48,10 +56,10 @@ import java.time.LocalDateTime
 
     }
     @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
-    abstract  suspend fun update(transaction: TransactionEntity)
+    abstract suspend fun update(transaction: TransactionEntity)
 
     @Delete(entity = OperationEntity::class)
-    abstract  suspend fun delete(operation: OperationEntity)
+    abstract suspend fun delete(operation: OperationEntity)
 
     @Transaction
     @Query(
@@ -78,7 +86,7 @@ import java.time.LocalDateTime
         isAsc: Boolean,
         offset: Int,
         limit: Int
-    ): List<TransactionPreviewEntity>
+    ): List<TransactionPreviewRelation>
 
     // get expenses with exchange rate
     @Query(
@@ -98,4 +106,5 @@ import java.time.LocalDateTime
         dateTo: LocalDateTime,
         currencyTo: String
     ): Double
+
 }

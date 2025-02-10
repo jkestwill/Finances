@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.jk.transaction_common_data.OperationPreview
 import com.jk.transaction_common_data.TransactionPreview
+import com.jk.transaction_data.mapper.TransactionPreviewMapper
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -11,6 +12,7 @@ import dagger.assisted.AssistedInject
 
 class TransactionPreviewPagingSource @AssistedInject constructor(
     private val transactionDao: TransactionDao,
+    private val transactionPreviewMapper: TransactionPreviewMapper,
     @Assisted("categoryId") private val categoryId: String,
     @Assisted("q") private val q: String,
     @Assisted("sortBy") private var sortBy: String,
@@ -38,7 +40,7 @@ class TransactionPreviewPagingSource @AssistedInject constructor(
             val nextKey = if (list.size < pageSize) null else page + 1
             val prevKey = if (page == 0) null else page - 1
 
-            val data = checkNotNull(listOf<TransactionPreview>())
+            val data = checkNotNull(list.map { transactionPreviewMapper.toPreview(it)})
             LoadResult.Page(data, prevKey, nextKey)
         } else {
             LoadResult.Error(Exception(""))

@@ -28,9 +28,11 @@ abstract class GoodsDao internal constructor(
     abstract fun getById(id:String):GoodsEntity
 
     @Transaction
-    fun insert(goods:List<GoodsxSpecificationsxMoneyRelation>){
+    open fun insert(goods:List<GoodsxSpecificationsxMoneyRelation>){
 
-    }
+   }
+
+
 //    @Transaction
 //    open suspend fun insert(goodsRelation: GoodsRelation) {
 //        for (i in goodsRelation.specificationList) {

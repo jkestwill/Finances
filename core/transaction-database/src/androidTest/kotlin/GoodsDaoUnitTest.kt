@@ -98,7 +98,7 @@ class GoodsDaoUnitTest {
                 cost = moneyId
             )
 
-        goodsDao.insert()
+
     }
 
     private fun randomSpecification(n: Int, measureId: String) = List(n) {
