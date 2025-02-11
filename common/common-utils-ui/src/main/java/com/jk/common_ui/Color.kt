@@ -36,7 +36,7 @@ val colorPickList = listOf(
 )
 
 val lightPalette = FinanceHelperColors(
-    primaryText = MidnightGreen,
+    primaryText = Color.Black,
     secondaryText = Color.Black,
     primaryBackground = LightCreamy,
     secondaryBackground = TeaGreen,

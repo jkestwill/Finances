@@ -3,6 +3,7 @@ package com.jk.common_ui.composable
 import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -12,6 +13,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,9 +38,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.jk.common_ui.FinanceHelperTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -62,53 +67,41 @@ fun Search(
         mutableStateOf(SearchState.COLLAPSED)
     }
     val coroutineScope = rememberCoroutineScope()
-    val offsetY = animateFloatAsState(
-        targetValue = if (state.value == SearchState.COLLAPSED) 0f else 150f,
-        tween(100, if (state.value == SearchState.COLLAPSED) 300 else 0, LinearOutSlowInEasing)
+    val offsetX = animateFloatAsState(
+        targetValue = if (state.value == SearchState.COLLAPSED) 400f else 0f,
+        tween(100, 0, LinearEasing)
     )
     val keyboard = LocalSoftwareKeyboardController.current
-    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    val focusRequester = remember { FocusRequester() }
     val size =
         animateDpAsState(
-            targetValue = if (state.value == SearchState.COLLAPSED) (-100).dp else 150.dp,
-            tween(100, if (state.value == SearchState.COLLAPSED) 0 else 300, LinearOutSlowInEasing)
+            targetValue = if(state.value==SearchState.EXPANDED) 150.dp else 0.dp,
+           tween(100, delayMillis = 0, easing =  LinearEasing)
         )
 
     Row(
-        modifier = modifier
-            .graphicsLayer {
-                this.translationY = offsetY.value
-            }, horizontalArrangement = Arrangement.spacedBy(5.dp)
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        IconButton(modifier = Modifier
-            .width(40.dp)
-            .height(40.dp)
-            .border(2.dp, color = Color.Black, shape = RoundedCornerShape(20))
-            .background(
-                color = color,
-                shape = FinanceHelperTheme.shape.shapeRoundMedium
-            )
-            .zIndex(1f), onClick = {
-            coroutineScope.launch {
-                state.value = SearchState.EXPANDED
-                delay(200)
-                focusRequester.requestFocus()
-                keyboard?.show()
-            }
-        }) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
-        }
-
+  //  if (state.value == SearchState.EXPANDED)
         CharacterLimitTextField(
             modifier = modifier
+
                 .height(40.dp)
+
                 .animateContentSize()
-                .width(if (state.value == SearchState.EXPANDED) 150.dp else 0.dp)
+
+                .width(150.dp)
+                .graphicsLayer {
+                    translationX = offsetX.value
+                }
                 .background(
                     color = color.copy(alpha = 0.5f),
                     shape = FinanceHelperTheme.shape.shapeRoundedLow
                 )
-                .focusRequester(focusRequester),
+            ,
+
+               // .focusRequester(focusRequester),
             textStyle = FinanceHelperTheme.typography.h3,
             maxLines = 1,
             maxLengthPostfixVisibility = true,
@@ -126,12 +119,39 @@ fun Search(
             }
         )
 
+        IconButton(modifier = Modifier
+            .width(40.dp)
+            .height(40.dp)
+            .border(2.dp, color = Color.Black, shape = RoundedCornerShape(20))
+            .background(
+                color = Color.Transparent,
+                shape = FinanceHelperTheme.shape.shapeRoundMedium
+            )
+            .zIndex(1f), onClick = {
+
+            coroutineScope.launch {
+                if(state.value ==SearchState.EXPANDED){
+                    delay(300)
+                    state.value = SearchState.COLLAPSED
+                } else state.value=SearchState.EXPANDED
+
+             //   focusRequester.requestFocus()
+                if(state.value ==SearchState.EXPANDED)
+                    keyboard?.show()
+                else
+                    keyboard?.hide()
+            }
+
+        }) {
+            Icon(imageVector = Icons.Filled.Search, contentDescription = "ic_search")
+        }
+
     }
     LaunchedEffect(key1 = keyboardState.value) {
         if (keyboardState.value == KeyboardState.CLOSED) {
             //focusRequester.captureFocus()
             Log.e(TAG, "Search: ${size.value}")
-            state.value = SearchState.COLLAPSED
+            //state.value = SearchState.COLLAPSED
         }
     }
 }

@@ -104,11 +104,7 @@ fun CategoryListScreen(
         Box(modifier = Modifier.fillMaxWidth()) {
             Search(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .onGloballyPositioned {
-                        searchPositionY = it.positionInRoot().y
-
-                    },
+                    .align(Alignment.CenterEnd),
                 text = searchText.value,
                 onValueChange = {
                     searchText.value = it
@@ -119,6 +115,7 @@ fun CategoryListScreen(
                     error = TextError(maxTextLengthError = "Err")
                 )
             )
+            // header
             Row(
                 modifier = Modifier.padding(start = 5.dp, end = 5.dp) .align(Alignment.Center),
                 verticalAlignment = Alignment.CenterVertically,
@@ -132,16 +129,7 @@ fun CategoryListScreen(
                     color = FinanceHelperTheme.colors.primaryText
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (isSelectionMode == CategoryListViewModel.SelectionState.ON)
-                    SelectAll(modifier = Modifier.weight(1f), isSelected = selectAll.value) {
-                        selectAll.value = !selectAll.value
-                        if (selectAll.value) {
-                            viewModel.selectedCategoryIdList.value = listOf()
-                            viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
-                                it?.id ?: ""
-                            }
-                        } else viewModel.selectedCategoryIdList.value = listOf()
-                    }
+
             }
         }
     }) { paddingValues ->
@@ -153,10 +141,6 @@ fun CategoryListScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .graphicsLayer {
-                        Log.e(TAG, "CategoryListScqqqqreen: ${searchPositionY}")
-                        this.translationY = searchPositionY
-                    }
                     .padding(FinanceHelperTheme.shape.headerPadding)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -180,6 +164,7 @@ fun CategoryListScreen(
                 viewModel.removeCategoriesById()
                 selectAll.value = false
             }
+            // add category button
             if (isSelectionMode != CategoryListViewModel.SelectionState.ON) {
                 IconButton(
                     modifier = Modifier
@@ -203,12 +188,24 @@ fun CategoryListScreen(
 
                 }
 
+                    SelectAll( isSelected = selectAll.value) {
+                        selectAll.value = !selectAll.value
+                        if (selectAll.value) {
+                            viewModel.selectedCategoryIdList.value = listOf()
+                            viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
+                                it?.id ?: ""
+                            }
+                        } else viewModel.selectedCategoryIdList.value = listOf()
+                    }
+
             }
         }
     }
 }
 
-
+/**
+ * Contains Select text and radio button
+ * */
 @Composable
 fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: () -> Unit) {
     Row(modifier) {
@@ -283,8 +280,6 @@ fun BoxScope.SelectItemsMenu(
         }
 
     }
-
-
 
     LaunchedEffect(key1 = deleteState.value) {
         viewModel.getAllCategories(search = "")

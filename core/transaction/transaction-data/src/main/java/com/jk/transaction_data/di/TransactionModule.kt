@@ -4,6 +4,8 @@ import com.jk.transaction_data.TransactionPagingSourceFactory
 import com.jk.transaction_data.TransactionRepository
 import com.jk.transaction_data.datasource.TransactionRemoteDataSource
 import com.jk.transaction_data.mapper.TransactionMapperImpl
+import com.jk.transaction_data.mapper.TransactionPreviewMapper
+import com.jk.transaction_data.mapper.TransactionPreviewMapperImpl
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
@@ -55,4 +57,8 @@ class TransactionModule {
         return db.getTransactionDao()
     }
 
+    @Provides
+    fun provideTransactionPreviewMapper():TransactionPreviewMapper{
+        return TransactionPreviewMapperImpl()
+    }
 }
