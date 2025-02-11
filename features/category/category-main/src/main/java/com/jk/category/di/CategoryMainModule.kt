@@ -1,7 +1,7 @@
 package com.jk.category.di
 
-import com.jk.category_common_ui.CategoryUIMapper
-import com.jk.category_common_ui.CategoryUIMapperImpl
+import com.jk.category.CategoryUIMapper
+import com.jk.category.CategoryUIMapperImpl
 
 import dagger.Module
 import dagger.Provides

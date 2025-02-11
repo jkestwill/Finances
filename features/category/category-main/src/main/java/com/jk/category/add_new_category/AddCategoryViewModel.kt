@@ -2,11 +2,12 @@ package com.jk.category.add_new_category
 
 import android.util.Log
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_common_ui.CategoryUIMapper
-import com.jk.category_data.CategoryRepository
+import com.jk.category.CategoryUIMapper
+import com.jk.category_data.s.CategoryRepository
 import com.jk.common_data.sha256
 import com.jk.common_ui.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +42,7 @@ class AddCategoryViewModel @Inject constructor(
     val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
 
 
-    fun addCategory(name: String, color: ULong?, isExpenses: Boolean) {
+    fun addCategory(name: String, color: Int, isExpenses: Boolean) {
         Log.e(TAG, "addCategory:${name} ${color} ${isExpenses} ")
         viewModelScope.launch {
             when {
@@ -57,9 +58,8 @@ class AddCategoryViewModel @Inject constructor(
                         CategoryUI(
                             "$name $color $isExpenses".sha256(),
                             name,
-                            color?.toLong() ?: colorList.random().value.toLong(),
-
-                            )
+                            color,
+                        )
                     )
                 }
             }

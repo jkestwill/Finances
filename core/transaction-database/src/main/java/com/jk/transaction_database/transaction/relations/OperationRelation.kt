@@ -1,9 +1,15 @@
 package com.jk.transaction_database.transaction.relations
 
-import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
+import androidx.room.Embedded
+import androidx.room.Relation
+import com.jk.transaction_database.transaction.entity.MoneyEntity
+import com.jk.transaction_database.transaction.entity.OperationEntity
 
 
 data class OperationRelation(
-    val operationGoodsListEntity: OperationGoodsListEntity,
+    @Embedded
+    val operationGoodsEntity: OperationEntity,
 
+    @Relation(MoneyEntity::class, parentColumn = "money_id", entityColumn = "id")
+    val money:MoneyEntity
 )

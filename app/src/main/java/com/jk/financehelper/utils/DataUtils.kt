@@ -26,7 +26,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6
+                            color = (0xFF0094C6).toInt()
                         )
                     ),
                     scheduleList = listOf(),
@@ -49,7 +49,7 @@ class DataUtils {
                         CategoryUI(
                             id = "x1",
                             "Sport",
-                            color = 0xFF0094C6
+                            color =  (0xFF0094C6).toInt()
                         )
                     ),
                     scheduleList = listOf(),

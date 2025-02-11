@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
         childColumns  = ["measure_id"],
         parentColumns = ["id"],
         onDelete = ForeignKey.CASCADE
-    )
+    )   
 ])
 data class SpecificationsEntity(
     @PrimaryKey

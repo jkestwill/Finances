@@ -24,8 +24,17 @@ class TransactionModule {
 
     @Provides
     @Singleton
-    fun provideTransactionRepository(transactionDao: TransactionDao, currencyDao: CurrencyDao, transactionPagingSourceFactory: TransactionPagingSourceFactory): TransactionRepository {
-        return TransactionRepository(transactionDao, currencyDao = currencyDao, transactionPagingSource = transactionPagingSourceFactory, transactionMapper = TransactionMapperImpl())
+    fun provideTransactionRepository(
+        transactionDao: TransactionDao,
+        currencyDao: CurrencyDao,
+        transactionPagingSourceFactory: TransactionPagingSourceFactory
+    ): TransactionRepository {
+        return TransactionRepository(
+            transactionDao,
+            currencyDao = currencyDao,
+            transactionPagingSource = transactionPagingSourceFactory,
+            transactionMapper = TransactionMapperImpl()
+        )
     }
 
     @Provides
@@ -51,14 +60,16 @@ class TransactionModule {
     fun provideRemoteDataSource(): TransactionRemoteDataSource {
         return TransactionRemoteDataSource()
     }
+
     @Provides
     @Singleton
-    fun provideTransactionDao(db:TransactionDatabaseProvider):TransactionDao{
+    fun provideTransactionDao(db: TransactionDatabaseProvider): TransactionDao {
         return db.getTransactionDao()
     }
 
     @Provides
-    fun provideTransactionPreviewMapper():TransactionPreviewMapper{
+    fun provideTransactionPreviewMapper():TransactionPreviewMapper {
         return TransactionPreviewMapperImpl()
     }
+
 }

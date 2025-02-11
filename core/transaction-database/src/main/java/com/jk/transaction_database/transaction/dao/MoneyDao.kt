@@ -3,6 +3,7 @@ package com.jk.transaction_database.transaction.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.MoneyEntity
@@ -21,7 +22,7 @@ abstract class MoneyDao internal constructor(
     @Update(entity = MoneyEntity::class)
     abstract suspend fun update(t: MoneyEntity)
 
-    @Insert(entity = MoneyEntity::class)
+    @Insert(entity = MoneyEntity::class, onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insert(t: MoneyEntity)
 
     @Query(value = "SELECT * FROM money")

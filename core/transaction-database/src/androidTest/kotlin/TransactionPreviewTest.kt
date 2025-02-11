@@ -7,6 +7,7 @@ import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.MeasureDao
+import com.jk.transaction_database.transaction.dao.MoneyAccountDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
 import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
@@ -16,6 +17,7 @@ import com.jk.transaction_database.transaction.database.TransactionDatabaseProvi
 import com.jk.transaction_database.transaction.database.transactionDatabaseProvider
 import com.jk.transaction_database.transaction.entity.CategoryEntity
 import com.jk.transaction_database.transaction.entity.CurrencyEntity
+import com.jk.transaction_database.transaction.entity.MoneyAccountEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
@@ -44,6 +46,7 @@ class TransactionPreviewTest {
     private lateinit var transactionDao:TransactionDao
     private lateinit var categoryDao:CategoryDao
     private lateinit var operationCategoryList: OperationCategoryDao
+    private lateinit var moneyAccountDao: MoneyAccountDao
 
     private val TAG = "TransactionPreviewTest"
 
@@ -62,6 +65,7 @@ class TransactionPreviewTest {
         transactionTypeDao = database.getTypeDao()
         categoryDao = database.getCategoryDao()
         operationCategoryList = database.getOperationCategoryDao()
+        moneyAccountDao = database.getMoneyAccountDao()
     }
 
     @Test
@@ -70,31 +74,33 @@ class TransactionPreviewTest {
         val currency = CurrencyEntity("b", "BYN")
         val money = MoneyEntity("aojsd", 23.1, currency.id)
         val transactionTypeEntity = TransactionTypeEntity("id","online")
+        val moneyForAccount = MoneyEntity("zxc", 23.1, currency.id)
+        val moneyAccount = MoneyAccountEntity("m","Card1",null,moneyId=moneyForAccount.id)
         val operation = OperationEntity("op","Пакупачка",money.id, isExpenses = true)
-        val transaction = TransactionEntity("id", date = LocalDateTime.now(), operationId = operation.id, typeId = transactionTypeEntity.id)
+        val transaction = TransactionEntity("id", date = LocalDateTime.now(), operationId = operation.id, typeId = transactionTypeEntity.id, moneyAccountId = moneyAccount.id)
         val categoryList = randomCategoryList(20)
         categoryDao.insert(categoryList)
 
         transactionTypeDao.insert(transactionTypeEntity)
         currencyDao.insert(currency)
         moneyDao.insert(money)
+        moneyDao.insert(moneyForAccount)
+        moneyAccountDao.insert(moneyAccount)
         operationDao.insert(operation)
         transactionDao.insert(transaction)
 
         for (cat in categoryList) {
             operationCategoryList.insert(OperationCategoryList(operation.id,cat.id))
         }
-        val previewList =  transactionDao.getAllPreview()
+        val previewList =  transactionDao.getTransactionPreview()
 
         Log.e(TAG, "insert_test:${previewList} ", )
 
         assertTrue(previewList.isNotEmpty())
-
     }
 
-
     private fun randomCategoryList(n:Int) =List<CategoryEntity>(n) {
-        CategoryEntity(id="$it",name = "Chevapchis${it}", color = Random.nextLong().toString())
+        CategoryEntity(id="$it",name = "Chevapchis${it}", color = Random.nextInt())
     }
     @After
     fun close() {

@@ -1,14 +1,12 @@
 package com.jk.category
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_common_ui.CategoryUIMapper
-import com.jk.category_data.CategoryRepository
-import com.jk.category_data.CategorySortBy
+import com.jk.category_data.s.CategoryRepository
+import com.jk.category_data.s.CategorySortBy
 import com.jk.common_ui.toState
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State
@@ -25,7 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject

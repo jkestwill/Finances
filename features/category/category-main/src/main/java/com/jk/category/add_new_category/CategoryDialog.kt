@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,7 +60,7 @@ fun CategoryDialog(
         mutableStateOf("")
     }
     val colorHex = remember {
-        mutableStateOf<ULong?>(null)
+        mutableStateOf<Int?>(null)
     }
 
     val isExpensesSwitch = remember {
@@ -166,7 +167,7 @@ fun CategoryDialog(
                             .clickable {
                                 viewModel.addCategory(
                                     name = name.value,
-                                    color = colorHex.value,
+                                    color = colorHex.value?: colorPickList[0].toArgb(),
                                     isExpenses = isExpensesSwitch.value
                                 )
 
@@ -211,9 +212,9 @@ fun CategoryDialog(
 
 
 @Composable
-fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
+fun ColorPicker(modifier: Modifier = Modifier, onPick: (Int?) -> Unit) {
     val selectedColor = remember {
-        mutableStateOf<ULong?>(null)
+        mutableStateOf<Int?>(null)
     }
     val borderColor = FinanceHelperTheme.colors.secondaryText
     val shape = FinanceHelperTheme.shape.shapeRoundedLow
@@ -228,7 +229,7 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
         items(colorPickList) {
             val borderModifier by remember(selectedColor.value) {
                 mutableStateOf(
-                    if (selectedColor.value == it.value) Modifier.border(
+                    if (selectedColor.value == it.toArgb()) Modifier.border(
                         2.dp,
                         borderColor,
                         shape
@@ -242,14 +243,14 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (ULong?) -> Unit) {
                     .background(color = it, shape = FinanceHelperTheme.shape.shapeRoundMedium)
                     .clickAnimation {
 
-                        if (it.value == selectedColor.value) {
+                        if (it.toArgb() == selectedColor.value) {
                             Log.e(
                                 TAG,
-                                "ColorPicker: it.value == selectedColor.value ${it.value == selectedColor.value}"
+                                "ColorPicker: it.value == selectedColor.value ${it.toArgb() == selectedColor.value}"
                             )
                             selectedColor.value = null
                         } else {
-                            selectedColor.value = it.value
+                            selectedColor.value = it.toArgb()
                         }
                         onPick(selectedColor.value)
                     }

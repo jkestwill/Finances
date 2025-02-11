@@ -7,8 +7,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_common_ui.CategoryUIMapper
-import com.jk.category_data.CategoryRepository
+import com.jk.category.CategoryUIMapper
+import com.jk.category_data.s.CategoryRepository
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State
 import com.jk.common_ui.toState

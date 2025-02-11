@@ -10,56 +10,62 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
-import com.jk.transaction_database.transaction.entity.MoneyEntity
-import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewRelation
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import java.time.LocalDateTime
 
 @Dao
- abstract class TransactionDao internal constructor(
-  private val db:TransactionDatabase,
+abstract class TransactionDao internal constructor(
+    private val db: TransactionDatabase,
 ) {
-    private val operationDao:OperationDao = db.getOperationDao()
-    private val typeDao:TypeDao = db.getTypeDao()
-    private val goodsDao:GoodsDao = db.getGoodsDao()
-    private val categoryDao:CategoryDao = db.getCategoryDao()
+    private val operationDao: OperationDao = db.getOperationDao()
+    private val typeDao: TypeDao = db.getTypeDao()
+    private val goodsDao: GoodsDao = db.getGoodsDao()
+    private val categoryDao: CategoryDao = db.getCategoryDao()
+    private val moneyAccountDao: MoneyAccountDao = db.getMoneyAccountDao()
 
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
     abstract suspend fun getAll(): List<TransactionEntity>
 
-    @Query("SELECT * FROM `transaction`")
-   abstract suspend fun getAllPreview():List<TransactionPreviewRelation>
-
-
     @Transaction
-    @Query("SELECT * FROM `transaction` " +
-            "INNER JOIN type ON `transaction`.type_id == type.id " +
-            "INNER JOIN operation ON `transaction`.operation_id==operation.id " +
-            "INNER JOIN category_list ON operation.id == category_list.operation_id " +
-            "INNER JOIN category ON category_list.category_id == category.id " +
-            "LEFT JOIN goods_list ON operation.id == operation.id " +
-            "LEFT JOIN goods ON goods_list.goods_id = goods.id")
-    abstract suspend fun getRelation(): List<TransactionxCategoriesxTypexGoods>
+    @Query(
+        "SELECT * FROM `transaction` " +
+                "INNER JOIN type ON `transaction`.type_id == type.id " +
+                "INNER JOIN operation ON `transaction`.operation_id==operation.id " +
+                "INNER JOIN category_list ON operation.id == category_list.operation_id " +
+                "INNER JOIN category ON category_list.category_id == category.id " +
+                "LEFT JOIN goods_list ON operation.id == operation.id " +
+                "LEFT JOIN goods ON goods_list.goods_id = goods.id"
+    )
+    public abstract fun getRelation(): List<TransactionxCategoriesxTypexGoods>
+
+    @Query("SELECT * FROM `transaction`")
+    abstract suspend fun getTransactionPreview(): List<TransactionPreviewRelation>
 
     @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract suspend fun insert(transaction: TransactionEntity)
 
     @Transaction
-    open suspend fun insert(transaction:TransactionxCategoriesxTypexGoods){
+    open suspend fun insert(transaction: TransactionxCategoriesxTypexGoods) {
         operationDao.insert(transaction.operation)
         categoryDao.insert(transaction.categoryList)
-        goodsDao.insert(transaction.goodsList)
+        goodsDao.insertList(transaction.goodsList)
         typeDao.insertIfNotExist(transaction.type)
+        moneyAccountDao.updateAmount(
+            transaction.transactionEntity.moneyAccountId,
+            amount = transaction.operation.money.amount
+        )
         insert(transaction.transactionEntity)
 
     }
+
     @Update(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract suspend fun update(transaction: TransactionEntity)
 
     @Delete(entity = OperationEntity::class)
     abstract suspend fun delete(operation: OperationEntity)
+
 
     @Transaction
     @Query(
@@ -106,5 +112,4 @@ import java.time.LocalDateTime
         dateTo: LocalDateTime,
         currencyTo: String
     ): Double
-
 }

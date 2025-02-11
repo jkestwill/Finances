@@ -35,9 +35,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
-    kapt(libs.mapstruct.kotlin)
-    implementation(libs.mapstruct)
-    kapt(libs.mapstruct.processor)
+
     implementation(project(":common:common-data:category"))
 
     implementation(project(":common:common-ui:money"))

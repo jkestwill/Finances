@@ -1,4 +1,4 @@
-package com.jk.category_data
+package com.jk.category_data.s
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(
     private val categoryDao: CategoryDao,
-    private val categoryPagingSource: CategoryPagingSourceFactory
+    private val categoryPagingSource: CategoryPagingSourceFactory,
+    private val categoryMapper: CategoryMapper
 ) {
     fun getList(
         searchParams: SearchParams
@@ -48,7 +49,7 @@ class CategoryRepository @Inject constructor(
     fun add(category:Category): Flow<ApiRequest<Long>> {
         val startFlow = flowOf(ApiRequest.Loading<Long>())
         val result: Flow<ApiRequest<Long>> = flow<Long> {
-            emit(categoryDao.insert(category.toEntity()))
+            emit(categoryDao.insert(categoryMapper.toEntity(category)))
         }.map { result ->
             if (result > 0) {
                 ApiRequest.Success(result)
@@ -71,7 +72,8 @@ class CategoryRepository @Inject constructor(
             emit(categoryDao.getById(categoryId))
         }.map {
             if (it != null) {
-                ApiRequest.Success(it.toCategory())
+
+                ApiRequest.Success(categoryMapper.toCategory(it))
             } else {
                 ApiRequest.Error<Category>(
                     it,
@@ -91,7 +93,7 @@ class CategoryRepository @Inject constructor(
         val result = flow {
             emit(categoryDao.getByListId(categoryId))
         }.map {
-            val category = it?.map { c->c.toCategory() }
+            val category = it?.map { c->categoryMapper.toCategory(c)}
             if (category != null) {
                 ApiRequest.Success(category )
             } else {

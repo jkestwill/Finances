@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":core:goods:goods-data"))
     implementation(project(":core:settings"))
     implementation(project(":core:money:exchange-rate-data"))
+    implementation(project(":features:category:category-main"))
 
     // mapper
     kapt(libs.mapstruct.kotlin)

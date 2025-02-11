@@ -5,6 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 import com.jk.transaction_database.transaction.entity.CategoryEntity
 import com.jk.transaction_database.transaction.entity.GoodsEntity
+import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
@@ -15,11 +16,17 @@ data class TransactionxCategoriesxTypexGoods(
     @Embedded
     val transactionEntity: TransactionEntity,
 
-    @Relation(entity = OperationEntity::class, parentColumn = "operation_id", entityColumn = "id")
-    val operation: OperationEntity,
-    @Relation(entity = TransactionTypeEntity::class, parentColumn = "type_id","id")
+    @Relation(
+        entity = OperationEntity::class,
+        parentColumn = "operation_id",
+        entityColumn = "id",
+        associateBy =Junction(OperationEntity::class,"id")
+    )
+    val operation: OperationRelation,
+    @Relation(entity = TransactionTypeEntity::class, parentColumn = "type_id", "id")
     val type: TransactionTypeEntity,
-    @Relation(entity = CategoryEntity::class,
+    @Relation(
+        entity = CategoryEntity::class,
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
@@ -28,13 +35,13 @@ data class TransactionxCategoriesxTypexGoods(
             "category_id"
         )
     )
-    val categoryList:List<CategoryEntity>,
+    val categoryList: List<CategoryEntity>,
     @Relation(
         GoodsEntity::class,
         entityColumn = "id",
         parentColumn = "operation_id",
-        associateBy = Junction(OperationGoodsListEntity::class,"operation_id","goods_id")
+        associateBy = Junction(OperationGoodsListEntity::class, "operation_id", "goods_id")
     )
+    val goodsList: List<GoodsEntity>,
 
-    val goodsList:List<GoodsEntity>
-)
+    )

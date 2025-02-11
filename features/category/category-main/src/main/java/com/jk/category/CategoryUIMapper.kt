@@ -1,6 +1,7 @@
-package com.jk.category_common_ui
+package com.jk.category
 
 import com.jk.category_common_data.Category
+import com.jk.category_common_ui.CategoryUI
 import org.mapstruct.Mapper
 
 @Mapper()
@@ -10,4 +11,6 @@ interface CategoryUIMapper {
 
 
     fun toCategoryUI(category: Category): CategoryUI
+
+
 }

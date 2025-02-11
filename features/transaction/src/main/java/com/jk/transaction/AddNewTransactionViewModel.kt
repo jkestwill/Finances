@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.jk.category.CategoryUIMapper
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_common_ui.CategoryUIMapper
-import com.jk.category_data.CategoryRepository
+import com.jk.category_data.s.CategoryRepository
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
@@ -51,7 +51,7 @@ class AddNewTransactionViewModel @Inject constructor(
     private val dispatchers: Dispatchers,
     private val transactionValidator: TransactionValidator,
     private val transactionMapper: TransactionUiMapper,
-    private val categoryMapper:CategoryUIMapper
+    private val categoryMapper: CategoryUIMapper
 ) : ViewModel() {
 
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())

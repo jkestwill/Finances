@@ -33,6 +33,7 @@ import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
 import com.jk.transaction_database.transaction.dao.LedgerDao
 import com.jk.transaction_database.transaction.dao.LedgerTransactionListDao
 import com.jk.transaction_database.transaction.dao.MeasureDao
+import com.jk.transaction_database.transaction.dao.MoneyAccountDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
 import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
@@ -41,6 +42,7 @@ import com.jk.transaction_database.transaction.dao.SpecificationDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.dao.TypeDao
+import com.jk.transaction_database.transaction.entity.MoneyAccountEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.list.LangMeasureListEntity
 import com.jk.transaction_database.transaction.list.LedgerTransactionList
@@ -75,8 +77,9 @@ import java.util.concurrent.Executors
         LangMeasureListEntity::class,
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
-        AddressEntity::class
-    ], version = 1, exportSchema = false, autoMigrations = []
+        AddressEntity::class,
+        MoneyAccountEntity::class
+    ], version = 3, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -86,8 +89,11 @@ internal abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getCategoryDao(): CategoryDao
 
     abstract fun getGoodsDao(): GoodsDao
+
     abstract fun getMeasureDao(): MeasureDao
+
     abstract fun getLanguageDao(): LanguageDao
+
     abstract fun getLanguageMeasureListDao(): LanguageMeasureListDao
 
     abstract fun getMoneyDao(): MoneyDao
@@ -103,7 +109,9 @@ internal abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getOperationCategoryDao(): OperationCategoryDao
 
     abstract fun getTransactionGoodsListDao(): TransactionGoodsListDao
+
     abstract fun getSpecificationDao(): SpecificationDao
+
     abstract fun getLedgerDao(): LedgerDao
 
     abstract fun getLedgerTransactionListDao(): LedgerTransactionListDao
@@ -111,14 +119,19 @@ internal abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getExchangeRateDao(): ExchangeRateDao
 
     abstract fun getGoodsSpecificationDao(): GoodsSpecificationDao
-    abstract fun getBankDao():BankDao
-    abstract fun getAddressDao():AddressDao
 
+    abstract fun getBankDao(): BankDao
+
+    abstract fun getAddressDao(): AddressDao
+
+    abstract fun getMoneyAccountDao(): MoneyAccountDao
 
 }
 
-
-fun transactionDatabaseProvider(context: Context, dbAssetPath:String): TransactionDatabaseProvider {
+fun transactionDatabaseProvider(
+    context: Context,
+    dbAssetPath: String
+): TransactionDatabaseProvider {
     val db = Room.databaseBuilder(
         context = context,
         klass = TransactionDatabase::class.java,
@@ -128,7 +141,7 @@ fun transactionDatabaseProvider(context: Context, dbAssetPath:String): Transacti
             Log.e("DATABASE_LOG", "${sqlQuery} ## Args: ${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
         .createFromAsset(dbAssetPath)
-       .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration()
         .build()
         .apply {
             query(query = "SELECT * FROM currency", args = null)
@@ -137,81 +150,92 @@ fun transactionDatabaseProvider(context: Context, dbAssetPath:String): Transacti
 
     return TransactionDatabaseProvider(db)
 }
+
 // костыль чтобы не делать руму как апи
-class TransactionDatabaseProvider internal constructor (internal val db:TransactionDatabase){
+class TransactionDatabaseProvider internal constructor(internal val db: TransactionDatabase) {
     fun getCategoryDao(): CategoryDao {
         return db.getCategoryDao()
     }
-    fun getTransactionDao(): TransactionDao{
-       return db.getTransactionDao()
+
+    fun getTransactionDao(): TransactionDao {
+        return db.getTransactionDao()
     }
 
-    fun getGoodsDao(): GoodsDao{
-       return db.getGoodsDao()
+    fun getGoodsDao(): GoodsDao {
+        return db.getGoodsDao()
     }
-    fun getMeasureDao(): MeasureDao{
+
+    fun getMeasureDao(): MeasureDao {
         return db.getMeasureDao()
     }
-    fun getLanguageDao(): LanguageDao{
+
+    fun getLanguageDao(): LanguageDao {
         return db.getLanguageDao()
     }
 
-    fun getLanguageMeasureListDao(): LanguageMeasureListDao{
-         return db.getLanguageMeasureListDao()
+    fun getLanguageMeasureListDao(): LanguageMeasureListDao {
+        return db.getLanguageMeasureListDao()
     }
 
-    fun getMoneyDao(): MoneyDao{
+    fun getMoneyDao(): MoneyDao {
         return db.getMoneyDao()
     }
-    fun getOperationDao(): OperationDao{
+
+    fun getOperationDao(): OperationDao {
         return db.getOperationDao()
     }
 
-     fun getScheduleDao(): ScheduleDao{
-         return db.getScheduleDao()
-     }
+    fun getScheduleDao(): ScheduleDao {
+        return db.getScheduleDao()
+    }
 
-    fun getTypeDao(): TypeDao{
+    fun getTypeDao(): TypeDao {
         return db.getTypeDao()
     }
 
-    fun getCurrencyDao(): CurrencyDao{
+    fun getCurrencyDao(): CurrencyDao {
         return db.getCurrencyDao()
     }
 
-     fun getOperationCategoryDao(): OperationCategoryDao{
-         return db.getOperationCategoryDao()
-     }
+    fun getOperationCategoryDao(): OperationCategoryDao {
+        return db.getOperationCategoryDao()
+    }
 
-     fun getTransactionGoodsListDao(): TransactionGoodsListDao{
-         return db.getTransactionGoodsListDao()
-     }
-     fun getSpecificationDao(): SpecificationDao{
-         return db.getGoodsDao()
-     }
-     fun getLedgerDao(): LedgerDao{
-         return db.getLedgerDao()
-     }
+    fun getTransactionGoodsListDao(): TransactionGoodsListDao {
+        return db.getTransactionGoodsListDao()
+    }
 
-     fun getLedgerTransactionListDao(): LedgerTransactionListDao{
-         return db.getLedgerTransactionListDao()
-     }
+    fun getSpecificationDao(): SpecificationDao {
+        return db.getGoodsDao()
+    }
 
-     fun getExchangeRateDao(): ExchangeRateDao{
-         return db.getExchangeRateDao()
-     }
+    fun getLedgerDao(): LedgerDao {
+        return db.getLedgerDao()
+    }
 
-     fun getGoodsSpecificationDao(): GoodsSpecificationDao{
-         return db.getGoodsSpecificationDao()
-     }
-    fun getBankDao():BankDao{
+    fun getLedgerTransactionListDao(): LedgerTransactionListDao {
+        return db.getLedgerTransactionListDao()
+    }
+
+    fun getExchangeRateDao(): ExchangeRateDao {
+        return db.getExchangeRateDao()
+    }
+
+    fun getGoodsSpecificationDao(): GoodsSpecificationDao {
+        return db.getGoodsSpecificationDao()
+    }
+
+    fun getBankDao(): BankDao {
         return db.getBankDao()
     }
 
-    fun getAddressDao():AddressDao{
+    fun getAddressDao(): AddressDao {
         return db.getAddressDao()
     }
 
+    fun getMoneyAccountDao():MoneyAccountDao{
+        return db.getMoneyAccountDao()
+    }
 }
 
 

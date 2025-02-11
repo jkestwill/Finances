@@ -77,9 +77,9 @@ fun CategoryScreen(
     val color by remember(category.value) {
         derivedStateOf {
             when (category.value) {
-                is State.Success -> (category.value as State.Success<CategoryUI>).data.color
+                is State.Success -> (category.value as State.Success<CategoryUI>).data.color.toULong()
                 else -> {
-                    Celadon.value.toLong()
+                    Celadon.value
                 }
             }
         }
@@ -115,7 +115,7 @@ fun CategoryScreen(
                     modifier = Modifier
                         .fillMaxWidth(0.5f),
                     categoryState = category.value,
-                    color = Color(color?:0xffff),
+                    color = Color(color),
                     onSearchTranslationY = {
                         contentTranslationY.floatValue = it
                     }

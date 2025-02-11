@@ -1,5 +1,6 @@
 package com.jk.transaction_database
 
+import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
@@ -15,12 +16,8 @@ import com.jk.transaction_database.transaction.entity.MeasureEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -51,6 +48,7 @@ class GoodsDaoUnitTest {
         goodsDao = database.getGoodsDao()
         currencyDao = database.getCurrencyDao()
         moneyDao = database.getMoneyDao()
+        measureDao = database.getMeasureDao()
     }
 
 
@@ -81,29 +79,33 @@ class GoodsDaoUnitTest {
         assertTrue(goods[0] == goodsEntity)
     }
 
+    @Test
     fun insertGoodxEtc() = runBlocking {
-        val currency = CurrencyEntity(Random.nextInt().toString(), "BYN")
+        database.db.clearAllTables()
+        val measure = MeasureEntity("c", "Kg")
+        val currency = CurrencyEntity("BYN", "USD")
         val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id)
         val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, moneyId.id)
-        val measure = MeasureEntity("zxc", "Kg")
-        try {
-            measureDao.insert(measure)
-        } catch (e: Throwable) {
-        }
-
+        measureDao.insert(measure)
+        currencyDao.insert(currency)
+        moneyDao.insert(moneyId)
+        goodsDao.insert(goodsEntity)
         val goods =
             GoodsxSpecificationsxMoneyRelation(
                 goodsEntity,
-                specifications = randomSpecification(30, measure.id),
+                specifications = randomSpecification(1, measure.id),
                 cost = moneyId
             )
 
+        goodsDao.insertGoodsRelation(listOf(goods))
 
+        val insertedGoodsList = goodsDao.getByIdList(listOf(goods.goodsEntity.id))[0]
+        assertTrue(insertedGoodsList == goods)
     }
 
     private fun randomSpecification(n: Int, measureId: String) = List(n) {
         SpecificationsEntity(
-            "$it  ${Random.nextInt()}",
+            "$it${Random.nextInt()}",
             "Weight",
             Random.nextFloat(),
             measureId

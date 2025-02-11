@@ -24,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColor
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.clickAnimation
@@ -66,6 +67,7 @@ fun CategoryVerticalListItem(
     val checked by remember(selected,category) {
         mutableStateOf(selected)
     }
+
     val checkedColors = FinanceHelperTheme.colors.defaultButtonColor
     Box(
         modifier = modifier
@@ -74,7 +76,7 @@ fun CategoryVerticalListItem(
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .background(
-                color = Color(category.color?:0xffffffff),
+                color = Color(category.color.toULong()),
                 shape = FinanceHelperTheme.shape.shapeRoundMedium
             )
             .padding(5.dp)

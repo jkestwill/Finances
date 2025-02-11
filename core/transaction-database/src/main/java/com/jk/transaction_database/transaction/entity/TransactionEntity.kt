@@ -17,7 +17,6 @@ import java.time.LocalDateTime
         entity = TransactionTypeEntity::class,
         childColumns  = ["type_id"],
         parentColumns = ["id"],
-        onDelete = ForeignKey.CASCADE
     ),
 ])
 data class TransactionEntity(
@@ -28,8 +27,9 @@ data class TransactionEntity(
     val operationId: String,
     @ColumnInfo(name="type_id")
     val typeId: String,
+    @ColumnInfo(name="money_account_id")
+    val moneyAccountId:String
 )
-
 
 
 

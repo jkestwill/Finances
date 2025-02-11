@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 
 @Dao
@@ -25,14 +26,29 @@ abstract class GoodsDao internal constructor(
     abstract suspend fun update(t: GoodsEntity)
 
     @Query("SELECT * FROM goods WHERE goods.id == :id")
-    abstract fun getById(id:String):GoodsEntity
+    abstract fun getById(id: String): GoodsEntity
 
     @Transaction
-    open fun insert(goods:List<GoodsxSpecificationsxMoneyRelation>){
+    open suspend fun insertGoodsRelation(goodsList: List<GoodsxSpecificationsxMoneyRelation>) {
+        for (goods in goodsList) {
+            for (specs in goods.specifications){
+                specificationDao.insert(specs)
+            }
+          //  insert(goods.goodsEntity)
+            //specificationDao.insert(goods.specifications)
+            moneyDao.insert(goods.cost)
+            for (specs in goods.specifications) {
+                goodsSpecificationDao.insert(
+                    GoodsSpecificationsListEntity(
+                        goodsId = goods.goodsEntity.id,
+                        specificationsId = specs.id
+                    )
+                )
+            }
 
-   }
 
-
+        }
+    }
 //    @Transaction
 //    open suspend fun insert(goodsRelation: GoodsRelation) {
 //        for (i in goodsRelation.specificationList) {
@@ -57,7 +73,8 @@ abstract class GoodsDao internal constructor(
 
     @Delete(entity = GoodsEntity::class)
     abstract suspend fun delete(t: GoodsEntity)
-//
+
+    //
 //    @Query(
 //        value = "SELECT * FROM goods " +
 //                " WHERE LOWER(goods.name) LIKE  '%'||:q||'%' " +
@@ -81,5 +98,5 @@ abstract class GoodsDao internal constructor(
     abstract suspend fun insert(t: GoodsEntity)
 
     @Insert(entity = GoodsEntity::class)
-    abstract suspend fun insert(t: List<GoodsEntity>)
+    abstract suspend fun insertList(t: List<GoodsEntity>)
 }

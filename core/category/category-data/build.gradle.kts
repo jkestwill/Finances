@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jk.category_data"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -35,15 +35,20 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
 
+    // mapper
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
     implementation(libs.hilt.android)
-    implementation(project(":common:common-utils-ui"))
     kapt(libs.hilt.android.compiler)
-    implementation(project(":common:common-utils"))
-    implementation(project(":common:common-data:category"))
-    implementation(project(":core:transaction-database"))
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(project(":common:common-utils-ui"))
+    implementation(project(":common:common-utils"))
+    implementation(project(":common:common-data:category"))
+    implementation(project(":core:transaction-database"))
 }

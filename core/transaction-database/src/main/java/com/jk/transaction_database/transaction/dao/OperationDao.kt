@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.relations.OperationAndGoodsListRelation
+import com.jk.transaction_database.transaction.relations.OperationRelation
 
 
 @Dao
@@ -24,6 +25,12 @@ import com.jk.transaction_database.transaction.relations.OperationAndGoodsListRe
     @Insert(entity = OperationEntity::class)
     abstract suspend fun insert(t: OperationEntity)
 
+    @Transaction
+    open suspend fun insert(operationRelation: OperationRelation){
+        moneyDao.insert(operationRelation.money)
+        insert(operationRelation.operationGoodsEntity)
+
+    }
     @Update(entity = OperationEntity::class)
     abstract suspend fun update(t: OperationEntity)
 
@@ -37,7 +44,7 @@ import com.jk.transaction_database.transaction.relations.OperationAndGoodsListRe
 
     @Transaction
     open suspend fun insertGoodsCrossRef(operationRelation:OperationAndGoodsListRelation) {
-        goodsDao.insert(operationRelation.goodsList)
+        goodsDao.insertList(operationRelation.goodsList)
         insert(operationRelation.operation)
     }
 

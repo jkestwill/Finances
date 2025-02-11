@@ -54,6 +54,17 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
+    debugImplementation(libs.androidx.ui.tooling)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
     implementation(project(":common:common-utils-ui"))
     implementation(project(":common:common-ui:category"))
     implementation(project(":common:common-utils"))
@@ -65,13 +76,5 @@ dependencies {
     implementation(project(":common:shared_res"))
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":core:category:category-data"))
-    debugImplementation(libs.androidx.ui.tooling)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
 
 }

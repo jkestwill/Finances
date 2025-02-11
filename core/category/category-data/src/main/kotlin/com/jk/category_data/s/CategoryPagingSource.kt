@@ -1,4 +1,4 @@
-package com.jk.category_data
+package com.jk.category_data.s
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 
 class CategoryPagingSource @AssistedInject constructor(
     private var categoryDao: CategoryDao,
+    private var categoryMapper: CategoryMapper,
     @Assisted("q") private val q: String,
     @Assisted("sortBy") private var sortBy: String,
     @Assisted("isAsc") private var isAsc: Boolean
@@ -36,7 +37,7 @@ class CategoryPagingSource @AssistedInject constructor(
             if (response.isNotEmpty()) {
                 val nextKey = if (response.size < pageSize) null else page + 1
                 val prevKey = if (page == 0) null else page - 1
-                val data = checkNotNull(response.map { it.toCategory() })
+                val data = checkNotNull(response.map { categoryMapper.toCategory(it) })
 
                 LoadResult.Page(data = data, prevKey = prevKey, nextKey = nextKey)
             } else {

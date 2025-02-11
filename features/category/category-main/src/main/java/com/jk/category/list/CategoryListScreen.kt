@@ -117,7 +117,9 @@ fun CategoryListScreen(
             )
             // header
             Row(
-                modifier = Modifier.padding(start = 5.dp, end = 5.dp) .align(Alignment.Center),
+                modifier = Modifier
+                    .padding(start = 5.dp, end = 5.dp)
+                    .align(Alignment.Center),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -188,15 +190,15 @@ fun CategoryListScreen(
 
                 }
 
-                    SelectAll( isSelected = selectAll.value) {
-                        selectAll.value = !selectAll.value
-                        if (selectAll.value) {
-                            viewModel.selectedCategoryIdList.value = listOf()
-                            viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
-                                it?.id ?: ""
-                            }
-                        } else viewModel.selectedCategoryIdList.value = listOf()
-                    }
+                SelectAll(isSelected = selectAll.value) {
+                    selectAll.value = !selectAll.value
+                    if (selectAll.value) {
+                        viewModel.selectedCategoryIdList.value = listOf()
+                        viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
+                            it?.id ?: ""
+                        }
+                    } else viewModel.selectedCategoryIdList.value = listOf()
+                }
 
             }
         }
@@ -334,6 +336,7 @@ fun CategoryGrid(
                                     )
                                 CategoryItem(
                                     modifier = Modifier
+
                                         .combinedClickable(
                                             onClick = {
                                                 if (viewModel.selectionState.value == CategoryListViewModel.SelectionState.ON) {
@@ -365,7 +368,7 @@ fun CategoryGrid(
                                                     }
                                             }),
                                     category = category,
-                                    color = Color(category.color?:0xfffffff),
+                                    color = Color(category.color ?: 0xfffffff),
                                     isSelectionMode = viewModel.selectionState.value,
                                     isSelected = isSelected
                                 )
