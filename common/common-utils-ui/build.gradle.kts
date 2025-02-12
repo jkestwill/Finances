@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.jk.ui"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -46,6 +46,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 
     implementation(project(":common:common-utils"))
     testImplementation(libs.junit)
