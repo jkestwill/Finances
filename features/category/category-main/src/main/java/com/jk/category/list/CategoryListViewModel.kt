@@ -32,14 +32,16 @@ class CategoryListViewModel @Inject constructor(
         private const val TAG = "CategoryViewModel"
     }
 
-    private var _categoryFLow: MutableStateFlow<PagingData<CategoryUI>> =
+    private var _categoryListFLow: MutableStateFlow<PagingData<CategoryUI>> =
         MutableStateFlow(PagingData.empty())
-    val categoryFlow: StateFlow<PagingData<CategoryUI>> get() = _categoryFLow
+
+    val categoryListFlow: StateFlow<PagingData<CategoryUI>> get() = _categoryListFLow
 
     val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None)
 
     var selectedCategoryIdList = MutableStateFlow(listOf<String>())
 
+    // indicates when items in selection mode
     val selectionState = MutableStateFlow(SelectionState.OFF)
 
     fun observeCategoryDeleteState() {
@@ -54,17 +56,18 @@ class CategoryListViewModel @Inject constructor(
     }
 
     fun removeCategoriesById() {
-        viewModelScope.launch {
-            categoryDeleteState.emitAll(
-                categoryRepository.removeByIdList(selectedCategoryIdList.value)
-                    .map { it.toState() }
-            )
-        }
+        if (selectedCategoryIdList.value.isNotEmpty())
+            viewModelScope.launch {
+                categoryDeleteState.emitAll(
+                    categoryRepository.removeByIdList(selectedCategoryIdList.value)
+                        .map { it.toState() }
+                )
+            }
     }
 
     fun getAllCategories(search: String) {
         viewModelScope.launch {
-            _categoryFLow.emitAll(
+            _categoryListFLow.emitAll(
                 categoryRepository.getList(
                     SearchParams(
                         q = search,

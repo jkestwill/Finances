@@ -35,10 +35,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -46,9 +44,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,11 +54,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category.R
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
+import com.jk.common_ui.RotateableBlock
+import com.jk.common_ui.RotationOptions
+import com.jk.common_ui.State
 import com.jk.common_ui.composable.Limit
 import com.jk.common_ui.composable.Search
 import com.jk.common_ui.composable.TextError
 import com.jk.common_ui.composable.TextLimit
 import com.jk.common_ui.composable.TextLimitConfig
+import com.jk.common_ui.rememberRotationState
 
 private const val TAG = "CategoryListScreen"
 
@@ -74,7 +73,7 @@ fun CategoryListScreen(
     onCategoryItemClick: (CategoryUI) -> Unit,
     onNewCategoryClick: () -> Unit
 ) {
-    val categoryList = viewModel.categoryFlow.collectAsLazyPagingItems()
+    val categoryList = viewModel.categoryListFlow.collectAsLazyPagingItems()
     val searchText = remember {
         mutableStateOf("")
     }
@@ -83,9 +82,7 @@ fun CategoryListScreen(
     val selectAll = remember {
         mutableStateOf(false)
     }
-    var searchPositionY by remember {
-        mutableFloatStateOf(0f)
-    }
+
 
     BackHandler(isSelectionMode == CategoryListViewModel.SelectionState.ON) {
 
@@ -123,17 +120,78 @@ fun CategoryListScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-
-                Text(
+                RotateableBlock(
                     modifier = Modifier.weight(1f),
-                    text = "Categories",
-                    style = FinanceHelperTheme.typography.label,
-                    color = FinanceHelperTheme.colors.primaryText
-                )
+                    state = rememberRotationState(rotationEvent = if (isSelectionMode == CategoryListViewModel.SelectionState.ON) RotationOptions.RotationEvent.NEXT else RotationOptions.RotationEvent.IDLE),
+                    block = {
+                        Text(
+                            text = "Categories",
+                            style = FinanceHelperTheme.typography.h2,
+                            color = FinanceHelperTheme.colors.primaryText
+                        )
+                    },
+                    block2 = {
+                        SelectAll(isSelected = selectAll.value) {
+                            selectAll.value = !selectAll.value
+                            if (selectAll.value) {
+                                viewModel.selectedCategoryIdList.value = listOf()
+                                viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
+                                    it?.id ?: ""
+                                }
+                            } else viewModel.selectedCategoryIdList.value = listOf()
+                        }
+
+                    })
+
                 Spacer(modifier = Modifier.weight(1f))
 
             }
         }
+    }, floatingActionButton = {
+        // add category button
+
+        RotateableBlock(
+            state = rememberRotationState(rotationEvent = if (isSelectionMode == CategoryListViewModel.SelectionState.ON) RotationOptions.RotationEvent.NEXT else RotationOptions.RotationEvent.IDLE),
+            block = {
+                IconButton(
+                    modifier = Modifier
+
+                        .background(
+                            color = FinanceHelperTheme.colors.defaultButtonColor,
+                            shape = FinanceHelperTheme.shape.shapeRoundMedium
+                        )
+                        .padding(10.dp),
+                    onClick = {
+                        onNewCategoryClick()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "add"
+                    )
+                }
+            },
+            block2 = {
+                IconButton(
+                    modifier = Modifier
+                        .background(
+                            FinanceHelperTheme.colors.buttonDeleteColor,
+                            shape = FinanceHelperTheme.shape.shapeRoundMedium
+                        )
+                        .padding(FinanceHelperTheme.shape.buttonPadding),
+                    onClick = {
+
+                        viewModel.removeCategoriesById()
+                        selectAll.value = false
+                    }
+
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
+                }
+            }
+        )
+
+
     }) { paddingValues ->
         Box(
             modifier = Modifier
@@ -159,51 +217,14 @@ fun CategoryListScreen(
             }
 
             SelectItemsMenu(
-                isSelectionMode == CategoryListViewModel.SelectionState.ON,
                 viewModel = viewModel
-            ) {
-                Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
-                viewModel.removeCategoriesById()
-                selectAll.value = false
-            }
-            // add category button
-            if (isSelectionMode != CategoryListViewModel.SelectionState.ON) {
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(65.dp)
-                        .padding(10.dp)
-                        .background(
-                            color = FinanceHelperTheme.colors.defaultButtonColor,
-                            shape = FinanceHelperTheme.shape.shapeRoundMedium
-                        ),
-                    onClick = {
-                        onNewCategoryClick()
-                    }
-                ) {
-                    Icon(
-                        modifier = Modifier.align(Alignment.Center),
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "add"
-                    )
+            )
 
-                }
 
-                SelectAll(isSelected = selectAll.value) {
-                    selectAll.value = !selectAll.value
-                    if (selectAll.value) {
-                        viewModel.selectedCategoryIdList.value = listOf()
-                        viewModel.selectedCategoryIdList.value += categoryList.itemSnapshotList.map {
-                            it?.id ?: ""
-                        }
-                    } else viewModel.selectedCategoryIdList.value = listOf()
-                }
-
-            }
         }
     }
 }
+
 
 /**
  * Contains Select text and radio button
@@ -230,14 +251,12 @@ fun SelectAll(modifier: Modifier = Modifier, isSelected: Boolean, onSelectAll: (
 
 @Composable
 fun BoxScope.SelectItemsMenu(
-    visible: Boolean,
-    viewModel: CategoryListViewModel,
-    onDelete: () -> Unit
+    viewModel: CategoryListViewModel
 ) {
     val deleteState = viewModel.categoryDeleteState.collectAsState()
     viewModel.observeCategoryDeleteState()
     when (deleteState.value) {
-        is com.jk.common_ui.State.Loading -> {
+        is State.Loading -> {
             Box(
                 modifier = Modifier
                     .background(
@@ -250,11 +269,11 @@ fun BoxScope.SelectItemsMenu(
             }
         }
 
-        is com.jk.common_ui.State.Success -> {
+        is State.Success -> {
 
         }
 
-        is com.jk.common_ui.State.Error -> {
+        is State.Error -> {
             // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
             ErrorCategory(
                 modifier = Modifier.align(Alignment.TopStart),
@@ -263,24 +282,7 @@ fun BoxScope.SelectItemsMenu(
 
         }
 
-        else -> {
-            if (visible)
-                IconButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .height(65.dp)
-                        .padding(FinanceHelperTheme.shape.buttonPadding)
-                        .background(
-                            FinanceHelperTheme.colors.buttonDeleteColor,
-                            shape = FinanceHelperTheme.shape.shapeRoundMedium
-                        ), onClick = onDelete
-
-                ) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "ic_delete")
-                }
-        }
-
+        State.None -> {}
     }
 
     LaunchedEffect(key1 = deleteState.value) {
@@ -322,7 +324,7 @@ fun CategoryGrid(
             }
 
             else -> {
-                if (categoryPagingList.itemCount > 0)
+            //    if (categoryPagingList.itemCount > 0)
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(4),
                         verticalArrangement = Arrangement.spacedBy(5.dp),
@@ -355,9 +357,8 @@ fun CategoryGrid(
 
                                             }, onLongClick = {
 
-                                                viewModel.selectionState.value =
-                                                    if (viewModel.selectionState.value ==
-                                                        CategoryListViewModel.SelectionState.OFF
+                                                viewModel.selectionState.value = if (
+                                                    viewModel.selectionState.value == CategoryListViewModel.SelectionState.OFF
                                                     ) {
                                                         viewModel.selectedCategoryIdList.value += category.id
                                                         CategoryListViewModel.SelectionState.ON
@@ -368,16 +369,16 @@ fun CategoryGrid(
                                                     }
                                             }),
                                     category = category,
-                                    color = Color(category.color ?: 0xfffffff),
+                                    color = Color(category.color),
                                     isSelectionMode = viewModel.selectionState.value,
                                     isSelected = isSelected
                                 )
                             }
                         }
                     }
-                else {
-                    ErrorCategory(errorText = stringResource(id = R.string.empty_list))
-                }
+//                else {
+//                    ErrorCategory(errorText = stringResource(id = R.string.empty_list))
+//                }
             }
         }
     }
