@@ -46,9 +46,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -163,7 +160,7 @@ fun CategoryListScreen(
                 viewModel = viewModel
             ) {
                 Log.e("TAG", "CategoryListScreen: ${viewModel.selectedCategoryIdList.value}")
-                viewModel.removeCategoriesById()
+                viewModel.removeSelectedCategories()
                 selectAll.value = false
             }
             // add category button

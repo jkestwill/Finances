@@ -63,9 +63,6 @@ fun CategoryDialog(
         mutableStateOf<Int?>(null)
     }
 
-    val isExpensesSwitch = remember {
-        mutableStateOf(false)
-    }
     AddCategory(viewModel = viewModel, onNewCategoryCreated = onNewCategoryCreated)
 
 
@@ -145,15 +142,6 @@ fun CategoryDialog(
                             text = expensesLabel,
                             style = FinanceHelperTheme.typography.body,
                         )
-                        Switch(
-                            modifier = Modifier,
-                            checked = isExpensesSwitch.value,
-                            onCheckedChange = {
-                                isExpensesSwitch.value = it
-                            },
-                            colors = SwitchDefaults.colors()
-                                .copy(checkedTrackColor = FinanceHelperTheme.colors.defaultButtonColor)
-                        )
                     }
 
 //Create###Cancel Buttons
@@ -168,7 +156,6 @@ fun CategoryDialog(
                                 viewModel.addCategory(
                                     name = name.value,
                                     color = colorHex.value?: colorPickList[0].toArgb(),
-                                    isExpenses = isExpensesSwitch.value
                                 )
 
                             }) {

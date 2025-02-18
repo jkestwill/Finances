@@ -9,4 +9,6 @@ fun logger(tag: String,isDebug:Boolean): Logger? {
 object LoggerTags{
     const val SELECT_CATEGORY="SelectCategory"
     const val ADD_NEW_TRANSACTION="AddNewTransaction"
+    const val CATEGORY_LIST="CategoryList"
+    const val ADD_CATEGORY="AddCategory"
 }

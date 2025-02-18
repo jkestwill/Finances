@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable
 data class Category public constructor(
     val id:String,
     val name:String,
-    val color:String
+    val color:Int
 )
 
 

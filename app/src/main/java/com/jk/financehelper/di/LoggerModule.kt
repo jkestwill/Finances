@@ -27,4 +27,16 @@ class LoggerModule {
     fun provideAddNewCategoryLogger(): Logger? {
         return logger(tag = LoggerTags.ADD_NEW_TRANSACTION, BuildConfig.DEBUG)
     }
+
+    @Provides
+    @Named(LoggerTags.CATEGORY_LIST)
+    fun provideCategoryListLogger():Logger? {
+        return logger(tag = LoggerTags.CATEGORY_LIST,BuildConfig.DEBUG)
+    }
+
+    @Provides
+    @Named(LoggerTags.ADD_CATEGORY)
+    fun provideAddCategoryLogger():Logger? {
+        return logger(tag = LoggerTags.ADD_CATEGORY,BuildConfig.DEBUG)
+    }
 }

@@ -1,14 +1,14 @@
 package com.jk.category.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.jk.category_common_ui.CategoryUI
 import com.jk.category.CategoryUIMapper
+import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.s.CategoryRepository
+import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
@@ -20,12 +20,17 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.logging.Level
+import java.util.logging.Logger
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class CategoryListViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
-    private val categoryUIMapper: CategoryUIMapper
+    private val categoryUIMapper: CategoryUIMapper,
+    @Named(LoggerTags.CATEGORY_LIST)
+    private val logger:Logger?
 ) : ViewModel() {
 
     companion object {
@@ -34,6 +39,7 @@ class CategoryListViewModel @Inject constructor(
 
     private var _categoryFLow: MutableStateFlow<PagingData<CategoryUI>> =
         MutableStateFlow(PagingData.empty())
+
     val categoryFlow: StateFlow<PagingData<CategoryUI>> get() = _categoryFLow
 
     val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None)
@@ -53,7 +59,7 @@ class CategoryListViewModel @Inject constructor(
         }
     }
 
-    fun removeCategoriesById() {
+    fun removeSelectedCategories() {
         viewModelScope.launch {
             categoryDeleteState.emitAll(
                 categoryRepository.removeByIdList(selectedCategoryIdList.value)
@@ -74,7 +80,7 @@ class CategoryListViewModel @Inject constructor(
                 )
                     .map { pagingData ->
                         pagingData.map { category ->
-                            Log.e(TAG, "getAllCategories: ${category}")
+                            logger?.log(Level.FINE,"getAllCategories#map: ${category}")
                             categoryUIMapper.toCategoryUI(category)
                         }
                     }
