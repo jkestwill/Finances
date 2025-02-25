@@ -2,6 +2,7 @@ package com.example.currencyexchangeapi
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
@@ -10,7 +11,7 @@ import kotlinx.serialization.json.Json
 import java.util.logging.Level
 
 fun configureHttpClient():HttpClient{
-    return HttpClient(CIO){
+    return HttpClient(OkHttp){
         install(ContentNegotiation){
             json(Json {
                 prettyPrint=true

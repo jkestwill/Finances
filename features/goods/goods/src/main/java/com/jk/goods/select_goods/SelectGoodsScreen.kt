@@ -1,4 +1,4 @@
-package com.jk.goods
+package com.jk.goods.select_goods
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -13,7 +13,7 @@ class ExchangeServiceFactoryImpl(): ExchangeServiceFactory {
             is ExchangeRateServices.NBRB -> {
                 NBRBApi(httpClient = httpClient, baseUrl = exchangeService.baseUrl)
             }
-
+            
             else -> {
                 throw IllegalArgumentException("Wrong argument ${exchangeService}")
             }

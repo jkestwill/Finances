@@ -61,22 +61,25 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
-    // Optional -- mockito-kotlin
     testImplementation (libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(project(":common:common-utils"))
     implementation(project(":common:common-utils-ui"))
     implementation(project(":common:common-ui:category"))
-    implementation(project(":common:common-utils"))
     implementation(project(":common:common-ui:transaction"))
+    implementation(project(":common:common-ui:money"))
+
+    implementation(project(":common:common-data:money"))
     implementation(project(":common:common-data:category"))
     implementation(project(":common:common-data:transaction"))
-    implementation(project(":common:common-ui:money"))
-    implementation(project(":common:common-data:money"))
+
     implementation(project(":common:shared_res"))
+
     implementation(project(":core:transaction:transaction-data"))
     implementation(project(":core:category:category-data"))
 

@@ -181,7 +181,7 @@ fun CategoryListScreen(
                         .padding(FinanceHelperTheme.shape.buttonPadding),
                     onClick = {
 
-                        viewModel.removeCategoriesById()
+                        viewModel.removeSelectedCategories()
                         selectAll.value = false
                     }
 

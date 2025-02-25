@@ -1,7 +1,6 @@
 package com.jk.financehelper.navigation
 
 import android.annotation.SuppressLint
-import android.app.backup.SharedPreferencesBackupHelper
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,8 +20,8 @@ import com.jk.category.list.CategoryListScreen
 import com.jk.category.select_category_dialog.SelectCategoryDialog
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
-import com.jk.financehelper.main.HomeScreen
-import com.jk.goods.SelectGoodsDialog
+import com.jk.goods.goods_list.GoodsListScreen
+import com.jk.goods.select_goods.SelectGoodsDialog
 import com.jk.transaction.TransactionScreen
 
 private const val TAG = "NavHost"
@@ -33,7 +32,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.CATEGORY_LIST) {
+    NavHost(navController = navController, startDestination = Routes.GOODS) {
 
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(
@@ -110,6 +109,10 @@ fun MainNavGraph(
                     navController.popBackStack()
                 }
             )
+        }
+
+        composable(route = "goods_list") {
+            GoodsListScreen(viewModel = hiltViewModel())
         }
 
         dialog("${Routes.SELECT_CATEGORY}?selectedCategoryId={selectedCategoryId}") {

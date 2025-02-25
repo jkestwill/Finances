@@ -1,8 +1,8 @@
 package com.example.currency_exchange
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.currencyexchangeapi.ExchangeRateRequestParams
-import com.example.currencyexchangeapi.ExchangeRateServices
 import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
@@ -28,16 +28,16 @@ class ExchangeRateViewModel @Inject constructor(
     private val exchangeRateRepository:CurrencyExchangeRepository,
 ) : ViewModel() {
     private val job = SupervisorJob()
-    private val viewModelScope = CoroutineScope(job + Dispatchers.Default)
 
     private var _exchangeRateState = MutableStateFlow<State<ExchangeRateUI>>(State.None)
     val exchangeRateState: StateFlow<State<ExchangeRateUI>> get() = _exchangeRateState
 
-    fun getBynToCurrencyExchange(currencyIn: String,currencyOut:String,currencyName:String) {
-        viewModelScope.launch {
+    //todo exchangeService идет по дефолту в настройках
+    fun getBynToCurrencyExchange(currencyIn: String, currencyOut:String, exchangeServiceName:String) {
+        viewModelScope.launch(Dispatchers.IO) {
             _exchangeRateState.emitAll(
                 exchangeRateRepository.getExchangeRate(
-                    currencyName,
+                    exchangeServiceName,
                     exchangeRateRequestParams = ExchangeRateRequestParams(currencyIn,currencyOut, LocalDateTime.now()),
                     mergeStrategy = ApiRequestMergeStrategy()
                 )

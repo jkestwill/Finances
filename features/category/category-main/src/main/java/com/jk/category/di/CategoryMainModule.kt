@@ -2,6 +2,7 @@ package com.jk.category.di
 
 import com.jk.category.CategoryUIMapper
 import com.jk.category.CategoryUIMapperImpl
+import com.jk.category.add_new_category.CategoryUIValidator
 
 import dagger.Module
 import dagger.Provides
@@ -13,5 +14,8 @@ import dagger.hilt.components.SingletonComponent
 class CategoryMainModule {
 
     @Provides
-    fun bindCategoryUIMapper(): CategoryUIMapper = CategoryUIMapperImpl()
+    fun provideCategoryUIMapper(): CategoryUIMapper = CategoryUIMapperImpl()
+
+    @Provides
+    fun provideCategoryUIValidator():CategoryUIValidator = CategoryUIValidator()
 }

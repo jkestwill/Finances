@@ -47,11 +47,11 @@ class AddNewTransactionViewModel @Inject constructor(
     private val currencyRepository: CurrencyRepository,
     private val categoryRepository: CategoryRepository,
     private val goodsRepository: GoodsRepository,
-    @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
-    private val dispatchers: Dispatchers,
     private val transactionValidator: TransactionValidator,
     private val transactionMapper: TransactionUiMapper,
-    private val categoryMapper: CategoryUIMapper
+    private val categoryMapper: CategoryUIMapper,
+    @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
+    private val dispatchers: Dispatchers,
 ) : ViewModel() {
 
     private var _transactionState = MutableStateFlow<PagingData<TransactionUI>>(PagingData.empty())

@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.jk.common_ui.FinanceHelperTheme
+import com.jk.shared_res.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -106,7 +107,7 @@ fun Search(
             },
             placeHolder = {
                 Text(
-                    text = stringResource(id = 0),
+                    text = stringResource(id = R.string.search),
                     style = FinanceHelperTheme.typography.h3
                 )
             }

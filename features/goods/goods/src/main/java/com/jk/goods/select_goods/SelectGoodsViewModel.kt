@@ -1,4 +1,4 @@
-package com.jk.goods
+package com.jk.goods.select_goods
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -8,8 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.common_data.SearchParams
-import com.jk.common_data.Selectable
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.toUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted

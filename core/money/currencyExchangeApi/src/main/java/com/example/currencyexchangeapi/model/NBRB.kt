@@ -28,7 +28,7 @@ class NBRBApi(val httpClient: HttpClient,val baseUrl: String): ExchangeRateServi
             parameters.append("ondate",exchangeRateRequestParams.date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
             parameters.append("periodicity", PERIODICITY_DAY.toString())
         }
-
+        // unresolved address
         val response =  httpClient.get(builder=builder)
         when(response.status.value){
             in 200..299->{

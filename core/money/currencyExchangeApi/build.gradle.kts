@@ -13,7 +13,7 @@ buildTimeConfig{
         destination.set(project.buildDir)
 
         configProperties{
-            val NBRB_API_URL:String by string("https://api.nbrb.by/exrates/")
+            val NBRB_API_URL:String by string("api.nbrb.by/exrates")
         }
     }
 }
@@ -43,4 +43,10 @@ dependencies{
     implementation(libs.converter.simplexml)
     //implementation(":common:common-utils")
 
+    testImplementation(kotlin("test"))
+
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
