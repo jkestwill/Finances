@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -75,7 +76,7 @@ fun GoodsListScreen(viewModel: GoodsListViewModel) {
                     start = paddings.calculateStartPadding(LayoutDirection.Rtl),
                     end = paddings.calculateEndPadding(LayoutDirection.Rtl)
                 ),
-            goodsList = goodsList.itemSnapshotList.items
+            goodList = goodsList
         )
     }
 
@@ -87,11 +88,11 @@ fun GoodsList(modifier: Modifier = Modifier, goodList: LazyPagingItems<GoodsUI>)
     when (goodList.loadState.refresh) {
         is LoadState.NotLoading -> {
             if (goodList.itemCount != 0)
-                GoodsList(goodsList = goodList.itemSnapshotList.items)
+                GoodsList(modifier = modifier, goodsList = goodList.itemSnapshotList.items)
         }
 
         is LoadState.Loading -> {
-            // todo progress indicator
+            CircularProgressIndicator(progress = { 1f })
         }
 
         is LoadState.Error -> {

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_data.s.CategoryRepository
-import com.jk.category_data.s.CategorySortBy
+import com.jk.category_data.CategoryRepository
+import com.jk.category_data.CategorySortBy
 import com.jk.common_ui.toState
 import com.jk.common_data.SearchParams
 import com.jk.common_ui.State

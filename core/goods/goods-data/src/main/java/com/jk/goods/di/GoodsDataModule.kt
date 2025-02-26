@@ -1,12 +1,16 @@
 package com.jk.goods.di
 
+import com.jk.goods.GoodsMapper
 import com.jk.goods.GoodsMapperImpl
 import com.jk.goods.GoodsPagingSource
 import com.jk.goods.GoodsRepository
+import com.jk.goods.SpecificationsMapper
+import com.jk.goods.SpecificationsMapperImpl
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.LanguageDao
 import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
 import com.jk.transaction_database.transaction.dao.MeasureDao
+import com.jk.transaction_database.transaction.dao.SpecificationDao
 import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
 import dagger.Module
 import dagger.Provides
@@ -48,4 +52,12 @@ class GoodsDataModule {
         return db.getLanguageMeasureListDao()
     }
 
+    @Provides
+    fun provideSpecificationMapper():SpecificationsMapper = SpecificationsMapperImpl()
+
+    @Provides
+    fun provideSpecificationDao(db:TransactionDatabaseProvider):SpecificationDao = db.getSpecificationDao()
+
+    @Provides
+    fun provideGoodsMapper():GoodsMapper = GoodsMapperImpl()
 }

@@ -5,10 +5,9 @@ import com.jk.category.add_new_category.AddCategoryViewModel
 import com.jk.category.add_new_category.CategoryUIValidator
 import com.jk.category_common_data.Category
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_data.s.CategoryRepository
+import com.jk.category_data.CategoryRepository
 import com.jk.common_data.ApiRequest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -20,8 +19,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.internal.MockitoCore
-import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoJUnitRunner
 
 /**

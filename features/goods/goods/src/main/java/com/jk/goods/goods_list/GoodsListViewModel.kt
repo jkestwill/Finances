@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.SearchParams
-import com.jk.common_ui.State
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.toGoods
@@ -28,7 +27,6 @@ class GoodsListViewModel @Inject constructor(
 
     private var _goodsStateFlow: StateFlow<PagingData<GoodsUI>> =
         MutableStateFlow<PagingData<GoodsUI>>(PagingData.empty())
-
 
     val goodsListStateFlow: StateFlow<PagingData<GoodsUI>> = _goodsStateFlow
 

@@ -232,8 +232,7 @@ fun TransactionList(transactionList: List<TransactionPreviewUI>, color: Color) {
         contentPadding = PaddingValues(start = 5.dp, end = 5.dp, top = 20.dp)
     ) {
         items(transactionList.size) {
-
-
+            // date header
             if ((transactionList[it].date.dayOfYear != transactionList[(it - 1).coerceAtLeast(0)].date.dayOfYear || it - 1 < 0)) {
                 val pattern = remember(transactionList) {
                     derivedStateOf {
@@ -263,8 +262,8 @@ fun TransactionPreviewItem(item: TransactionPreviewUI, color: Color) {
         Modifier
             .background(color, FinanceHelperTheme.shape.shapeRoundMedium)
             .border(2.dp, Color.Black, RoundedCornerShape(20))
-            .height(60.dp)
-            .padding(start = 10.dp)
+            .height(50.dp)
+            .padding(start = 5.dp)
     ) {
 
         Column(

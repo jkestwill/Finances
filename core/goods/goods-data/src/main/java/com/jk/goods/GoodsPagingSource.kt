@@ -7,6 +7,7 @@ import com.jk.transaction_database.transaction.dao.GoodsDao
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.testing.HiltTestApplication
 
 class GoodsPagingSource @AssistedInject constructor(
     private val goodsRepository: GoodsDao,
@@ -30,6 +31,7 @@ class GoodsPagingSource @AssistedInject constructor(
 //            limit = pageSize,
 //            offset = page * pageSize
 //        )
+
         val result = listOf<Goods>()
 
         return try {

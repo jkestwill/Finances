@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -73,9 +72,7 @@ fun CategoryDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-
         ) {
-
             Error(
                 modifier = Modifier
                     .align(Alignment.TopStart),
@@ -118,7 +115,8 @@ fun CategoryDialog(
                     ColorPicker(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(start = 10.dp, end = 10.dp)
+                            .padding(start = 10.dp, end = 10.dp),
+                        colorPickList
 
                     ) {
                         colorHex.value = if (colorHex.value != it) {
@@ -199,7 +197,7 @@ fun CategoryDialog(
 
 
 @Composable
-fun ColorPicker(modifier: Modifier = Modifier, onPick: (Int?) -> Unit) {
+fun ColorPicker(modifier: Modifier = Modifier,colorList:List<Color>, onPick: (Int?) -> Unit) {
     val selectedColor = remember {
         mutableStateOf<Int?>(null)
     }
@@ -213,7 +211,7 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (Int?) -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        items(colorPickList) {
+        items(colorList) {
             val borderModifier by remember(selectedColor.value) {
                 mutableStateOf(
                     if (selectedColor.value == it.toArgb()) Modifier.border(
@@ -226,10 +224,9 @@ fun ColorPicker(modifier: Modifier = Modifier, onPick: (Int?) -> Unit) {
             Box(
                 modifier = borderModifier
                     .height(30.dp)
-                    .width(25.dp)
-                    .background(color = it, shape = FinanceHelperTheme.shape.shapeRoundMedium)
+                    .width(30.dp)
+                    .background(color = it, shape = FinanceHelperTheme.shape.shapeRoundHard)
                     .clickAnimation {
-
                         if (it.toArgb() == selectedColor.value) {
                             Log.e(
                                 TAG,

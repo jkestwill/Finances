@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jk.goods"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -38,7 +38,10 @@ dependencies {
     kapt(libs.mapstruct.kotlin)
     implementation(libs.mapstruct)
     kapt(libs.mapstruct.processor)
-
+    implementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    implementation(libs.androidx.core)
     implementation(libs.hilt.android)
     implementation(project(":common:common-data:goods"))
     implementation(project(":common:common-data:money"))

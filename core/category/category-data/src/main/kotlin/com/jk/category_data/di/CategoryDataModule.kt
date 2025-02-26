@@ -1,8 +1,8 @@
 package com.jk.category_data.di
 
 import androidx.compose.ui.graphics.Color
-import com.jk.category_data.s.CategoryMapper
-import com.jk.category_data.s.CategoryMapperImpl
+import com.jk.category_data.CategoryMapper
+import com.jk.category_data.CategoryMapperImpl
 import com.jk.common_ui.colorPickList
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider

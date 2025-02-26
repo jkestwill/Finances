@@ -134,7 +134,10 @@ dependencies {
 
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
-    //noinspection UseTomlInstead
+
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.android.compiler)
+
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

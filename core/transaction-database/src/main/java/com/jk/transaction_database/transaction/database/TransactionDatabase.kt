@@ -153,6 +153,10 @@ fun transactionDatabaseProvider(
 
 // костыль чтобы не делать руму как апи
 class TransactionDatabaseProvider internal constructor(internal val db: TransactionDatabase) {
+    fun clear(){
+        db.clearAllTables()
+    }
+
     fun getCategoryDao(): CategoryDao {
         return db.getCategoryDao()
     }

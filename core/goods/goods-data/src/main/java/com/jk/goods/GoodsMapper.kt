@@ -6,6 +6,7 @@ import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 
 @Mapper()
+// todo поменять маппер в goods
 interface GoodsMapper {
     @Mapping(target = "specifications", source = "specifications")
     fun toGoods(goods:GoodsxSpecificationsxMoneyRelation):Goods

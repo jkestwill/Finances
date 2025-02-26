@@ -1,4 +1,4 @@
-package com.jk.category_data.s
+package com.jk.category_data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

@@ -1,4 +1,4 @@
-package com.jk.category_data.s
+package com.jk.category_data
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -61,8 +61,8 @@ class CategoryRepository @Inject constructor(
         return merge(startFlow, result)
     }
 
-//    suspend fun update(category: TransactionCategory): Flow<Response<Unit>> = flowOf(
-//        categoryLocalDataSource.update(category.toEntity())
+//    suspend fun update(category: Category): Flow<ApiRequest<Unit>> = flowOf(
+//        categoryDao.update(categoryMapper.toEntity(category))
 //    )
 
     fun getById(categoryId: String): Flow<ApiRequest<Category>> {

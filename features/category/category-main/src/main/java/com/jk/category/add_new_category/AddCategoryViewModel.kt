@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.category.CategoryUIMapper
 import com.jk.category_common_ui.CategoryUI
-import com.jk.category_data.s.CategoryRepository
+import com.jk.category_data.CategoryRepository
 import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.sha256
@@ -48,7 +48,7 @@ class AddCategoryViewModel @Inject constructor(
 
 
     fun addCategory(name: String, color: Int?) {
-        viewModelScope.launch(dispatchers.default) {
+        viewModelScope.launch(dispatchers.io) {
             try {
                 val category =  CategoryUI(
                     "$name $color".sha256(),
