@@ -1,11 +1,7 @@
 package com.jk.goods
 
-import android.app.Application
-import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.runner.AndroidJUnitRunner
 import com.jk.common_goods_data.Goods
 import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
@@ -20,19 +16,12 @@ import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.entity.MeasureEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.After
-
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Before
-import org.junit.Rule
-import javax.inject.Inject
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -78,6 +67,7 @@ class ExampleInstrumentedTest {
     @Test
     fun GoodsRepository_getList_Success() = runBlocking {
         db.clear()
+        // todo проверить на соответствие записанных данных
         val measure = MeasureEntity(id = "mes", "kg")
         val specifiacationsList = List(30) {
             SpecificationsEntity("$it", "text$it", measureId = measure.id, amount = 12f)
@@ -88,10 +78,12 @@ class ExampleInstrumentedTest {
         currencyDao.insert(currency)
         // moneyDao.insert(moneyEntity)
         measureDao.insert(measure)
-//        specificationDao.insert(specifiacationsList)
+
+    // specificationDao.insert(specifiacationsList)
+
         val goodsList = List(30) {
             Goods(
-                "$it",
+                "${it+30}",
                 name = "goods${it}",
                 amount = 10,
                 specifications = specifiacationsList.map { specificationMapper.toSpecification(it) },
@@ -104,7 +96,7 @@ class ExampleInstrumentedTest {
             )
         })
         val result = goodsDao.getByIdList(goodsList.map { it.id })
-
+        println(result)
         assertTrue(result == goodsList.map { goodsMapper.toGoodsxSpecificationsxMoneyRelation(it) })
 
     }

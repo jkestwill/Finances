@@ -10,5 +10,7 @@ interface SpecificationsMapper {
     @Mapping(target = "measureId",source ="measure.id")
     fun toEntity(specification: Specification):SpecificationsEntity
 
+    @Mapping(target = "measure.id", source = "measureId")
+    @Mapping(target = "measure.name", expression = "java(\"\")")
     fun toSpecification(specificationsEntity: SpecificationsEntity):Specification
 }

@@ -31,12 +31,10 @@ abstract class GoodsDao internal constructor(
     @Transaction
     open suspend fun insertGoodsRelation(goodsList: List<GoodsxSpecificationsxMoneyRelation>) {
         for (goods in goodsList) {
-            for (specs in goods.specifications){
-                specificationDao.insert(specs)
-            }
-          //  insert(goods.goodsEntity)
-            //specificationDao.insert(goods.specifications)
+            specificationDao.insert(goods.specifications)
             moneyDao.insert(goods.cost)
+            insert(goods.goodsEntity)
+
             for (specs in goods.specifications) {
                 goodsSpecificationDao.insert(
                     GoodsSpecificationsListEntity(
@@ -45,8 +43,6 @@ abstract class GoodsDao internal constructor(
                     )
                 )
             }
-
-
         }
     }
 //    @Transaction

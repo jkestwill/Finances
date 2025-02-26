@@ -7,8 +7,10 @@ import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntit
 
 @Dao
 interface GoodsSpecificationDao {
+
     @Insert(GoodsSpecificationsListEntity::class)
     suspend fun insert(specificationList:GoodsSpecificationsListEntity)
+
     @Query("SELECT * FROM goods_specifications_list")
     suspend fun getAll():List<GoodsSpecificationsListEntity>
 }
