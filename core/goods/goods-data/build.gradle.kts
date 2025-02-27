@@ -26,6 +26,9 @@ android {
             )
         }
     }
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
+    }
 }
 
 dependencies {

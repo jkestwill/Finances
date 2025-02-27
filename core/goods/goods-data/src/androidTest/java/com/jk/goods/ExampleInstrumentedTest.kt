@@ -16,6 +16,7 @@ import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.entity.MeasureEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
+import junit.framework.AssertionFailedError
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -79,11 +80,11 @@ class ExampleInstrumentedTest {
         // moneyDao.insert(moneyEntity)
         measureDao.insert(measure)
 
-    // specificationDao.insert(specifiacationsList)
+        // specificationDao.insert(specifiacationsList)
 
         val goodsList = List(30) {
             Goods(
-                "${it+30}",
+                "${it + 30}",
                 name = "goods${it}",
                 amount = 10,
                 specifications = specifiacationsList.map { specificationMapper.toSpecification(it) },
@@ -96,12 +97,18 @@ class ExampleInstrumentedTest {
             )
         })
         val result = goodsDao.getByIdList(goodsList.map { it.id })
-        println(result)
-        assertTrue(result == goodsList.map { goodsMapper.toGoodsxSpecificationsxMoneyRelation(it) })
+            .map { it.copy(specifications = it.specifications.sortedBy { s -> s.id }) }
+            .sortedBy { it.goodsEntity.id }
+        val sortedGoodsList = goodsList.map { goodsMapper.toGoodsxSpecificationsxMoneyRelation(it) }
+            .map { it.copy(specifications = it.specifications.sortedBy { s -> s.id }) }
+            .sortedBy { it.goodsEntity.id }
+
+        assertTrue(sortedGoodsList == result)
 
     }
+
     @After
-    fun after(){
+    fun after() {
         db.clear()
     }
 }

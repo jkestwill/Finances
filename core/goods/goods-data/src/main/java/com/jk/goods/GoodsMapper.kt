@@ -9,22 +9,26 @@ import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.AfterMapping
 import org.mapstruct.Named
+import org.mapstruct.ObjectFactory
+import org.mapstruct.TargetType
 
-@Mapper(uses = [SpecificationsMapper::class,MoneyMapper::class])
+@Mapper(uses = [SpecificationsMapper::class, MoneyMapper::class])
+
 interface GoodsMapper {
     @Mapping(target = "id", source = "goodsEntity.id")
     @Mapping(target = "name", source = "goodsEntity.name")
     @Mapping(target = "amount", source = "goodsEntity.amount")
     fun toGoods(goods: GoodsxSpecificationsxMoneyRelation): Goods
 
-    @Mapping(target = "goodsEntity", source = "goods", qualifiedByName = ["toEntity"])
-    fun toGoodsxSpecificationsxMoneyRelation(goods: Goods): GoodsxSpecificationsxMoneyRelation {
-        val goodsEntity =  GoodsEntity(
+
+    fun toGoodsxSpecificationsxMoneyRelation( goods: Goods): GoodsxSpecificationsxMoneyRelation {
+        val goodsEntity = GoodsEntity(
             goods.id,
             goods.name,
             goods.amount,
             goods.cost.id
         )
+        println("zxczkxjcsjkhfjsdhghjkghsdgiusudhgusdhgjsdjgkhsdg")
         return GoodsxSpecificationsxMoneyRelation(
             goodsEntity = goodsEntity,
             specifications = goods.specifications.map {
