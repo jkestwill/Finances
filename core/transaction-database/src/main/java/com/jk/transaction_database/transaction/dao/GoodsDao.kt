@@ -71,21 +71,21 @@ abstract class GoodsDao internal constructor(
     abstract suspend fun delete(t: GoodsEntity)
 
     //
-//    @Query(
-//        value = "SELECT * FROM goods " +
-//                " WHERE LOWER(goods.name) LIKE  '%'||:q||'%' " +
-//                "ORDER BY CASE WHEN :isAsc ==1 THEN :sortBy END ASC, " +
-//                "CASE WHEN :isAsc ==0 THEN :sortBy END DESC " +
-//                "LIMIT :limit OFFSET :offset"
-//    )
-//    abstract suspend fun getAll(
-//        q: String,
-//        sortBy: String,
-//        isAsc: Boolean,
-//        limit: Int,
-//        offset: Int
-//    ): List<GoodsRelation>
-//
+    @Query(
+        value = "SELECT * FROM goods " +
+                " WHERE LOWER(goods.name) LIKE  '%'||:q||'%' " +
+                "ORDER BY CASE WHEN :isAsc ==1 THEN :sortBy END ASC, " +
+                "CASE WHEN :isAsc ==0 THEN :sortBy END DESC " +
+                "LIMIT :limit OFFSET :offset"
+    )
+    abstract suspend fun getAll(
+        q: String,
+        sortBy: String,
+        isAsc: Boolean,
+        limit: Int,
+        offset: Int
+    ): List<GoodsxSpecificationsxMoneyRelation>
+
     @Transaction
     @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
     abstract suspend fun getByIdList(idList: List<String>): List<GoodsxSpecificationsxMoneyRelation>

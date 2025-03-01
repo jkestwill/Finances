@@ -13,6 +13,9 @@ interface SpecificationDao {
 
     @Insert(SpecificationsEntity::class, OnConflictStrategy.REPLACE)
     suspend fun insert(specificationsEntity: List<SpecificationsEntity>)
+
     @Query("SELECT * FROM specifications")
     suspend fun getAll():List<SpecificationsEntity>
+
+
 }

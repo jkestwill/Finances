@@ -3,10 +3,12 @@ package com.jk.goods
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.SearchParams
 import com.jk.common_goods_data.Goods
 import com.jk.transaction_database.transaction.dao.GoodsDao
+import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -50,6 +52,6 @@ class GoodsRepository @Inject constructor(
                 isAsc = searchParams.isAsc,
                 q = searchParams.q
             )
-        }.flow
+        }.flow.map { it.map {g-> goodsMapper.toGoods(g)}}
     }
 }

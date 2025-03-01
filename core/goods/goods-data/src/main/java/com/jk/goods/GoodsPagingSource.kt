@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.jk.common_goods_data.Goods
 import com.jk.transaction_database.transaction.dao.GoodsDao
+import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -11,28 +12,28 @@ import dagger.hilt.android.testing.HiltTestApplication
 
 class GoodsPagingSource @AssistedInject constructor(
     private val goodsRepository: GoodsDao,
+    private val goodsMapper: GoodsMapper,
     @Assisted("q") private val q: String,
     @Assisted("sortBy") private var sortBy: String,
     @Assisted("isAsc") private var isAsc: Boolean
-) : PagingSource<Int, Goods>() {
-    override fun getRefreshKey(state: PagingState<Int, Goods>): Int? {
+) : PagingSource<Int, GoodsxSpecificationsxMoneyRelation>() {
+    override fun getRefreshKey(state: PagingState<Int, GoodsxSpecificationsxMoneyRelation>): Int? {
         val anchorPos = state.anchorPosition ?: return null
         val page = state.closestPageToPosition(anchorPos) ?: return null
         return page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Goods> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GoodsxSpecificationsxMoneyRelation> {
         val pageSize = params.loadSize.coerceAtMost(20)
         val page = params.key ?: 0
-//        val result = goodsRepository.getAll(
-//            q = q,
-//            sortBy = sortBy,
-//            isAsc = isAsc,
-//            limit = pageSize,
-//            offset = page * pageSize
-//        )
+        val result = goodsRepository.getAll(
+            q = q,
+            sortBy = sortBy,
+            isAsc = isAsc,
+            limit = pageSize,
+            offset = page * pageSize
+        )
 
-        val result = listOf<Goods>()
 
         return try {
             if (result.isNotEmpty()) {

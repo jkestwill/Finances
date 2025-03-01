@@ -50,6 +50,8 @@ class ExampleInstrumentedTest {
 
     lateinit var goodsMapper: GoodsMapper
 
+    lateinit var goodsRepository: GoodsRepository
+
     @Before
     fun init() {
         db = transactionDatabaseProvider(
@@ -63,6 +65,8 @@ class ExampleInstrumentedTest {
         specificationMapper = SpecificationsMapperImpl()
         specificationDao = db.getSpecificationDao()
         measureDao = db.getMeasureDao()
+        // todo как сука инжектнуть
+        //goodsRepository=GoodsRepository(goodsDao,)
     }
 
     @Test
@@ -91,6 +95,7 @@ class ExampleInstrumentedTest {
                 cost = money
             )
         }
+
         goodsDao.insertGoodsRelation(goodsList.map {
             goodsMapper.toGoodsxSpecificationsxMoneyRelation(
                 it
