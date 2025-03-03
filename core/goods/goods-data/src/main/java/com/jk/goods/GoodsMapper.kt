@@ -21,14 +21,12 @@ interface GoodsMapper {
     fun toGoods(goods: GoodsxSpecificationsxMoneyRelation): Goods
 
 
-    fun toGoodsxSpecificationsxMoneyRelation( goods: Goods): GoodsxSpecificationsxMoneyRelation {
+    fun toGoodsxSpecificationsxMoneyRelation(goods: Goods): GoodsxSpecificationsxMoneyRelation {
         val goodsEntity = GoodsEntity(
             goods.id,
             goods.name,
             goods.amount,
-            goods.cost.id
         )
-        println("zxczkxjcsjkhfjsdhghjkghsdgiusudhgusdhgjsdjgkhsdg")
         return GoodsxSpecificationsxMoneyRelation(
             goodsEntity = goodsEntity,
             specifications = goods.specifications.map {
@@ -39,11 +37,13 @@ interface GoodsMapper {
                     measureId = it.measure.id
                 )
             },
-            cost = MoneyEntity(
-                id = goods.cost.id,
-                amount = goods.cost.amount,
-                goods.cost.currency.id
-            )
+            cost = goods.cost.map { money ->
+                MoneyEntity(
+                    id = money.id,
+                    amount = money.amount,
+                    currencyId = money.currency.id
+                )
+            }
         )
     }
 

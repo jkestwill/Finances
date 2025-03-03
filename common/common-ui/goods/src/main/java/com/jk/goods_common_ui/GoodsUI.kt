@@ -3,7 +3,9 @@ package com.jk.goods_common_ui
 import android.os.Parcelable
 import com.jk.common_data.Selectable
 import com.jk.common_goods_data.Goods
+import com.jk.common_goods_data.MoneyAndDate
 import com.jk.money_common_ui.CurrencyUI
+import com.jk.money_common_ui.MoneyAndDateUI
 import com.jk.money_common_ui.MoneyUI
 import kotlinx.parcelize.Parcelize
 import kotlin.math.cos
@@ -15,7 +17,7 @@ data class GoodsUI(
     val name: String,
     val amount: Int,
     val specifications: List<SpecificationsUI>,
-    val cost: MoneyUI
+    val cost:List<MoneyAndDateUI>
 ) : Parcelable, Selectable {
 
     override val value: String
@@ -36,7 +38,7 @@ data class GoodsUI(
         private var name: String = ""
         private var amount = 0
         private var specifications = listOf<SpecificationsUI>()
-        private var cost = MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id = "", name = ""))
+        private var cost = listOf<MoneyAndDateUI>()
 
         constructor(goods: GoodsUI) : this() {
             id = goods.id
@@ -67,7 +69,7 @@ data class GoodsUI(
             return this
         }
 
-        fun cost(cost: MoneyUI): Builder {
+        fun cost(cost: List<MoneyAndDateUI>): Builder {
             this.cost = cost
             return this
         }

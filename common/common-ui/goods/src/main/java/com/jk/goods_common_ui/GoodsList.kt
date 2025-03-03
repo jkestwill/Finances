@@ -54,7 +54,9 @@ import com.jk.common_ui.composable.rememberIncrement
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
+import com.jk.money_common_ui.MoneyAndDateUI
 import com.jk.money_common_ui.MoneyUI
+import java.time.LocalDate
 
 @Composable
 fun GoodsList(
@@ -100,7 +102,7 @@ fun GoodsList(
                         }
                     }, onRemove = {
                         onRemove(goodsList[index])
-                        onGoodsListChange(goodsList-goodsList[index])
+                        onGoodsListChange(goodsList - goodsList[index])
                     })
             }
         }
@@ -155,17 +157,20 @@ fun EditableListItem(
     val goodsCountString = rememberSaveable(preBuild.value.amount) {
         mutableStateOf(preBuild.value.amount.toString())
     }
+    //todo поменять
     val goodsAmount = rememberSaveable() {
-        mutableStateOf(preBuild.value.cost.amount)
+        mutableStateOf(0.0)
     }
+    //todo поменять
     val goodsAmountString = rememberSaveable() {
-        mutableStateOf(preBuild.value.cost.amount.toString())
+        mutableStateOf("")
     }
+    //todo поменять
     val currency = rememberSaveable() {
         mutableStateOf(
             CurrencyUI(
-                id = preBuild.value.cost.currency.id,
-                name = preBuild.value.cost.currency.name
+                id = "",
+                name = ""
             )
         )
     }
@@ -184,7 +189,7 @@ fun EditableListItem(
 
     val iconButtonModifier = defaultModifier.size(32.dp)
 
-    val increment = rememberIncrement(startValue =goodsCount.value, onChange = {
+    val increment = rememberIncrement(startValue = goodsCount.value, onChange = {
         goodsCountString.value = it.toString()
 
     }) {
@@ -212,10 +217,13 @@ fun EditableListItem(
                 .amount(goodsCount.value)
                 .name(goodsName.value)
                 .cost(
-                    MoneyUI(
-                        id = "${goodsAmount}${currency.value}".sha256(),
-                        amount = goodsAmount.value,
-                        currency = currency.value
+                    listOf(
+                        MoneyAndDateUI(
+                            id = "${goodsAmount}${currency.value}".sha256(),
+                            amount = goodsAmount.value,
+                            currency = currency.value,
+                            date = LocalDate.now()
+                        )
                     )
                 )
         )
@@ -359,7 +367,7 @@ fun EditableListItem(
 
                 },
                 onDone = {
-                  //  goodsAmount.value *= goodsCount.value
+                    //  goodsAmount.value *= goodsCount.value
                     goodsAmountString.value = goodsAmount.value.toString()
                 })
         }

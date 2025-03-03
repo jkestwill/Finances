@@ -6,8 +6,10 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.jk.transaction_database.transaction.GoodsMoneyListDao
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 
@@ -21,7 +23,7 @@ abstract class GoodsDao internal constructor(
     private val moneyDao: MoneyDao = db.getMoneyDao()
     private val specificationDao: SpecificationDao = db.getSpecificationDao()
     private val goodsSpecificationDao: GoodsSpecificationDao = db.getGoodsSpecificationDao()
-
+    private val goodsMoneyListDao:GoodsMoneyListDao = db.getGoodsMoneyListDao()
     @Update(entity = GoodsEntity::class)
     abstract suspend fun update(t: GoodsEntity)
 
@@ -32,9 +34,12 @@ abstract class GoodsDao internal constructor(
     open suspend fun insertGoodsRelation(goodsList: List<GoodsxSpecificationsxMoneyRelation>) {
         for (goods in goodsList) {
             specificationDao.insert(goods.specifications)
-            moneyDao.insert(goods.cost)
             insert(goods.goodsEntity)
-
+            for (money in goods.cost) {
+                moneyDao.insert(money)
+                goodsMoneyListDao.insert(GoodsMoneyListEntity(goods.goodsEntity.id, money.id, date = money.date))
+            }
+           
             for (specs in goods.specifications) {
                 goodsSpecificationDao.insert(
                     GoodsSpecificationsListEntity(

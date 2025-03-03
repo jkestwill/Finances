@@ -6,6 +6,7 @@ import androidx.room.Relation
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
+import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 
 data class GoodsxSpecificationsxMoneyRelation(
@@ -20,7 +21,15 @@ data class GoodsxSpecificationsxMoneyRelation(
         )
     )
     val specifications: List<SpecificationsEntity>,
-    @Relation(entity = MoneyEntity::class, entityColumn = "id", parentColumn = "cost_id")
-    val cost: MoneyEntity,
-
+    @Relation(
+        entity = MoneyEntity::class,
+        entityColumn = "id",
+        parentColumn = "id",
+        associateBy = Junction(
+            GoodsMoneyListEntity::class,
+            parentColumn = "money_id",
+            entityColumn = "goods_id"
+        )
     )
+    val cost: List<MoneyEntity>
+)

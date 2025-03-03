@@ -1,6 +1,7 @@
 package com.jk.common_goods_data
 
-import com.jk.money_common_data.Money
+import com.jk.money_common_data.Currency
+import java.time.LocalDate
 
 
 data class Goods(
@@ -8,7 +9,7 @@ data class Goods(
     val name: String,
     val amount:Int,
     val specifications:List<Specification>,
-    val cost: Money
+    val cost: List<MoneyAndDate>
 ) {
 }
 /**
@@ -36,4 +37,13 @@ data class Language(
     val id: String,
     val lanName: String,
     val lanShortName: String
+)
+/**
+ * Цена привязанная к дате. Нужна для отслеживания динамики цен
+ **/
+data class MoneyAndDate(
+    val id:String,
+    val amount:Double,
+    val currency: Currency,
+    val date:LocalDate
 )
