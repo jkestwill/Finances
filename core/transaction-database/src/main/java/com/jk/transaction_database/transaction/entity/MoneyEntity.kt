@@ -15,12 +15,16 @@ import java.time.LocalDate
         childColumns = ["currency_id"]
     )]
 )
-data class MoneyEntity(
+// var т.к @Ignore все руинит
+data class MoneyEntity public constructor(
     @PrimaryKey
-    val id: String,
-    val amount: Double,
+    var id: String,
+    var amount: Double,
     @ColumnInfo("currency_id")
-    val currencyId: String,
+    var currencyId: String,
     @Ignore
-    val date:LocalDate
-)
+    var date:LocalDate
+
+){
+    constructor():this("",0.0,"", LocalDate.now())
+}

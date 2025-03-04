@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Parcelize
-data class MoneyAndDateUI(
+data class MoneyDateUI(
     val id:String,
     val amount:Double,
     val currency: CurrencyUI,

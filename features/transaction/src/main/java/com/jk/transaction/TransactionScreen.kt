@@ -2,7 +2,6 @@
 package com.jk.transaction
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,14 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,14 +41,13 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_data.sha256
-import com.jk.common_goods_data.Goods
 import com.jk.common_ui.ExpandedSection
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.ExpandedListItem
 import com.jk.goods_common_ui.GoodsList
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
@@ -78,14 +72,14 @@ fun TransactionScreen(
 ) {
     val preGoods = viewModel.incomingGoodsFlow.collectAsState()
     val fullGoodsList = remember{
-        mutableStateOf(listOf<GoodsUI.Builder>())
+        mutableStateOf(listOf<GoodsMoneyDateUI.Builder>())
     }
 
     LaunchedEffect(key1 = preGoods.value) {
         when(preGoods.value){
-            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsUI>>).data.map { it.toBuilder() }
+            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsMoneyDateUI>>).data.map { it.toBuilder() }
             is State.Loading-> Log.e("TAG", "TransactionScreen: Loading goods from list...", )
-            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsUI>>).message}", )
+            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsMoneyDateUI>>).message}", )
             State.None -> {}
         }
     }
@@ -415,12 +409,12 @@ fun CategoryGrid(
 @Composable
 fun GoodsSection(
     modifier: Modifier = Modifier,
-    list: List<GoodsUI.Builder>,
+    list: List<GoodsMoneyDateUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
     onGoodsAdd: (List<String>?) -> Unit,
-    onNewGoods:(GoodsUI.Builder)->Unit,
-    onRemoveGoods:(GoodsUI.Builder)->Unit,
-    onGoodsListChange: (List<GoodsUI.Builder>) -> Unit
+    onNewGoods:(GoodsMoneyDateUI.Builder)->Unit,
+    onRemoveGoods:(GoodsMoneyDateUI.Builder)->Unit,
+    onGoodsListChange: (List<GoodsMoneyDateUI.Builder>) -> Unit
 ) {
     val deletedImmutables = remember {
         mutableStateOf(listOf<String>())

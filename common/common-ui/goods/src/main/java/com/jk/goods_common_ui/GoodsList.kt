@@ -24,11 +24,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.CombinedModifier
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -54,19 +52,19 @@ import com.jk.common_ui.composable.rememberIncrement
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.MoneyAndDateUI
+import com.jk.money_common_ui.MoneyDateUI
 import com.jk.money_common_ui.MoneyUI
 import java.time.LocalDate
 
 @Composable
 fun GoodsList(
     modifier: Modifier = Modifier,
-    goodsList: List<GoodsUI.Builder>,
+    goodsList: List<GoodsMoneyDateUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
-    onGoodsListChange: (List<GoodsUI.Builder>) -> Unit,
-    onChange: (GoodsUI.Builder, Int) -> Unit,
-    onAdd: (GoodsUI.Builder) -> Unit,
-    onRemove: (GoodsUI.Builder) -> Unit
+    onGoodsListChange: (List<GoodsMoneyDateUI.Builder>) -> Unit,
+    onChange: (GoodsMoneyDateUI.Builder, Int) -> Unit,
+    onAdd: (GoodsMoneyDateUI.Builder) -> Unit,
+    onRemove: (GoodsMoneyDateUI.Builder) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -109,7 +107,7 @@ fun GoodsList(
         Box(modifier = Modifier
             .clickAnimation {
                 onAdd(
-                    GoodsUI
+                    GoodsMoneyDateUI
                         .Builder()
                         .id("${goodsList.size + System.currentTimeMillis()}".sha256())
                 )
@@ -141,8 +139,8 @@ fun GoodsList(
 fun EditableListItem(
     modifier: Modifier,
     currencyListState: State<List<CurrencyUI>>,
-    item: GoodsUI.Builder,
-    onChange: (GoodsUI.Builder) -> Unit,
+    item: GoodsMoneyDateUI.Builder,
+    onChange: (GoodsMoneyDateUI.Builder) -> Unit,
     onRemove: () -> Unit,
 ) {
     val preBuild = remember(item) {
@@ -217,14 +215,12 @@ fun EditableListItem(
                 .amount(goodsCount.value)
                 .name(goodsName.value)
                 .cost(
-                    listOf(
-                        MoneyAndDateUI(
-                            id = "${goodsAmount}${currency.value}".sha256(),
-                            amount = goodsAmount.value,
-                            currency = currency.value,
-                            date = LocalDate.now()
-                        )
+                    MoneyUI(
+                        id = "${goodsAmount}${currency.value}".sha256(),
+                        amount = goodsAmount.value,
+                        currency = currency.value,
                     )
+
                 )
         )
     }

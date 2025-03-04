@@ -1,4 +1,4 @@
-package com.jk.goods
+package com.jk.goods_common_ui
 
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview

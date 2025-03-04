@@ -7,8 +7,9 @@ import androidx.paging.map
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.SearchParams
 import com.jk.common_goods_data.Goods
+import com.jk.common_goods_data.GoodsPreview
 import com.jk.transaction_database.transaction.dao.GoodsDao
-import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
+import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 class GoodsRepository @Inject constructor(
     private val goodsLocalDataSource: GoodsDao,
-    private val goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory,
+    private val goodsPagingSource: GoodsXSpecificationXMoneyRelationPagingSource.GoodsPagingSourceFactory,
+    private val goodsPreviewPagingSource: GoodsPreviewPagingSourceFactory,
     private val goodsMapper: GoodsMapper
 ) {
     suspend fun add(goodsList: List<Goods>) {
@@ -38,10 +40,15 @@ class GoodsRepository @Inject constructor(
                 ApiRequest.Error(goodsList, e)
             }
         }
-       return merge(start, result)
+        return merge(start, result)
 
     }
 
+    fun getGoodsPreviewList(searchParams: SearchParams): Flow<PagingData<GoodsPreview>> {
+        return Pager(PagingConfig(20)) {
+            goodsPreviewPagingSource.create(searchParams.q, searchParams.sortBy, searchParams.isAsc)
+        }.flow.map {page-> page.map {goodsMapper.toPreview(it)}  }
+    }
 
     fun getAllFromDatabase(
         searchParams: SearchParams
@@ -52,6 +59,6 @@ class GoodsRepository @Inject constructor(
                 isAsc = searchParams.isAsc,
                 q = searchParams.q
             )
-        }.flow.map { it.map {g-> goodsMapper.toGoods(g)}}
+        }.flow.map { it.map { g -> goodsMapper.toGoods(g) } }
     }
 }

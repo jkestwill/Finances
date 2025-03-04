@@ -3,13 +3,12 @@ package com.jk.common_goods_data
 import com.jk.money_common_data.Currency
 import java.time.LocalDate
 
-
 data class Goods(
     val id: String,
     val name: String,
     val amount:Int,
     val specifications:List<Specification>,
-    val cost: List<MoneyAndDate>
+    val cost: MoneyAndDate
 ) {
 }
 /**

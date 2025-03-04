@@ -1,14 +1,15 @@
 package com.jk.transaction.validator
 
 import com.jk.common_data.Validator
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
 import javax.inject.Inject
 
 class GoodsValidator @Inject constructor(private val moneyValidator: MoneyValidator) :
-    Validator<GoodsUI.Builder> {
-    override fun validate(target: GoodsUI.Builder) {
+    Validator<GoodsMoneyDateUI.Builder> {
+    override fun validate(target: GoodsMoneyDateUI.Builder) {
         val preBuild = target.build()
-        moneyValidator.validate(preBuild.cost)
+       // for (i in preBuild.cost)
+       // moneyValidator.validate(i)
         when {
             preBuild.name.isEmpty() -> {
                 throw IllegalArgumentException("Goods name can't be empty")

@@ -1,16 +1,15 @@
 package com.jk.goods
 
 import com.jk.common_goods_data.Goods
+import com.jk.common_goods_data.GoodsPreview
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
+import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
-import org.mapstruct.AfterMapping
 import org.mapstruct.Named
-import org.mapstruct.ObjectFactory
-import org.mapstruct.TargetType
 
 @Mapper(uses = [SpecificationsMapper::class, MoneyMapper::class])
 
@@ -37,22 +36,22 @@ interface GoodsMapper {
                     measureId = it.measure.id
                 )
             },
-            cost = goods.cost.map { money ->
-                MoneyEntity(
-                    id = money.id,
-                    amount = money.amount,
-                    currencyId = money.currency.id
-                )
-            }
+            cost =  MoneyEntity(
+                id = goods.cost.id,
+                amount = goods.cost.amount,
+                currencyId = goods.cost.currency.id,
+                date = goods.cost.date
+            )
         )
     }
 
+
+    fun toPreview(goodsPreview: GoodsPreviewEntity):GoodsPreview
 
     @Mapping(source = "id", target = "id")
     fun toGoods(goodsEntity: GoodsEntity): Goods
 
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "costId", source = "cost.id")
     @Named("toEntity")
     fun toEntity(goods: Goods): GoodsEntity
 }

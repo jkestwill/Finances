@@ -9,7 +9,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.common_data.SearchParams
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.toUI
+import com.jk.goods.GoodsUIMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -19,11 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SelectGoodsViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
+    private val goodsUIMapper: GoodsUIMapper
 ) : ViewModel(), SelectableItems<String> {
     val goodsListFlow = goodsRepository.getAllFromDatabase(SearchParams.getDefault())
         .map { pagingList ->
             pagingList.map { goods ->
-                goods.toUI()
+                goodsUIMapper.toUI(goods)
             }
         }
         .cachedIn(viewModelScope)

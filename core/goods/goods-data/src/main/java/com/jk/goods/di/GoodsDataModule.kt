@@ -2,7 +2,8 @@ package com.jk.goods.di
 
 import com.jk.goods.GoodsMapper
 import com.jk.goods.GoodsMapperImpl
-import com.jk.goods.GoodsPagingSource
+import com.jk.goods.GoodsPreviewPagingSourceFactory
+import com.jk.goods.GoodsXSpecificationXMoneyRelationPagingSource
 import com.jk.goods.GoodsRepository
 import com.jk.goods.SpecificationsMapper
 import com.jk.goods.SpecificationsMapperImpl
@@ -30,8 +31,17 @@ class GoodsDataModule {
 
     @Provides
     @Singleton
-    fun provideGoodsRepository(goodsDao: GoodsDao, goodsPagingSource: GoodsPagingSource.GoodsPagingSourceFactory): GoodsRepository {
-        return GoodsRepository(goodsDao,goodsPagingSource,GoodsMapperImpl())
+    fun provideGoodsRepository(
+        goodsDao: GoodsDao,
+        goodsPagingSource: GoodsXSpecificationXMoneyRelationPagingSource.GoodsPagingSourceFactory,
+        goodsPreviewPagingSourceFactory: GoodsPreviewPagingSourceFactory
+    ): GoodsRepository {
+        return GoodsRepository(
+            goodsDao,
+            goodsPagingSource,
+            goodsPreviewPagingSourceFactory,
+            GoodsMapperImpl()
+        )
     }
 
     @Provides
@@ -53,11 +63,12 @@ class GoodsDataModule {
     }
 
     @Provides
-    fun provideSpecificationMapper():SpecificationsMapper = SpecificationsMapperImpl()
+    fun provideSpecificationMapper(): SpecificationsMapper = SpecificationsMapperImpl()
 
     @Provides
-    fun provideSpecificationDao(db:TransactionDatabaseProvider):SpecificationDao = db.getSpecificationDao()
+    fun provideSpecificationDao(db: TransactionDatabaseProvider): SpecificationDao =
+        db.getSpecificationDao()
 
     @Provides
-    fun provideGoodsMapper():GoodsMapper = GoodsMapperImpl()
+    fun provideGoodsMapper(): GoodsMapper = GoodsMapperImpl()
 }

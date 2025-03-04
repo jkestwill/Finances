@@ -8,7 +8,7 @@ import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
 import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
-
+// todo или новая моделька без листа либо убрать лист
 data class GoodsxSpecificationsxMoneyRelation(
     @Embedded
     val goodsEntity: GoodsEntity,

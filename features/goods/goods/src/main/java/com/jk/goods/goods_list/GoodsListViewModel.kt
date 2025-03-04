@@ -6,10 +6,11 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.SearchParams
+import com.jk.common_goods_data.GoodsPreview
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.GoodsUI
-import com.jk.goods_common_ui.toGoods
-import com.jk.goods_common_ui.toUI
+import com.jk.goods.GoodsUIMapper
+import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsPreviewUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,32 +23,33 @@ import javax.inject.Inject
 @HiltViewModel
 class GoodsListViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
+    private val goodsUIMaper:GoodsUIMapper,
     private val dispatcherProvider: Dispatchers
 ) : ViewModel() {
 
-    private var _goodsStateFlow: StateFlow<PagingData<GoodsUI>> =
-        MutableStateFlow<PagingData<GoodsUI>>(PagingData.empty())
+    private var _goodsStateFlow: StateFlow<PagingData<GoodsPreviewUI>> =
+        MutableStateFlow<PagingData<GoodsPreviewUI>>(PagingData.empty())
 
-    val goodsListStateFlow: StateFlow<PagingData<GoodsUI>> = _goodsStateFlow
+    val goodsListStateFlow: StateFlow<PagingData<GoodsPreviewUI>> = _goodsStateFlow
 
 
     fun getGoodsList(q: String, sortBy: String, isAsc: Boolean) {
         viewModelScope.launch(dispatcherProvider.io) {
             _goodsStateFlow =
-                goodsRepository.getAllFromDatabase(SearchParams(q, sortBy = sortBy, isAsc = isAsc))
+                goodsRepository.getGoodsPreviewList(SearchParams(q, sortBy = sortBy, isAsc = isAsc))
                     .map { pagingData ->
                         pagingData.map { goodsList ->
-                            goodsList.toUI()
+                            goodsUIMaper.toPreviewUI(goodsList)
                         }
                     }
                     .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
         }
     }
 
-    fun add(goodsList: List<GoodsUI>) {
+    fun add(goodsList: List<GoodsMoneyDateUI>) {
         viewModelScope.launch(dispatcherProvider.io) {
             goodsRepository.add(goodsList.map {
-                it.toGoods()
+                goodsUIMaper.toGoods(it)
             })
         }
     }
