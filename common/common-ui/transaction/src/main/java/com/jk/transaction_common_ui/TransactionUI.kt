@@ -1,7 +1,7 @@
 package com.jk.transaction_common_ui
 
 import com.jk.category_common_ui.CategoryUI
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import java.time.LocalDateTime
@@ -55,7 +55,7 @@ data class OperationUI(
     val name: String,
     val categoryList: List<CategoryUI>,
     val scheduleList: List<ScheduleUI>,
-    val goodsList: List<GoodsUI>,
+    val goodsList: List<GoodsMoneyDateUI>,
     val money: MoneyUI
 ) {
     fun builder(): OperationUI.Builder {
@@ -73,7 +73,7 @@ data class OperationUI(
         private var name: String = ""
         private var categoryList: List<CategoryUI> = listOf()
         private var scheduleList: List<ScheduleUI> = listOf()
-        private var goodsList: List<GoodsUI> = listOf()
+        private var goodsList: List<GoodsMoneyDateUI> = listOf()
         private var money: MoneyUI = MoneyUI(id = "", amount = 0.0, currency = CurrencyUI(id, name))
 
         fun setName(name: String): Builder {
@@ -91,7 +91,7 @@ data class OperationUI(
             return this
         }
 
-        fun setGoodsList(goodsList: List<GoodsUI>): Builder {
+        fun setGoodsList(goodsList: List<GoodsMoneyDateUI>): Builder {
             this.goodsList = goodsList
             return this
         }

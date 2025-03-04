@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class MoneyUI(
     val id:String,
     val amount:Double,
-    val currency: CurrencyUI
+    val currency: CurrencyUI,
 ):Parcelable
 
 @Parcelize

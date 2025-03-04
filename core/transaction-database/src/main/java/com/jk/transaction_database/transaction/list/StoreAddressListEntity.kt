@@ -4,14 +4,14 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.jk.transaction_database.transaction.entity.AddressEntity
-import com.jk.transaction_database.transaction.entity.Store
+import com.jk.transaction_database.transaction.entity.StoreEntity
 
 @Entity(
     "store_address_list",
     primaryKeys = ["store_id", "address_id"],
     foreignKeys = [
         ForeignKey(
-            entity = Store::class,
+            entity = StoreEntity::class,
             parentColumns = ["id"],
             childColumns = ["store_id"]
         ),

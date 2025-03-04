@@ -34,17 +34,13 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.map
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.common_ui.State
 import com.jk.common_ui.composable.Search
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsPreviewUI
 import com.jk.goods_common_ui.MeasureUI
 import com.jk.goods_common_ui.SpecificationsUI
 import com.jk.money_common_ui.CurrencyUI
@@ -84,7 +80,7 @@ fun GoodsListScreen(viewModel: GoodsListViewModel) {
 
 
 @Composable
-fun GoodsList(modifier: Modifier = Modifier, goodList: LazyPagingItems<GoodsUI>) {
+fun GoodsList(modifier: Modifier = Modifier, goodList: LazyPagingItems<GoodsPreviewUI>) {
     when (goodList.loadState.refresh) {
         is LoadState.NotLoading -> {
             if (goodList.itemCount != 0)
@@ -105,7 +101,7 @@ fun GoodsList(modifier: Modifier = Modifier, goodList: LazyPagingItems<GoodsUI>)
 @Composable
 fun GoodsList(
     modifier: Modifier = Modifier,
-    goodsList: List<GoodsUI>,
+    goodsList: List<GoodsPreviewUI>,
     headerTextStyle: TextStyle? = null,
     itemsTextStyle: TextStyle? = null,
     headerList: List<String> = listOf(),
@@ -151,7 +147,7 @@ fun GoodsList(
 @Composable
 fun GoodsItem(
     modifier: Modifier = Modifier,
-    goodsList: GoodsUI,
+    goodsList: GoodsPreviewUI,
     style: TextStyle? = null
 ) {
     Row(
@@ -170,7 +166,7 @@ fun GoodsItem(
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically),
-            text = goodsList.amount.toString(),
+            text = goodsList.cost.toString(),
             style = style ?: LocalTextStyle.current,
             maxLines = 1
         )
@@ -179,16 +175,7 @@ fun GoodsItem(
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically),
-            text = goodsList.cost.amount.toString(),
-            style = style ?: LocalTextStyle.current,
-            maxLines = 1
-        )
-
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .align(Alignment.CenterVertically),
-            text = goodsList.cost.currency.name,
+            text = goodsList.currency,
             style = style ?: LocalTextStyle.current,
             maxLines = 1
         )
@@ -244,34 +231,16 @@ fun GoodsScreenPreview() {
 }
 
 val test = listOf(
-    GoodsUI(
+    GoodsPreviewUI(
         id = "gg",
         name = "fimojhgjhgjhgjhghjz",
-        specifications = listOf(
-            SpecificationsUI(
-                id = "sp", text = "weight", amount = 2f,
-                measure = MeasureUI(
-                    "mm",
-                    "kg"
-                )
-            )
-        ),
-        cost = MoneyUI("qq", 200000.0, CurrencyUI("zxc", "BYN")),
-        amount = 1
+        cost = 223.0,
+        currency = "BYN"
     ),
-    GoodsUI(
-        id = "gg",
+    GoodsPreviewUI(
+        id = "g3g",
         name = "fimojhgjhgjhgjhghjz",
-        specifications = listOf(
-            SpecificationsUI(
-                id = "sp", text = "weight", amount = 2f,
-                measure = MeasureUI(
-                    "mm",
-                    "kg"
-                )
-            )
-        ),
-        cost = MoneyUI("qq", 200000.0, CurrencyUI("zxc", "BYN")),
-        amount = 1
-    ),
+        cost = 223.0,
+        currency = "BYN"
+    )
 )

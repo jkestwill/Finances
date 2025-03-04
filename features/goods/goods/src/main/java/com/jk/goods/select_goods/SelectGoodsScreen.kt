@@ -38,7 +38,7 @@ import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.Red
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.loadingAnimation
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
 import com.jk.shared_res.R
 
 
@@ -242,7 +242,7 @@ fun <T : Selectable> ItemVerticalList(
 @Composable
 fun GoodsListItem(
     modifier: Modifier,
-    goodsUI: GoodsUI,
+    goodsUI: GoodsMoneyDateUI,
     selected: Boolean,
 ) {
     val checked by remember(selected, goodsUI) {

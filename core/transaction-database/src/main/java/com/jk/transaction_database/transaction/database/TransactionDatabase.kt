@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.jk.transaction_database.transaction.GoodsMoneyListDao
 import com.jk.transaction_database.transaction.entity.AddressEntity
 import com.jk.transaction_database.transaction.entity.BankEntity
 import com.jk.transaction_database.transaction.entity.CurrencyEntity
@@ -43,12 +44,16 @@ import com.jk.transaction_database.transaction.dao.TransactionDao
 import com.jk.transaction_database.transaction.dao.TransactionGoodsListDao
 import com.jk.transaction_database.transaction.dao.TypeDao
 import com.jk.transaction_database.transaction.entity.MoneyAccountEntity
+import com.jk.transaction_database.transaction.entity.StoreEntity
+import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.list.LangMeasureListEntity
 import com.jk.transaction_database.transaction.list.LedgerTransactionList
 import com.jk.transaction_database.transaction.list.OperationCategoryList
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.list.OperationScheduleList
+import com.jk.transaction_database.transaction.list.StoreAddressListEntity
+import com.jk.transaction_database.transaction.list.StoreGoodsListEntity
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalTimeTypeConverter
@@ -78,8 +83,12 @@ import java.util.concurrent.Executors
         GoodsSpecificationsListEntity::class,
         BankEntity::class,
         AddressEntity::class,
-        MoneyAccountEntity::class
-    ], version = 3, exportSchema = false, autoMigrations = []
+        StoreEntity::class,
+        MoneyAccountEntity::class,
+        StoreAddressListEntity::class,
+        GoodsMoneyListEntity::class,
+        StoreGoodsListEntity::class
+    ], version = 4, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -126,6 +135,8 @@ internal abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getMoneyAccountDao(): MoneyAccountDao
 
+    abstract fun getGoodsMoneyListDao(): GoodsMoneyListDao
+
 }
 
 fun transactionDatabaseProvider(
@@ -141,7 +152,7 @@ fun transactionDatabaseProvider(
             Log.e("DATABASE_LOG", "${sqlQuery} ## Args: ${bindArgs} ")
         }, executor = Executors.newSingleThreadExecutor())
         .createFromAsset(dbAssetPath)
-            .fallbackToDestructiveMigration()
+        .fallbackToDestructiveMigration()
         .build()
         .apply {
             query(query = "SELECT * FROM currency", args = null)
@@ -153,7 +164,7 @@ fun transactionDatabaseProvider(
 
 // костыль чтобы не делать руму как апи
 class TransactionDatabaseProvider internal constructor(internal val db: TransactionDatabase) {
-    fun clear(){
+    fun clear() {
         db.clearAllTables()
     }
 
@@ -237,9 +248,11 @@ class TransactionDatabaseProvider internal constructor(internal val db: Transact
         return db.getAddressDao()
     }
 
-    fun getMoneyAccountDao():MoneyAccountDao{
+    fun getMoneyAccountDao(): MoneyAccountDao {
         return db.getMoneyAccountDao()
     }
+
+    fun getGoodsMoneyListDao():GoodsMoneyListDao = db.getGoodsMoneyListDao()
 }
 
 

@@ -2,15 +2,13 @@ package com.jk.goods
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.jk.common_goods_data.Goods
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.testing.HiltTestApplication
 
-class GoodsPagingSource @AssistedInject constructor(
+class GoodsXSpecificationXMoneyRelationPagingSource @AssistedInject constructor(
     private val goodsRepository: GoodsDao,
     private val goodsMapper: GoodsMapper,
     @Assisted("q") private val q: String,
@@ -33,7 +31,6 @@ class GoodsPagingSource @AssistedInject constructor(
             limit = pageSize,
             offset = page * pageSize
         )
-
 
         return try {
             if (result.isNotEmpty()) {
@@ -58,7 +55,7 @@ class GoodsPagingSource @AssistedInject constructor(
             @Assisted("q")  q: String,
             @Assisted("sortBy") sortBy: String,
             @Assisted("isAsc")  isAsc: Boolean
-        ):GoodsPagingSource
+        ):GoodsXSpecificationXMoneyRelationPagingSource
     }
 }
 

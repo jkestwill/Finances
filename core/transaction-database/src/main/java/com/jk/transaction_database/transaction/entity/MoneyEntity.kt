@@ -3,7 +3,9 @@ package com.jk.transaction_database.transaction.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 
 @Entity(
     tableName = "money",
@@ -13,10 +15,16 @@ import androidx.room.PrimaryKey
         childColumns = ["currency_id"]
     )]
 )
-data class MoneyEntity(
+// var т.к @Ignore все руинит
+data class MoneyEntity public constructor(
     @PrimaryKey
-    val id: String,
-    val amount: Double,
+    var id: String,
+    var amount: Double,
     @ColumnInfo("currency_id")
-    val currencyId: String
-)
+    var currencyId: String,
+    @Ignore
+    var date:LocalDate
+
+){
+    constructor():this("",0.0,"", LocalDate.now())
+}

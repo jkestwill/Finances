@@ -22,6 +22,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 import kotlin.random.Random
 
 /**
@@ -55,10 +56,10 @@ class GoodsDaoUnitTest {
     @Test
     fun updateGods() = runBlocking {
         val currency = CurrencyEntity("b", "BYN")
-        val moneyId = MoneyEntity("aojsd", 23.1, currency.id)
-        val goodsEntity = GoodsEntity("xc", "Flavor", 1, moneyId.id)
+        val moneyId = MoneyEntity("aojsd", 23.1, currency.id,LocalDate.now())
+        val goodsEntity = GoodsEntity("xc", "Flavor", 1,)
         val randomAmount = Random.nextInt()
-        val newGoods = GoodsEntity("xc", "Flavor", randomAmount, moneyId.id)
+        val newGoods = GoodsEntity("xc", "Flavor", randomAmount, )
         goodsDao.update(newGoods)
         val updatedGoods = goodsDao.getById("xc")
         assertTrue(updatedGoods != goodsEntity)
@@ -68,8 +69,8 @@ class GoodsDaoUnitTest {
     @Test
     fun insertAndGetEntities() = runBlocking {
         val currency = CurrencyEntity(Random.nextInt().toString(), "BYN")
-        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id)
-        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, moneyId.id)
+        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id, LocalDate.now())
+        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, )
         currencyDao.insert(currency)
         moneyDao.insert(moneyId)
         goodsDao.insert(goodsEntity)
@@ -84,8 +85,8 @@ class GoodsDaoUnitTest {
         database.db.clearAllTables()
         val measure = MeasureEntity("c", "Kg")
         val currency = CurrencyEntity("BYN", "USD")
-        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id)
-        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, moneyId.id)
+        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id,LocalDate.now())
+        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, )
         measureDao.insert(measure)
         currencyDao.insert(currency)
         moneyDao.insert(moneyId)
@@ -94,7 +95,8 @@ class GoodsDaoUnitTest {
             GoodsxSpecificationsxMoneyRelation(
                 goodsEntity,
                 specifications = randomSpecification(1, measure.id),
-                cost = moneyId
+                cost = listOf(moneyId),
+
             )
 
         goodsDao.insertGoodsRelation(listOf(goods))

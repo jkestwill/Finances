@@ -53,6 +53,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     kapt(libs.hilt.android.compiler)
 
+    kapt(libs.mapstruct.kotlin)
+    implementation(libs.mapstruct)
+    kapt(libs.mapstruct.processor)
+
     implementation(project(":core:money:money-data"))
     implementation(project(":core:goods:goods-data"))
     implementation(project(":common:common-utils-ui"))

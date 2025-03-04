@@ -17,8 +17,8 @@ import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.GoodsUI
-import com.jk.goods_common_ui.toUI
+import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsUIMapper
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
@@ -50,6 +50,7 @@ class AddNewTransactionViewModel @Inject constructor(
     private val transactionValidator: TransactionValidator,
     private val transactionMapper: TransactionUiMapper,
     private val categoryMapper: CategoryUIMapper,
+    private val goodsMapper: GoodsUIMapper,
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
     private val dispatchers: Dispatchers,
 ) : ViewModel() {
@@ -87,7 +88,8 @@ class AddNewTransactionViewModel @Inject constructor(
         goodsRepository.getAllFromDatabase(searchParams = SearchParams.getDefault())
             .map { request ->
                 request.map { goods ->
-                    goods.toUI()
+
+                    goodsMapper.toUI(goods)
                 }
             }
             .cachedIn(viewModelScope)
@@ -95,11 +97,11 @@ class AddNewTransactionViewModel @Inject constructor(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
-    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
-    val incomingGoodsFlow: StateFlow<State<List<GoodsUI>>> get() = _incomingGoodsFlow
+    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsMoneyDateUI>>>(State.None)
+    val incomingGoodsFlow: StateFlow<State<List<GoodsMoneyDateUI>>> get() = _incomingGoodsFlow
 
 
-    val newGoodsBuilderList = mutableStateListOf<GoodsUI.Builder>()
+    val newGoodsBuilderList = mutableStateListOf<GoodsMoneyDateUI.Builder>()
     val operationBuilder =
         MutableStateFlow<OperationUI.Builder>(OperationUI.Builder())
 
@@ -111,7 +113,15 @@ class AddNewTransactionViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             _categoryList.emitAll(
                 categoryRepository.getByCategoryListId(idList)
-                    .map { req -> req.map { list -> list.map { cat -> categoryMapper.toCategoryUI(cat)} }.toState() }
+                    .map { req ->
+                        req.map { list ->
+                            list.map { cat ->
+                                categoryMapper.toCategoryUI(
+                                    cat
+                                )
+                            }
+                        }.toState()
+                    }
                     .onEach { state ->
                         if (state is State.Success)
                             state.map { list ->
@@ -126,7 +136,8 @@ class AddNewTransactionViewModel @Inject constructor(
     fun getGoodsListById(idList: List<String>) {
         viewModelScope.launch(dispatchers.io) {
             _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
-                apiRequest.toState().map { goodsList -> goodsList.map { goods -> goods.toUI() } }
+                apiRequest.toState()
+                    .map { goodsList -> goodsList.map { goods -> goodsMapper.toUI(goods) } }
             })
         }
     }
@@ -134,7 +145,7 @@ class AddNewTransactionViewModel @Inject constructor(
     fun addTransaction(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         viewModelScope.launch(dispatchers.io) {
             try {
-                val transactionUI:TransactionUI.Builder = newTransactionState.value.setOperation(
+                val transactionUI: TransactionUI.Builder = newTransactionState.value.setOperation(
                     operationBuilder.value
                         .setGoodsList(
                             newGoodsBuilderList.map { it.build() }

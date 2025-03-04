@@ -3,6 +3,7 @@ package com.jk.goods
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jk.common_goods_data.Goods
+import com.jk.common_goods_data.MoneyAndDate
 import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -23,6 +24,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -78,8 +80,8 @@ class ExampleInstrumentedTest {
             SpecificationsEntity("$it", "text$it", measureId = measure.id, amount = 12f)
         }
         val currency = CurrencyEntity("cur", name = "USD")
-        val moneyEntity = MoneyEntity(id = "mon", 12.0, currency.id)
-        val money = Money(id = "m", moneyEntity.amount, Currency(currency.id, currency.name))
+        val moneyEntity = MoneyEntity(id = "mon", 12.0, currency.id,date= LocalDate.now())
+        val money = MoneyAndDate(id = "m", moneyEntity.amount, date = LocalDate.now(), currency =  Currency(currency.id, currency.name))
         currencyDao.insert(currency)
         // moneyDao.insert(moneyEntity)
         measureDao.insert(measure)
@@ -92,7 +94,7 @@ class ExampleInstrumentedTest {
                 name = "goods${it}",
                 amount = 10,
                 specifications = specifiacationsList.map { specificationMapper.toSpecification(it) },
-                cost = money
+                cost = listOf(money)
             )
         }
 
