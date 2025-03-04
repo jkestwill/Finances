@@ -9,7 +9,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.jk.common_data.SearchParams
 import com.jk.goods.GoodsRepository
-import com.jk.goods.GoodsUIMapper
+import com.jk.goods_common_ui.GoodsUIMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

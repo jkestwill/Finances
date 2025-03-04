@@ -8,7 +8,8 @@ object Routes {
     const val NEW_CATEGORY="new_category"
     const val SELECT_CATEGORY = "select_category"
     const val EXCHANGE_RATE="exchange_rate"
-    const val GOODS = "goods_list"
+    const val GOODS_LIST = "goods_list"
+    const val GOODS_INFO = "goods_info"
     const val CREATE_TRANSACTION = "create_transaction"
     const val SELECT_GOODS = "select_goods"
 }

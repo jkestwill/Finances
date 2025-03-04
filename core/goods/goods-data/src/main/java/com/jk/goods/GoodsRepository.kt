@@ -9,30 +9,31 @@ import com.jk.common_data.SearchParams
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview
 import com.jk.transaction_database.transaction.dao.GoodsDao
-import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import java.io.IOException
 import javax.inject.Inject
 
 class GoodsRepository @Inject constructor(
-    private val goodsLocalDataSource: GoodsDao,
+    private val goodsDao: GoodsDao,
     private val goodsPagingSource: GoodsXSpecificationXMoneyRelationPagingSource.GoodsPagingSourceFactory,
     private val goodsPreviewPagingSource: GoodsPreviewPagingSourceFactory,
     private val goodsMapper: GoodsMapper
 ) {
-    suspend fun add(goodsList: List<Goods>) {
-        for (i in goodsList) {
-            //goodsLocalDataSource.insert(i.toGoodsRelation())
-        }
-    }
+    suspend fun add(goodsList: List<Goods>) =
+        goodsDao.insertGoodsRelation(goodsList.map {
+            goodsMapper.toGoodsxSpecificationsxMoneyRelation(
+                it
+            )
+        })
 
     suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
         val start = flowOf(ApiRequest.Loading<List<Goods>>())
         val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
-            emit(goodsLocalDataSource.getByIdList(idList).map { goodsMapper.toGoods(it) })
+            emit(goodsDao.getByIdList(idList).map { goodsMapper.toGoods(it) })
         }.map { goodsList ->
             try {
                 ApiRequest.Success(goodsList)
@@ -41,13 +42,26 @@ class GoodsRepository @Inject constructor(
             }
         }
         return merge(start, result)
+    }
 
+    fun getById(id: String): Flow<ApiRequest<Goods>> {
+        val start = flowOf<ApiRequest<Goods>>(ApiRequest.Loading())
+        val result = flow {
+            emit(goodsMapper.toGoods(goodsDao.getGoodsxSpecificationById(id)))
+        }.map {
+            try {
+                ApiRequest.Success(it)
+            } catch (e: IOException) {
+                ApiRequest.Error(it, e)
+            }
+        }
+        return merge(start, result)
     }
 
     fun getGoodsPreviewList(searchParams: SearchParams): Flow<PagingData<GoodsPreview>> {
         return Pager(PagingConfig(20)) {
             goodsPreviewPagingSource.create(searchParams.q, searchParams.sortBy, searchParams.isAsc)
-        }.flow.map {page-> page.map {goodsMapper.toPreview(it)}  }
+        }.flow.map { page -> page.map { goodsMapper.toPreview(it) } }
     }
 
     fun getAllFromDatabase(

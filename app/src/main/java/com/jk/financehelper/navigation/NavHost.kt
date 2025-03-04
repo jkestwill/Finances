@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
@@ -20,6 +21,7 @@ import com.jk.category.list.CategoryListScreen
 import com.jk.category.select_category_dialog.SelectCategoryDialog
 import com.jk.financehelper.R
 import com.jk.financehelper.currency.ExchangeRate
+import com.jk.goods.goods_info.GoodsScreen
 import com.jk.goods.goods_list.GoodsListScreen
 import com.jk.goods.select_goods.SelectGoodsDialog
 import com.jk.transaction.TransactionScreen
@@ -32,7 +34,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.GOODS) {
+    NavHost(navController = navController, startDestination = Routes.GOODS_LIST) {
 
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(
@@ -56,9 +58,8 @@ fun MainNavGraph(
                 }
             )
         }
-
-        composable(Routes.GOODS) {
-            // GoodsList()
+        composable(Routes.GOODS_INFO) {
+            GoodsScreen(viewModel = viewModel())
         }
 
         composable(
@@ -111,8 +112,10 @@ fun MainNavGraph(
             )
         }
 
-        composable(route = "goods_list") {
-            GoodsListScreen(viewModel = hiltViewModel())
+        composable(route = Routes.GOODS_LIST) {
+            GoodsListScreen(viewModel = hiltViewModel(), onAddClick = {
+                navController.navigate(Routes.GOODS_INFO)
+            })
         }
 
         dialog("${Routes.SELECT_CATEGORY}?selectedCategoryId={selectedCategoryId}") {

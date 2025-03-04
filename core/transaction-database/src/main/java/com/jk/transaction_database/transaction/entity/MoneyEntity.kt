@@ -23,8 +23,8 @@ data class MoneyEntity public constructor(
     @ColumnInfo("currency_id")
     var currencyId: String,
     @Ignore
-    var date:LocalDate
+    var date:LocalDate?
 
 ){
-    constructor():this("",0.0,"", LocalDate.now())
+    constructor():this("",0.0,"", null)
 }

@@ -6,11 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.SearchParams
-import com.jk.common_goods_data.GoodsPreview
 import com.jk.goods.GoodsRepository
-import com.jk.goods.GoodsUIMapper
 import com.jk.goods_common_ui.GoodsMoneyDateUI
 import com.jk.goods_common_ui.GoodsPreviewUI
+import com.jk.goods_common_ui.GoodsUIMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GoodsListViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
-    private val goodsUIMaper:GoodsUIMapper,
+    private val goodsUIMapper: GoodsUIMapper,
     private val dispatcherProvider: Dispatchers
 ) : ViewModel() {
 
@@ -39,7 +38,7 @@ class GoodsListViewModel @Inject constructor(
                 goodsRepository.getGoodsPreviewList(SearchParams(q, sortBy = sortBy, isAsc = isAsc))
                     .map { pagingData ->
                         pagingData.map { goodsList ->
-                            goodsUIMaper.toPreviewUI(goodsList)
+                            goodsUIMapper.toPreviewUI(goodsList)
                         }
                     }
                     .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
@@ -49,7 +48,7 @@ class GoodsListViewModel @Inject constructor(
     fun add(goodsList: List<GoodsMoneyDateUI>) {
         viewModelScope.launch(dispatcherProvider.io) {
             goodsRepository.add(goodsList.map {
-                goodsUIMaper.toGoods(it)
+                goodsUIMapper.toGoods(it)
             })
         }
     }

@@ -1,6 +1,7 @@
 package com.jk.common_goods_data
 
 import com.jk.money_common_data.Currency
+import com.jk.money_common_data.Money
 import java.time.LocalDate
 
 data class Goods(
@@ -8,7 +9,7 @@ data class Goods(
     val name: String,
     val amount:Int,
     val specifications:List<Specification>,
-    val cost: MoneyAndDate
+    val cost: Money
 ) {
 }
 /**

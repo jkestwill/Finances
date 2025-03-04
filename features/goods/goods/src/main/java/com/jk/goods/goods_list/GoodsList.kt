@@ -1,6 +1,7 @@
 package com.jk.goods.goods_list
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,6 +38,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -48,7 +53,7 @@ import com.jk.money_common_ui.MoneyUI
 
 
 @Composable
-fun GoodsListScreen(viewModel: GoodsListViewModel) {
+fun GoodsListScreen(viewModel: GoodsListViewModel,onAddClick:()->Unit) {
     val searchText = remember {
         mutableStateOf("")
     }
@@ -63,6 +68,12 @@ fun GoodsListScreen(viewModel: GoodsListViewModel) {
                     searchText.value = it
                 }
             )
+        }
+    }, floatingActionButton = {
+        FloatingActionButton(onClick = {
+            onAddClick()
+        }) {
+            Image(imageVector = Icons.Default.Add,"zxc")
         }
     }) { paddings ->
         GoodsList(
@@ -226,7 +237,7 @@ fun GoodsListPreview() {
 @Composable
 fun GoodsScreenPreview() {
     MaterialTheme {
-        GoodsListScreen(viewModel = hiltViewModel())
+        GoodsListScreen(viewModel = hiltViewModel(),{})
     }
 }
 

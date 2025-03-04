@@ -57,7 +57,6 @@ fun CharacterLimitTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
-
     onError: (String?) -> Unit,
     prefix: @Composable (() -> Unit)? = null,
     placeHolder: @Composable (() -> Unit)? = null

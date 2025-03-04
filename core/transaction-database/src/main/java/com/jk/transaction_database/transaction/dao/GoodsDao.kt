@@ -13,6 +13,7 @@ import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
+import java.time.LocalDate
 
 @Dao
 abstract class GoodsDao internal constructor(
@@ -32,6 +33,15 @@ abstract class GoodsDao internal constructor(
     @Query("SELECT * FROM goods WHERE goods.id == :id")
     abstract fun getById(id: String): GoodsEntity
 
+
+    @Query(
+        "SELECT * FROM goods " +
+                "WHERE goods.id == :id"
+    )
+    abstract suspend fun getGoodsxSpecificationById(
+        id: String
+    ): GoodsxSpecificationsxMoneyRelation
+
     @Transaction
     open suspend fun insertGoodsRelation(goodsList: List<GoodsxSpecificationsxMoneyRelation>) {
         for (goods in goodsList) {
@@ -41,9 +51,9 @@ abstract class GoodsDao internal constructor(
                 moneyDao.insert(money)
                 goodsMoneyListDao.insert(
                     GoodsMoneyListEntity(
-                        goods.goodsEntity.id,
-                        money.id,
-                        date = money.date
+                        goodsId = goods.goodsEntity.id,
+                        moneyId = money.id,
+                        date = money.date?:LocalDate.now()
                     )
                 )
             }
