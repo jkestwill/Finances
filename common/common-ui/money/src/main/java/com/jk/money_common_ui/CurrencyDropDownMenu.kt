@@ -11,7 +11,7 @@ import com.jk.common_ui.composable.TextWithDropDownMenu
 
 @Composable
 fun CurrencyDropDownMenu(
-    modifier: Modifier,
+    modifier: Modifier=Modifier,
     currencyListState: State<List<CurrencyUI>>,
     color: Color,
     placeholderText: String,

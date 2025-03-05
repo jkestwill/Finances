@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.jk.common_data.ApiRequest
 import com.jk.common_data.SearchParams
+import com.jk.common_data.StringUUIDGenerator
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview
+import com.jk.goods.mapper.GoodsMapper
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,7 +28,7 @@ class GoodsRepository @Inject constructor(
     suspend fun add(goodsList: List<Goods>) =
         goodsDao.insertGoodsRelation(goodsList.map {
             goodsMapper.toGoodsxSpecificationsxMoneyRelation(
-                it
+                it.copy(id = StringUUIDGenerator.generate())
             )
         })
 

@@ -1,12 +1,12 @@
 package com.jk.goods.di
 
-import com.jk.goods.GoodsMapper
-import com.jk.goods.GoodsMapperImpl
+import com.jk.goods.mapper.GoodsMapper
 import com.jk.goods.GoodsPreviewPagingSourceFactory
 import com.jk.goods.GoodsXSpecificationXMoneyRelationPagingSource
 import com.jk.goods.GoodsRepository
-import com.jk.goods.SpecificationsMapper
-import com.jk.goods.SpecificationsMapperImpl
+import com.jk.goods.mapper.GoodsMapperImpl
+import com.jk.goods.mapper.SpecificationsMapper
+import com.jk.goods.mapper.SpecificationsMapperImpl
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.dao.LanguageDao
 import com.jk.transaction_database.transaction.dao.LanguageMeasureListDao
@@ -71,4 +71,6 @@ class GoodsDataModule {
 
     @Provides
     fun provideGoodsMapper(): GoodsMapper = GoodsMapperImpl()
+
+
 }

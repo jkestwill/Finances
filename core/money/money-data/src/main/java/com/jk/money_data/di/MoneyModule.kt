@@ -1,5 +1,7 @@
 package com.jk.money_data.di
 
+import com.jk.money_data.CurrencyMapper
+import com.jk.money_data.CurrencyMapperImpl
 import com.jk.money_data.CurrencyRepository
 import com.jk.transaction_database.transaction.dao.BankDao
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -23,8 +25,8 @@ class MoneyModule {
 
     @Singleton
     @Provides
-    fun provideCurrencyRepository(currencyDao: CurrencyDao): CurrencyRepository {
-        return CurrencyRepository(currencyDao)
+    fun provideCurrencyRepository(currencyDao: CurrencyDao,currencyMapper: CurrencyMapper): CurrencyRepository {
+        return CurrencyRepository(currencyDao,currencyMapper)
     }
 
     @Singleton
@@ -33,5 +35,6 @@ class MoneyModule {
         return db.getMoneyDao()
     }
 
-
+    @Provides
+    fun provideCurrencyMapper():CurrencyMapper = CurrencyMapperImpl()
 }

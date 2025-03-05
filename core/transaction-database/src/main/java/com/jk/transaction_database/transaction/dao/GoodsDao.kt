@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.GoodsMoneyListDao
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
@@ -26,6 +27,7 @@ abstract class GoodsDao internal constructor(
     private val specificationDao: SpecificationDao = db.getSpecificationDao()
     private val goodsSpecificationDao: GoodsSpecificationDao = db.getGoodsSpecificationDao()
     private val goodsMoneyListDao: GoodsMoneyListDao = db.getGoodsMoneyListDao()
+    private val currencyDao: CurrencyDao = db.getCurrencyDao()
 
     @Update(entity = GoodsEntity::class)
     abstract suspend fun update(t: GoodsEntity)
@@ -47,7 +49,9 @@ abstract class GoodsDao internal constructor(
         for (goods in goodsList) {
             specificationDao.insert(goods.specifications)
             insert(goods.goodsEntity)
+            currencyDao.insert(CurrencyEntity(id = "${"zxc"}","BYN"))
             for (money in goods.cost) {
+
                 moneyDao.insert(money)
                 goodsMoneyListDao.insert(
                     GoodsMoneyListEntity(

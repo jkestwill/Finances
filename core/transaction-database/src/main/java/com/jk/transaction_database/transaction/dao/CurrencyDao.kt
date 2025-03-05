@@ -3,6 +3,7 @@ package com.jk.transaction_database.transaction.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
@@ -17,7 +18,7 @@ interface CurrencyDao {
     @Update(entity = CurrencyEntity::class)
     suspend fun update(t: CurrencyEntity)
 
-    @Insert(entity = CurrencyEntity::class)
+    @Insert(entity = CurrencyEntity::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(t: CurrencyEntity)
 
     @Query("SELECT * FROM currency")

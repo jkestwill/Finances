@@ -13,15 +13,15 @@ import javax.inject.Inject
 
 // создать промежуточный класс где стыкуются валюта и обменник
 class CurrencyRepository @Inject constructor(
-    private val currencyDao: CurrencyDao
+    private val currencyDao: CurrencyDao,
+    private val currencyMapper: CurrencyMapper
 ) {
     fun getCurrencyList(): Flow<ApiRequest<List<Currency>>> {
         val startEmitFlow = flowOf(ApiRequest.Loading<List<Currency>>())
         val result: Flow<ApiRequest<List<Currency>>> = flow {
             emit(currencyDao.getAll())
         }.map {
-            ApiRequest.Success(it.map { s -> s.toCurrency() })
-
+            ApiRequest.Success(it.map { s -> currencyMapper.toCurrency(s)})
         }.catch {
             ApiRequest.Error(data = null, error = it)
         }

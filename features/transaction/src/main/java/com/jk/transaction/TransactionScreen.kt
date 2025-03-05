@@ -47,7 +47,7 @@ import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.ExpandedListItem
 import com.jk.goods_common_ui.GoodsList
-import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
@@ -72,14 +72,14 @@ fun TransactionScreen(
 ) {
     val preGoods = viewModel.incomingGoodsFlow.collectAsState()
     val fullGoodsList = remember{
-        mutableStateOf(listOf<GoodsMoneyDateUI.Builder>())
+        mutableStateOf(listOf<GoodsUI.Builder>())
     }
 
     LaunchedEffect(key1 = preGoods.value) {
         when(preGoods.value){
-            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsMoneyDateUI>>).data.map { it.toBuilder() }
+            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsUI>>).data.map { it.toBuilder() }
             is State.Loading-> Log.e("TAG", "TransactionScreen: Loading goods from list...", )
-            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsMoneyDateUI>>).message}", )
+            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsUI>>).message}", )
             State.None -> {}
         }
     }
@@ -261,7 +261,8 @@ fun TransactionScreen(
                 },
                 onGoodsListChange = { list ->
                     goodsAmount.value = list.sumOf {
-                        it.build().cost.amount * it.build().amount
+                      //  it.build().cost.amount * it.build().amount
+                        0.0
                     }
                 }
             )
@@ -409,12 +410,12 @@ fun CategoryGrid(
 @Composable
 fun GoodsSection(
     modifier: Modifier = Modifier,
-    list: List<GoodsMoneyDateUI.Builder>,
+    list: List<GoodsUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
     onGoodsAdd: (List<String>?) -> Unit,
-    onNewGoods:(GoodsMoneyDateUI.Builder)->Unit,
-    onRemoveGoods:(GoodsMoneyDateUI.Builder)->Unit,
-    onGoodsListChange: (List<GoodsMoneyDateUI.Builder>) -> Unit
+    onNewGoods:(GoodsUI.Builder)->Unit,
+    onRemoveGoods:(GoodsUI.Builder)->Unit,
+    onGoodsListChange: (List<GoodsUI.Builder>) -> Unit
 ) {
     val deletedImmutables = remember {
         mutableStateOf(listOf<String>())

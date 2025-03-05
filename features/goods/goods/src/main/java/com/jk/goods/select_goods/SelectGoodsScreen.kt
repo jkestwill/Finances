@@ -38,7 +38,7 @@ import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.Red
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.loadingAnimation
-import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsUI
 import com.jk.shared_res.R
 
 
@@ -71,7 +71,7 @@ fun SelectGoodsDialog(
 }
 
 @Composable
-fun  SelectableItemsDialog(
+fun SelectableItemsDialog(
     modifier: Modifier = Modifier,
     viewModel: SelectableItems<String>,
     items: LazyPagingItems<out Selectable>,
@@ -242,7 +242,7 @@ fun <T : Selectable> ItemVerticalList(
 @Composable
 fun GoodsListItem(
     modifier: Modifier,
-    goodsUI: GoodsMoneyDateUI,
+    goodsUI: GoodsUI,
     selected: Boolean,
 ) {
     val checked by remember(selected, goodsUI) {

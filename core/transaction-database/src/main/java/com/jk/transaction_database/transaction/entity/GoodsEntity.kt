@@ -8,5 +8,4 @@ data class GoodsEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    val amount: Int,
 )

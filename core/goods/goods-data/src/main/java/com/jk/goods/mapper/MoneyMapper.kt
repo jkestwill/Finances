@@ -1,4 +1,4 @@
-package com.jk.goods
+package com.jk.goods.mapper
 
 import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.entity.MoneyEntity

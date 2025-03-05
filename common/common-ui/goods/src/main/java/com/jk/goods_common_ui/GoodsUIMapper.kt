@@ -7,9 +7,10 @@ import org.mapstruct.Mapper
 @Mapper
 interface GoodsUIMapper {
 
-    fun toGoods(goodsUI: GoodsMoneyDateUI):Goods
+    fun toGoods(goodsUI: GoodsUI):Goods
 
     fun toUI(goods:Goods):GoodsUI
+
 
     fun toPreviewUI(goodsPreview:GoodsPreview):GoodsPreviewUI
 

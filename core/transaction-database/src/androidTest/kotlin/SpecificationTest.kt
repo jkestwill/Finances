@@ -23,6 +23,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
@@ -66,8 +67,8 @@ class SpecificationTest {
      fun insert_spec_goods() = runBlocking {
         database.db.clearAllTables()
         val currency = CurrencyEntity(Random.nextInt().toString(), "BYN")
-        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id)
-        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1, moneyId.id)
+        val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id, LocalDate.now())
+        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1)
         val measure = MeasureEntity("c", "Kg")
         val specification = randomSpecification(30, measureId = measure.id)
         measureDao.insert(measure)

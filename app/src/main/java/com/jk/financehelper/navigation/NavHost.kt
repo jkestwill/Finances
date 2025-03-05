@@ -59,7 +59,7 @@ fun MainNavGraph(
             )
         }
         composable(Routes.GOODS_INFO) {
-            GoodsScreen(viewModel = viewModel())
+            GoodsScreen(viewModel = hiltViewModel())
         }
 
         composable(

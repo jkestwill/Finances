@@ -2,6 +2,7 @@ package com.jk.goods
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.jk.goods.mapper.GoodsMapper
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import dagger.assisted.Assisted

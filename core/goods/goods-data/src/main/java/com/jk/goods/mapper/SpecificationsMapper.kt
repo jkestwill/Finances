@@ -1,4 +1,4 @@
-package com.jk.goods
+package com.jk.goods.mapper
 
 import com.jk.common_goods_data.Specification
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity

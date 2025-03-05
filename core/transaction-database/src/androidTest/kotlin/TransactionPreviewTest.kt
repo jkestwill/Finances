@@ -29,6 +29,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.random.Random
 import kotlin.random.nextULong
@@ -72,9 +73,9 @@ class TransactionPreviewTest {
     fun insert_test() = runBlocking{
         database.db.clearAllTables()
         val currency = CurrencyEntity("b", "BYN")
-        val money = MoneyEntity("aojsd", 23.1, currency.id)
+        val money = MoneyEntity("aojsd", 23.1, currency.id, LocalDate.now())
         val transactionTypeEntity = TransactionTypeEntity("id","online")
-        val moneyForAccount = MoneyEntity("zxc", 23.1, currency.id)
+        val moneyForAccount = MoneyEntity("zxc", 23.1, currency.id, LocalDate.now())
         val moneyAccount = MoneyAccountEntity("m","Card1",null,moneyId=moneyForAccount.id)
         val operation = OperationEntity("op","Пакупачка",money.id, isExpenses = true)
         val transaction = TransactionEntity("id", date = LocalDateTime.now(), operationId = operation.id, typeId = transactionTypeEntity.id, moneyAccountId = moneyAccount.id)

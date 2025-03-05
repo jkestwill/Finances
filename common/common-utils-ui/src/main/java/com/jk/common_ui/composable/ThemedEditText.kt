@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,14 +42,14 @@ import com.jk.common_ui.error
 import kotlinx.coroutines.delay
 import kotlin.math.min
 
-
+// todo лагает
 @Composable
 fun CharacterLimitTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     onClick: (() -> Unit)? = null,
-    textStyle: TextStyle = TextStyle.Default,
+    textStyle: TextStyle = FinanceHelperTheme.typography.body,
     minTextSize: TextUnit = textStyle.fontSize,
     maxTextSize: TextUnit = textStyle.fontSize,
     maxLines: Int = 1,
@@ -57,7 +58,7 @@ fun CharacterLimitTextField(
     keyboardActions: KeyboardActions = KeyboardActions(),
     textLimitConfig: TextLimitConfig? = null,
     maxLengthPostfixVisibility: Boolean = true,
-    onError: (String?) -> Unit,
+    onError: (String?) -> Unit ={},
     prefix: @Composable (() -> Unit)? = null,
     placeHolder: @Composable (() -> Unit)? = null
 ) {
@@ -265,7 +266,7 @@ fun ThemedTextField(
 fun ThemedTextField(
     modifier: Modifier = Modifier,
     value: String,
-    textStyle: TextStyle = TextStyle.Default,
+    textStyle: TextStyle = LocalTextStyle.current,
     onClick: (() -> Unit)? = null,
     maxLines: Int = 1,
     singleLine: Boolean = true,

@@ -3,7 +3,8 @@ package com.jk.goods
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jk.common_goods_data.Goods
-import com.jk.common_goods_data.MoneyAndDate
+import com.jk.goods.mapper.GoodsMapper
+import com.jk.goods.mapper.SpecificationsMapper
 import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -17,7 +18,6 @@ import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.entity.MeasureEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
-import junit.framework.AssertionFailedError
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -81,7 +81,7 @@ class ExampleInstrumentedTest {
         }
         val currency = CurrencyEntity("cur", name = "USD")
         val moneyEntity = MoneyEntity(id = "mon", 12.0, currency.id,date= LocalDate.now())
-        val money = MoneyAndDate(id = "m", moneyEntity.amount, date = LocalDate.now(), currency =  Currency(currency.id, currency.name))
+        val money = Money(id = "m", moneyEntity.amount, currency =  Currency(currency.id, currency.name))
         currencyDao.insert(currency)
         // moneyDao.insert(moneyEntity)
         measureDao.insert(measure)
@@ -94,7 +94,7 @@ class ExampleInstrumentedTest {
                 name = "goods${it}",
                 amount = 10,
                 specifications = specifiacationsList.map { specificationMapper.toSpecification(it) },
-                cost = listOf(money)
+                cost = money
             )
         }
 

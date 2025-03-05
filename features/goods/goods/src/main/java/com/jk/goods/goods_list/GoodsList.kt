@@ -38,18 +38,12 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.composable.Search
-import com.jk.goods_common_ui.GoodsMoneyDateUI
 import com.jk.goods_common_ui.GoodsPreviewUI
-import com.jk.goods_common_ui.MeasureUI
-import com.jk.goods_common_ui.SpecificationsUI
-import com.jk.money_common_ui.CurrencyUI
-import com.jk.money_common_ui.MoneyUI
 
 
 @Composable
@@ -58,7 +52,7 @@ fun GoodsListScreen(viewModel: GoodsListViewModel,onAddClick:()->Unit) {
         mutableStateOf("")
     }
     val goodsList = viewModel.goodsListStateFlow.collectAsLazyPagingItems()
-
+    viewModel.getGoodsList(q = searchText.value,"", isAsc = true)
     Scaffold(topBar = {
         Box(modifier = Modifier.fillMaxWidth()) {
             Search(
@@ -94,7 +88,7 @@ fun GoodsListScreen(viewModel: GoodsListViewModel,onAddClick:()->Unit) {
 fun GoodsList(modifier: Modifier = Modifier, goodList: LazyPagingItems<GoodsPreviewUI>) {
     when (goodList.loadState.refresh) {
         is LoadState.NotLoading -> {
-            if (goodList.itemCount != 0)
+          //  if (goodList.itemCount != 0)
                 GoodsList(modifier = modifier, goodsList = goodList.itemSnapshotList.items)
         }
 

@@ -17,7 +17,7 @@ import com.jk.common_ui.State
 import com.jk.common_ui.map
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.GoodsMoneyDateUI
+import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.GoodsUIMapper
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
@@ -97,11 +97,11 @@ class AddNewTransactionViewModel @Inject constructor(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
-    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsMoneyDateUI>>>(State.None)
-    val incomingGoodsFlow: StateFlow<State<List<GoodsMoneyDateUI>>> get() = _incomingGoodsFlow
+    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
+    val incomingGoodsFlow: StateFlow<State<List<GoodsUI>>> get() = _incomingGoodsFlow
 
 
-    val newGoodsBuilderList = mutableStateListOf<GoodsMoneyDateUI.Builder>()
+    val newGoodsBuilderList = mutableStateListOf<GoodsUI.Builder>()
     val operationBuilder =
         MutableStateFlow<OperationUI.Builder>(OperationUI.Builder())
 

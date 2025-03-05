@@ -3,12 +3,16 @@ package com.jk.goods.goods_info
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jk.common_data.Dispatchers
+import com.jk.common_data.Validator
 import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.GoodsUI
 import com.jk.goods_common_ui.GoodsUIMapper
+import com.jk.money_common_ui.CurrencyUI
+import com.jk.money_common_ui.CurrencyUIMapper
+import com.jk.money_data.CurrencyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,12 +25,30 @@ import javax.inject.Inject
 @HiltViewModel
 class GoodsViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
+    private val currencyRepository: CurrencyRepository,
+    private val currencyUIMapper: CurrencyUIMapper,
     private val goodsMapper: GoodsUIMapper,
+    private val goodsValidator: Validator<GoodsUI>,
     private val dispatcher: Dispatchers
 ) : ViewModel() {
 
     private var _goodsFlow = MutableStateFlow<State<GoodsUI>>(State.None)
     val goodsFlow: StateFlow<State<GoodsUI>> = _goodsFlow
+
+    val currencyListFlow: StateFlow<State<List<CurrencyUI>>> =
+        currencyRepository.getCurrencyList()
+            .map { state ->
+                state.map { currencyList ->
+                    currencyList.map { currency ->
+                        currencyUIMapper.toUI(currency)
+                    }
+                }.toState()
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = State.None
+            )
 
     fun getById(id: String) {
         viewModelScope.launch(dispatcher.io) {
@@ -46,11 +68,19 @@ class GoodsViewModel @Inject constructor(
 
     }
 
-    fun getCostHistoryList(goodsId:String){
+
+    fun create(goodsUI: GoodsUI) {
+        goodsValidator.validate(goodsUI)
+        viewModelScope.launch {
+            goodsRepository.add(listOf(goodsMapper.toGoods(goodsUI)))
+        }
+    }
+
+    fun getCostHistoryList(goodsId: String) {
 
     }
 
-    fun getStoreList(goodsId:String){
+    fun getStoreList(goodsId: String) {
 
     }
 }

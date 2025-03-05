@@ -1,8 +1,7 @@
-package com.jk.goods
+package com.jk.goods.mapper
 
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview
-import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
@@ -16,7 +15,6 @@ import org.mapstruct.Named
 interface GoodsMapper {
     @Mapping(target = "id", source = "goodsEntity.id")
     @Mapping(target = "name", source = "goodsEntity.name")
-    @Mapping(target = "amount", source = "goodsEntity.amount")
     @Mapping(target = "cost", source = "cost", qualifiedByName = ["moneyListToList"])
     fun toGoods(goods: GoodsxSpecificationsxMoneyRelation): Goods
 
@@ -28,8 +26,7 @@ interface GoodsMapper {
     fun toGoodsxSpecificationsxMoneyRelation(goods: Goods): GoodsxSpecificationsxMoneyRelation {
         val goodsEntity = GoodsEntity(
             goods.id,
-            goods.name,
-            goods.amount,
+            goods.name
         )
         return GoodsxSpecificationsxMoneyRelation(
             goodsEntity = goodsEntity,

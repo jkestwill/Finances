@@ -28,5 +28,6 @@ data class OperationGoodsListEntity(
     @ColumnInfo(name = "operation_id")
     val operationId: String,
     @ColumnInfo(name = "goods_id")
-    val goodsId: String
+    val goodsId: String,
+    val amount:Int
 )
