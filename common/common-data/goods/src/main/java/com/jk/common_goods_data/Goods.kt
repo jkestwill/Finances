@@ -7,7 +7,7 @@ import java.time.LocalDate
 data class Goods(
     val id: String,
     val name: String,
-    val specifications:List<Specification>,
+    val specifications:List<Specification>?,
     val cost: Money
 ) {
 }

@@ -1,4 +1,4 @@
-package com.jk.goods_common_ui
+package com.jk.goods_common_ui.models
 
 data class GoodsPreviewUI(
     val id:String,

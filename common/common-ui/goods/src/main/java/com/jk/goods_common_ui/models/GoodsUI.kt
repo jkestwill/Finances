@@ -1,8 +1,9 @@
-package com.jk.goods_common_ui
+package com.jk.goods_common_ui.models
 
 import android.os.Parcelable
 import com.jk.common_data.Selectable
 import com.jk.common_goods_data.Goods
+import com.jk.goods_common_ui.SpecificationsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import kotlinx.parcelize.Parcelize
@@ -12,7 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class GoodsUI(
     val id: String,
     val name: String,
-    val specifications: List<SpecificationsUI>,
+    val specifications: List<SpecificationsUI>?,
     val cost:MoneyUI
 ) : Parcelable, Selectable {
 
@@ -30,7 +31,7 @@ data class GoodsUI(
     class Builder() {
         private var id: String = ""
         private var name: String = ""
-        private var specifications = listOf<SpecificationsUI>()
+        private var specifications:List<SpecificationsUI>? = null
         private var cost = MoneyUI("",0.0, currency = CurrencyUI("",""))
 
         constructor(goods: GoodsUI) : this() {
@@ -52,7 +53,7 @@ data class GoodsUI(
 
 
 
-        fun specifications(specifications: List<SpecificationsUI>): Builder {
+        fun specifications(specifications: List<SpecificationsUI>?): Builder {
             this.specifications = specifications
             return this
         }
@@ -73,7 +74,7 @@ data class GoodsUI(
 
         override fun equals(other: Any?): Boolean {
             if (other == null) return false
-            if (other is GoodsUI.Builder) {
+            if (other is Builder) {
                 return if (other.id.isEmpty())
                     other.name == name && other.specifications == specifications && other.cost == cost
                 else other.id == id

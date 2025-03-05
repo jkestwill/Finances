@@ -20,7 +20,7 @@ data class GoodsxSpecificationsxMoneyRelation(
             value = GoodsSpecificationsListEntity::class
         )
     )
-    val specifications: List<SpecificationsEntity>,
+    val specifications: List<SpecificationsEntity>?,
     @Relation(
         entity = MoneyEntity::class,
         entityColumn = "id",

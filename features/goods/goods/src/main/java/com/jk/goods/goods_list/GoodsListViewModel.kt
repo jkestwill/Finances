@@ -8,14 +8,13 @@ import androidx.paging.map
 import com.jk.common_data.Dispatchers
 import com.jk.common_data.SearchParams
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.GoodsUI
-import com.jk.goods_common_ui.GoodsPreviewUI
+import com.jk.goods_common_ui.models.GoodsUI
+import com.jk.goods_common_ui.models.GoodsPreviewUI
 import com.jk.goods_common_ui.GoodsUIMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn

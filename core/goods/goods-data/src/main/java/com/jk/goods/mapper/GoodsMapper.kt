@@ -2,10 +2,12 @@ package com.jk.goods.mapper
 
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview
+import com.jk.common_goods_data.GoodsPurchase
 import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.SpecificationsEntity
 import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
+import com.jk.transaction_database.transaction.relations.GoodsPurchaseDTO
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -30,7 +32,7 @@ interface GoodsMapper {
         )
         return GoodsxSpecificationsxMoneyRelation(
             goodsEntity = goodsEntity,
-            specifications = goods.specifications.map {
+            specifications = goods.specifications?.map {
                 SpecificationsEntity(
                     id = it.id,
                     text = it.text,
@@ -49,6 +51,9 @@ interface GoodsMapper {
         )
     }
 
+    fun toPurchase(goodsPurchaseDTO: GoodsPurchaseDTO):GoodsPurchase
+
+    fun toPurchaseDTO(goodsPurchase: GoodsPurchase):GoodsPurchaseDTO
 
     fun toPreview(goodsPreview: GoodsPreviewEntity): GoodsPreview
 

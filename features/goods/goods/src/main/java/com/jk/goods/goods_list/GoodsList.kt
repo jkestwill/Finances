@@ -43,7 +43,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.composable.Search
-import com.jk.goods_common_ui.GoodsPreviewUI
+import com.jk.goods_common_ui.models.GoodsPreviewUI
 
 
 @Composable

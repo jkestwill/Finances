@@ -8,7 +8,7 @@ import com.jk.common_data.map
 import com.jk.common_ui.State
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.goods_common_ui.GoodsUIMapper
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.CurrencyUIMapper

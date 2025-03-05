@@ -13,6 +13,7 @@ import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.list.GoodsMoneyListEntity
 import com.jk.transaction_database.transaction.list.GoodsSpecificationsListEntity
 import com.jk.transaction_database.transaction.preview.GoodsPreviewEntity
+import com.jk.transaction_database.transaction.relations.GoodsPurchaseDTO
 import com.jk.transaction_database.transaction.relations.GoodsxSpecificationsxMoneyRelation
 import java.time.LocalDate
 
@@ -47,9 +48,10 @@ abstract class GoodsDao internal constructor(
     @Transaction
     open suspend fun insertGoodsRelation(goodsList: List<GoodsxSpecificationsxMoneyRelation>) {
         for (goods in goodsList) {
-            specificationDao.insert(goods.specifications)
+            if (goods.specifications != null)
+                specificationDao.insert(goods.specifications)
             insert(goods.goodsEntity)
-            currencyDao.insert(CurrencyEntity(id = "${"zxc"}","BYN"))
+            currencyDao.insert(CurrencyEntity(id = "${"zxc"}", "BYN"))
             for (money in goods.cost) {
 
                 moneyDao.insert(money)
@@ -57,19 +59,19 @@ abstract class GoodsDao internal constructor(
                     GoodsMoneyListEntity(
                         goodsId = goods.goodsEntity.id,
                         moneyId = money.id,
-                        date = money.date?:LocalDate.now()
+                        date = money.date ?: LocalDate.now()
                     )
                 )
             }
-
-            for (specs in goods.specifications) {
-                goodsSpecificationDao.insert(
-                    GoodsSpecificationsListEntity(
-                        goodsId = goods.goodsEntity.id,
-                        specificationsId = specs.id
+            if (goods.specifications != null)
+                for (specs in goods.specifications) {
+                    goodsSpecificationDao.insert(
+                        GoodsSpecificationsListEntity(
+                            goodsId = goods.goodsEntity.id,
+                            specificationsId = specs.id
+                        )
                     )
-                )
-            }
+                }
         }
     }
 
@@ -124,4 +126,12 @@ abstract class GoodsDao internal constructor(
 
     @Insert(entity = GoodsEntity::class)
     abstract suspend fun insertList(t: List<GoodsEntity>)
+
+
+    @Transaction
+    suspend fun insertPurchase(goodsPurchaseDTO: GoodsPurchaseDTO){
+        
+    }
+
+
 }

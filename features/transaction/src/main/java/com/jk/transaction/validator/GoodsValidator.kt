@@ -1,7 +1,7 @@
 package com.jk.transaction.validator
 
 import com.jk.common_data.Validator
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.models.GoodsUI
 import javax.inject.Inject
 
 class GoodsValidator @Inject constructor(private val moneyValidator: MoneyValidator) :

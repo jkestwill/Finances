@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import com.jk.common_data.sha256
 import com.jk.common_ui.State
 import com.jk.common_ui.composable.CharacterLimitTextField
-import com.jk.goods_common_ui.GoodsUI
+import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI

@@ -49,6 +49,7 @@ import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.DraggableWidthContent
 import com.jk.common_ui.composable.rememberIncrement
+import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
