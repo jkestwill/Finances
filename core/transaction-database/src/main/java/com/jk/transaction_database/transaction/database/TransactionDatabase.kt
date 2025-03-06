@@ -6,6 +6,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.jk.common_data.StringUUIDGenerator
+import com.jk.money_common_data.Currencies
 import com.jk.transaction_database.transaction.GoodsMoneyListDao
 import com.jk.transaction_database.transaction.entity.AddressEntity
 import com.jk.transaction_database.transaction.entity.BankEntity
@@ -57,6 +59,9 @@ import com.jk.transaction_database.transaction.list.StoreGoodsListEntity
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalTimeTypeConverter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 
@@ -88,7 +93,7 @@ import java.util.concurrent.Executors
         StoreAddressListEntity::class,
         GoodsMoneyListEntity::class,
         StoreGoodsListEntity::class
-    ], version = 4, exportSchema = false, autoMigrations = []
+    ], version = 6, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -137,6 +142,9 @@ internal abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getGoodsMoneyListDao(): GoodsMoneyListDao
 
+    fun prepopulate(tableName: String, vararg values: String) {
+        query(query = "INSERT INTO $tableName VALUES (${values.joinToString(",")})", args = null)
+    }
 }
 
 fun transactionDatabaseProvider(
@@ -155,8 +163,13 @@ fun transactionDatabaseProvider(
         .fallbackToDestructiveMigration()
         .build()
         .apply {
-            query(query = "SELECT * FROM currency", args = null)
             query(query = "PRAGMA foreign_keys=ON", args = null)
+
+            CoroutineScope(this.queryExecutor.asCoroutineDispatcher()).launch {
+                for (i in Currencies.entries)
+                    getCurrencyDao().insert(CurrencyEntity(StringUUIDGenerator.generate(), i.name))
+            }
+
         }
 
     return TransactionDatabaseProvider(db)
@@ -252,7 +265,9 @@ class TransactionDatabaseProvider internal constructor(internal val db: Transact
         return db.getMoneyAccountDao()
     }
 
-    fun getGoodsMoneyListDao():GoodsMoneyListDao = db.getGoodsMoneyListDao()
+    fun getGoodsMoneyListDao(): GoodsMoneyListDao = db.getGoodsMoneyListDao()
+
+
 }
 
 

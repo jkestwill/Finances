@@ -7,28 +7,39 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.jk.common_data.StringUUIDGenerator
 import com.jk.common_data.sha256
+import com.jk.money_common_data.Currencies
+import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
 import com.jk.transaction_database.transaction.entity.CurrencyEntity
 
 @Dao
-interface CurrencyDao {
-    @Delete(entity = CurrencyEntity::class)
-    suspend fun delete(t: CurrencyEntity)
+abstract class CurrencyDao internal constructor() {
+    private var db:TransactionDatabase? = null
+    internal constructor(db: TransactionDatabase):this(){
+        this.db = db
 
-    @Update(entity = CurrencyEntity::class)
-    suspend fun update(t: CurrencyEntity)
+
+    }
+
+    @Delete(entity = CurrencyEntity::class)
+    abstract suspend fun delete(t: CurrencyEntity)
+
+    @Update(entity = CurrencyEntity::class,onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun update(t: CurrencyEntity)
 
     @Insert(entity = CurrencyEntity::class, onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(t: CurrencyEntity)
+    abstract suspend fun insert(t: CurrencyEntity)
 
     @Query("SELECT * FROM currency")
-    suspend fun getAll(): List<CurrencyEntity>
+    abstract suspend fun getAll(): List<CurrencyEntity>
 
     @Query("SELECT * FROM currency WHERE currency.name==:name")
-    suspend fun getOrNull(name: String): CurrencyEntity?
+    abstract suspend fun getOrNull(name: String): CurrencyEntity?
 
     @Transaction
-    suspend fun insertIfNotExist(currency: String) {
+    open suspend fun insertIfNotExist(currency: String) {
         if (getOrNull(currency) == null) {
             insert(CurrencyEntity(id = currency.sha256(), name = currency))
         }

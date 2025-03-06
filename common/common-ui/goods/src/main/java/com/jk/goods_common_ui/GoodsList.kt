@@ -49,6 +49,7 @@ import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.DraggableWidthContent
 import com.jk.common_ui.composable.rememberIncrement
+import com.jk.goods_common_ui.models.GoodsPurchaseUI
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
@@ -58,12 +59,12 @@ import com.jk.money_common_ui.MoneyUI
 @Composable
 fun GoodsList(
     modifier: Modifier = Modifier,
-    goodsList: List<GoodsUI.Builder>,
+    goodsList: List<GoodsPurchaseUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
-    onGoodsListChange: (List<GoodsUI.Builder>) -> Unit,
-    onChange: (GoodsUI.Builder, Int) -> Unit,
-    onAdd: (GoodsUI.Builder) -> Unit,
-    onRemove: (GoodsUI.Builder) -> Unit
+    onGoodsListChange: (List<GoodsPurchaseUI.Builder>) -> Unit,
+    onChange: (GoodsPurchaseUI.Builder, Int) -> Unit,
+    onAdd: (GoodsPurchaseUI.Builder) -> Unit,
+    onRemove: (GoodsPurchaseUI.Builder) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -106,7 +107,7 @@ fun GoodsList(
         Box(modifier = Modifier
             .clickAnimation {
                 onAdd(
-                    GoodsUI
+                    GoodsPurchaseUI
                         .Builder()
                         .id("${goodsList.size + System.currentTimeMillis()}".sha256())
                 )
@@ -138,8 +139,8 @@ fun GoodsList(
 fun EditableListItem(
     modifier: Modifier,
     currencyListState: State<List<CurrencyUI>>,
-    item: GoodsUI.Builder,
-    onChange: (GoodsUI.Builder) -> Unit,
+    item: GoodsPurchaseUI.Builder,
+    onChange: (GoodsPurchaseUI.Builder) -> Unit,
     onRemove: () -> Unit,
 ) {
     val preBuild = remember(item) {

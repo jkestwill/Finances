@@ -19,6 +19,7 @@ import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.goods_common_ui.GoodsUIMapper
+import com.jk.goods_common_ui.models.GoodsPurchaseUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
@@ -97,8 +98,8 @@ class AddNewTransactionViewModel @Inject constructor(
                 viewModelScope,
                 SharingStarted.Lazily, PagingData.empty()
             )
-    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsUI>>>(State.None)
-    val incomingGoodsFlow: StateFlow<State<List<GoodsUI>>> get() = _incomingGoodsFlow
+    private var _incomingGoodsFlow = MutableStateFlow<State<List<GoodsPurchaseUI>>>(State.None)
+    val incomingGoodsFlow: StateFlow<State<List<GoodsPurchaseUI>>> get() = _incomingGoodsFlow
 
 
     val newGoodsBuilderList = mutableStateListOf<GoodsUI.Builder>()
@@ -137,7 +138,7 @@ class AddNewTransactionViewModel @Inject constructor(
         viewModelScope.launch(dispatchers.io) {
             _incomingGoodsFlow.emitAll(goodsRepository.getByIdList(idList).map { apiRequest ->
                 apiRequest.toState()
-                    .map { goodsList -> goodsList.map { goods -> goodsMapper.toUI(goods) } }
+                    .map { goodsList -> goodsList.map { goods -> goodsMapper.toGoodsPurchaseUI(goods) } }
             })
         }
     }

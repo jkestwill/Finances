@@ -47,6 +47,7 @@ import com.jk.common_ui.State
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.ExpandedListItem
 import com.jk.goods_common_ui.GoodsList
+import com.jk.goods_common_ui.models.GoodsPurchaseUI
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
@@ -72,21 +73,21 @@ fun TransactionScreen(
 ) {
     val preGoods = viewModel.incomingGoodsFlow.collectAsState()
     val fullGoodsList = remember{
-        mutableStateOf(listOf<GoodsUI.Builder>())
+        mutableStateOf(listOf<GoodsPurchaseUI.Builder>())
     }
 
     LaunchedEffect(key1 = preGoods.value) {
         when(preGoods.value){
-            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsUI>>).data.map { it.toBuilder() }
+            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsPurchaseUI>>).data.map { GoodsPurchaseUI.Builder(it) }
             is State.Loading-> Log.e("TAG", "TransactionScreen: Loading goods from list...", )
-            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsUI>>).message}", )
+            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsPurchaseUI>>).message}", )
             State.None -> {}
         }
     }
     LaunchedEffect(key1 = goodsIdList) {
         println(goodsIdList?.size)
         if (goodsIdList != null) {
-           // viewModel.getGoodsListById(goodsIdList ?: listOf())
+            viewModel.getGoodsListById(goodsIdList)
         }
     }
 
@@ -261,8 +262,8 @@ fun TransactionScreen(
                 },
                 onGoodsListChange = { list ->
                     goodsAmount.value = list.sumOf {
-                      //  it.build().cost.amount * it.build().amount
-                        0.0
+                        it.build().cost.amount * it.build().amount
+
                     }
                 }
             )
@@ -410,12 +411,12 @@ fun CategoryGrid(
 @Composable
 fun GoodsSection(
     modifier: Modifier = Modifier,
-    list: List<GoodsUI.Builder>,
+    list: List<GoodsPurchaseUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
     onGoodsAdd: (List<String>?) -> Unit,
-    onNewGoods:(GoodsUI.Builder)->Unit,
-    onRemoveGoods:(GoodsUI.Builder)->Unit,
-    onGoodsListChange: (List<GoodsUI.Builder>) -> Unit
+    onNewGoods:(GoodsPurchaseUI.Builder)->Unit,
+    onRemoveGoods:(GoodsPurchaseUI.Builder)->Unit,
+    onGoodsListChange: (List<GoodsPurchaseUI.Builder>) -> Unit
 ) {
     val deletedImmutables = remember {
         mutableStateOf(listOf<String>())
@@ -436,17 +437,17 @@ fun GoodsSection(
                 onGoodsListChange(it)
             },
             onChange = { goodsBuilder, index ->
-
+                onGoodsListChange(goodsList.value)
 
             },
             onRemove = {
                 onRemoveGoods(it)
-//                    goodsList.value -= it
-//                    deletedImmutables.value += it.build().id
+                    goodsList.value -= it
+                    deletedImmutables.value += it.build().id
             },
             onAdd = {
                 onNewGoods(it)
-//                goodsList.value += it
+                goodsList.value += it
             }
 
         )

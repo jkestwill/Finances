@@ -7,6 +7,7 @@ import com.jk.goods_common_ui.models.GoodsPreviewUI
 import com.jk.goods_common_ui.models.GoodsPurchaseUI
 import com.jk.goods_common_ui.models.GoodsUI
 import org.mapstruct.Mapper
+import org.mapstruct.Mapping
 
 @Mapper
 interface GoodsUIMapper {
@@ -17,7 +18,11 @@ interface GoodsUIMapper {
 
     fun toGoodsPurchaseUI(goodsPurchase: GoodsPurchase):GoodsPurchaseUI
 
+    fun toGoodsPurchaseUI(goods:Goods):GoodsPurchaseUI
+
     fun toGoodsPurchase(goodsPurchase: GoodsPurchaseUI):GoodsPurchase
+
+    fun toGoodsPurchaseUI(goodsUI: GoodsUI):GoodsPurchase
 
     fun toPreviewUI(goodsPreview:GoodsPreview): GoodsPreviewUI
 

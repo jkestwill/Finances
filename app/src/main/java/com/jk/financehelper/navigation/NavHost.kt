@@ -34,7 +34,7 @@ fun MainNavGraph(
     navController: NavHostController = rememberNavController(),
 ) {
 
-    NavHost(navController = navController, startDestination = Routes.GOODS_LIST) {
+    NavHost(navController = navController, startDestination = Routes.CREATE_TRANSACTION) {
 
         composable(Routes.CATEGORY_LIST) {
             CategoryListScreen(
@@ -186,7 +186,8 @@ fun MainNavGraph(
                 },
                 onDismiss = {
                     navController.popBackStack()
-                })
+                },
+                onNewGoodsAdd = {navController.navigate(Routes.GOODS_INFO)})
 
 
         }

@@ -8,5 +8,4 @@ data class GoodsPurchaseUI(
     val name:String,
     val amount:String,
     val moneyUI:MoneyUI
-) {
-}
+)

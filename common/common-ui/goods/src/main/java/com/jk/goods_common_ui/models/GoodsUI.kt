@@ -51,8 +51,6 @@ data class GoodsUI(
             return this
         }
 
-
-
         fun specifications(specifications: List<SpecificationsUI>?): Builder {
             this.specifications = specifications
             return this

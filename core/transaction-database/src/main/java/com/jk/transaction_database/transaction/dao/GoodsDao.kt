@@ -121,6 +121,7 @@ abstract class GoodsDao internal constructor(
     @Query("SELECT * FROM goods WHERE goods.id in (:idList)")
     abstract suspend fun getByIdList(idList: List<String>): List<GoodsxSpecificationsxMoneyRelation>
 
+
     @Insert(entity = GoodsEntity::class)
     abstract suspend fun insert(t: GoodsEntity)
 
@@ -128,10 +129,10 @@ abstract class GoodsDao internal constructor(
     abstract suspend fun insertList(t: List<GoodsEntity>)
 
 
-    @Transaction
-    suspend fun insertPurchase(goodsPurchaseDTO: GoodsPurchaseDTO){
-        
-    }
+//    @Transaction
+//    suspend open fun insertPurchase(goodsPurchaseDTO: GoodsPurchaseDTO){
+//
+//    }
 
 
 }

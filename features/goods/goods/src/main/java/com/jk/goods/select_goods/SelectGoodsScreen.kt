@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +47,7 @@ import com.jk.shared_res.R
 fun SelectGoodsDialog(
     viewModel: SelectGoodsViewModel,
     preselectedIdList: List<String>? = null,
+    onNewGoodsAdd:()->Unit,
     onSelect: (List<String>) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -66,7 +68,8 @@ fun SelectGoodsDialog(
                 goodsUI = goodsList.itemSnapshotList.items[index],
                 selected = selected
             )
-        }
+        },
+        onNewItemCreate = onNewGoodsAdd
     )
 }
 
@@ -77,6 +80,7 @@ fun SelectableItemsDialog(
     items: LazyPagingItems<out Selectable>,
     preselectedIdList: List<String>? = null,
     onSelect: (List<String>) -> Unit,
+    onNewItemCreate:()->Unit={},
     itemListContent: @Composable LazyItemScope.(Int, Selectable, Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -119,6 +123,9 @@ fun SelectableItemsDialog(
                         style = FinanceHelperTheme.typography.h1,
                         textAlign = TextAlign.Start
                     )
+                    Button(onClick = onNewItemCreate) {
+                        Text("Add new")
+                    }
                     Box(
                         modifier = Modifier
                             .weight(1f)

@@ -9,6 +9,7 @@ import com.jk.common_data.SearchParams
 import com.jk.common_data.StringUUIDGenerator
 import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPreview
+import com.jk.common_goods_data.GoodsPurchase
 import com.jk.goods.mapper.GoodsMapper
 import com.jk.transaction_database.transaction.dao.GoodsDao
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +46,8 @@ class GoodsRepository @Inject constructor(
         }
         return merge(start, result)
     }
+
+
 
     fun getById(id: String): Flow<ApiRequest<Goods>> {
         val start = flowOf<ApiRequest<Goods>>(ApiRequest.Loading())

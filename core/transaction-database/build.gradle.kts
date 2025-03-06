@@ -68,6 +68,7 @@ dependencies {
 
     kapt(libs.hilt.android.compiler)
     implementation(project(":common:common-utils"))
+    implementation(project(":common:common-data:money"))
     ksp(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.junit.ktx)

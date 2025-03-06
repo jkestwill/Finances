@@ -1,9 +1,11 @@
 package com.jk.transaction.di
 
 import com.jk.common_data.Validator
+import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.transaction.validator.CurrencyValidator
+import com.jk.transaction.validator.GoodsValidator
 import com.jk.transaction.validator.MoneyValidator
 import com.jk.transaction_common_ui.TransactionUiMapper
 import com.jk.transaction_common_ui.TransactionUiMapperImpl
@@ -27,4 +29,6 @@ class TransactionModule {
     @Provides
     fun providesCurrencyValidator(): Validator<CurrencyUI> =
         CurrencyValidator()
+    @Provides
+    fun provideGoodsUIValidator(moneyValidator: Validator<MoneyUI>):Validator<GoodsUI> = GoodsValidator(moneyValidator)
 }
