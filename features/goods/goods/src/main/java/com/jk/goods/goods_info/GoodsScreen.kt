@@ -9,8 +9,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +23,7 @@ import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -43,13 +46,27 @@ fun GoodsGeneralInfo(
     currencyListState: State<List<CurrencyUI>>,
     onCreate: (GoodsUI) -> Unit
 ) {
+
+    val isLoadingAnimation = remember {
+        mutableStateOf(false)
+    }
+// не показывать анимацию если загрузка слишком быстрая
+    LaunchedEffect(goodsUIState) {
+        if (goodsUIState is State.Loading) {
+            delay(100)
+            isLoadingAnimation.value = true
+        } else {
+            isLoadingAnimation.value = false
+        }
+    }
     when (goodsUIState) {
         is State.Success -> {
             GoodsGeneralInfo(goodsUIState.data, currencyListState, onCreate = onCreate)
         }
 
         is State.Loading -> {
-            CircularProgressIndicator()
+            if (isLoadingAnimation.value)
+                CircularProgressIndicator()
         }
 
         is State.Error -> {
@@ -76,7 +93,7 @@ fun GoodsGeneralInfo(
     }
 
     val currency = rememberSaveable() {
-        mutableStateOf(goodsUI?.cost?.currency?.toString() ?: "")
+        mutableStateOf(goodsUI?.cost?.currency)
     }
     Column(
         Modifier
@@ -99,30 +116,23 @@ fun GoodsGeneralInfo(
                     Text(text = "Cost")
                 })
             CurrencyDropDownMenu(
-                modifier = Modifier,
+                modifier = Modifier.weight(1f),
                 currencyListState = currencyListState,
                 color = Color.Cyan,
                 placeholderText = "Currency"
             ) {
-
+                currency.value = it
             }
-            CharacterLimitTextField(
-                modifier = Modifier.weight(1f),
-                value = currency.value,
-                onValueChange = {
-                    currency.value = it
-                },
-                placeHolder = {
-                    Text(text = "Currency")
-                })
         }
 
         Button(onClick = {
-            onCreate(
-                GoodsUI.Builder().id("${name.value}${cost.value}".sha256())
-                    .cost(MoneyUI("", cost.value.toDouble(), CurrencyUI("zxc", currency.value)))
-                    .name(name.value).build()
-            )
+            currency.value?.let {
+                onCreate(
+                    GoodsUI.Builder().id("${name.value}${cost.value}".sha256())
+                        .cost(MoneyUI("", cost.value.toDouble(), it))
+                        .name(name.value).build()
+                )
+            }
         }) {
             Text(text = "Create")
         }

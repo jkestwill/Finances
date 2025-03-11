@@ -26,7 +26,7 @@ slf4jSimple = "2.0.16"
 truth = "1.4.0"
 ycharts = "2.1.0"
 
-android-application= "8.2.2"
+android-application= "8.5.0"
 jetbrains-kotlin-android="1.9.22"
 kapt="1.8.0"
 google-dagger-hilt-android="2.50"

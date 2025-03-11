@@ -1,5 +1,6 @@
 package com.jk.transaction_data
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -40,6 +41,9 @@ class TransactionRepository @Inject constructor(
     suspend fun addTransaction(transaction: Transaction) {
         sourceRequest {
             transactionDao.insert(transactionMapper.toTransactionxCategoryXTypeXGoods(transaction))
+
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 }

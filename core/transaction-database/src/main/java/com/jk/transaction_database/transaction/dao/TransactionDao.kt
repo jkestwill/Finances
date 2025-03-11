@@ -10,6 +10,7 @@ import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewRelation
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import java.time.LocalDateTime
@@ -23,6 +24,7 @@ abstract class TransactionDao internal constructor(
     private val goodsDao: GoodsDao = db.getGoodsDao()
     private val categoryDao: CategoryDao = db.getCategoryDao()
     private val moneyAccountDao: MoneyAccountDao = db.getMoneyAccountDao()
+    private val goodsOperationDao: OperationGoodsListDao = db.getOperationGoodsListDao()
 
     @Transaction
     @Query(value = "SELECT * FROM `transaction`")
@@ -51,9 +53,18 @@ abstract class TransactionDao internal constructor(
         operationDao.insert(transaction.operation)
         categoryDao.insert(transaction.categoryList)
         goodsDao.insertList(transaction.goodsList)
+        for (goods in transaction.goodsList) {
+            goodsOperationDao.insert(
+                OperationGoodsListEntity(
+                    operationId = transaction.operation.operationEntity.id,
+                    goodsId = goods.id,
+                    amount = transaction.goodsAmount
+                )
+            )
+        }
         typeDao.insertIfNotExist(transaction.type)
         moneyAccountDao.updateAmount(
-            transaction.transactionEntity.moneyAccountId,
+            moneyAccountId = transaction.transactionEntity.moneyAccountId,
             amount = transaction.operation.money.amount
         )
         insert(transaction.transactionEntity)

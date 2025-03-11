@@ -27,8 +27,8 @@ data class GoodsxSpecificationsxMoneyRelation(
         parentColumn = "id",
         associateBy = Junction(
             GoodsMoneyListEntity::class,
-            parentColumn = "money_id",
-            entityColumn = "goods_id"
+            parentColumn = "goods_id",
+            entityColumn = "money_id"
         )
     )
     val cost: List<MoneyEntity>

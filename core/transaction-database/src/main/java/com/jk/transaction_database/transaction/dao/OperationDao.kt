@@ -28,7 +28,7 @@ import com.jk.transaction_database.transaction.relations.OperationRelation
     @Transaction
     open suspend fun insert(operationRelation: OperationRelation){
         moneyDao.insert(operationRelation.money)
-        insert(operationRelation.operationGoodsEntity)
+        insert(operationRelation.operationEntity)
 
     }
     @Update(entity = OperationEntity::class)

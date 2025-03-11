@@ -155,9 +155,13 @@ class AddNewTransactionViewModel @Inject constructor(
                 )
                 transactionValidator.validate(newTransactionState.value)
                 transactionRepository.addTransaction(transactionMapper.toTransaction(transactionUI.build()))
+                onSuccess()
             } catch (e: IllegalArgumentException) {
+                onFailure(e.message?:"error creating transaction")
                 logger?.info(e.message)
                 return@launch
+            }catch (e:Exception){
+                logger?.info(e.message)
             }
 
         }

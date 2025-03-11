@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.jk.transaction_data"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -14,7 +14,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+    }
     buildTypes {
         release {
             isMinifyEnabled = false

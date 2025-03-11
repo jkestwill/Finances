@@ -29,5 +29,6 @@ data class OperationGoodsListEntity(
     val operationId: String,
     @ColumnInfo(name = "goods_id")
     val goodsId: String,
+    @ColumnInfo(name = "goods_amount")
     val amount:Int
 )

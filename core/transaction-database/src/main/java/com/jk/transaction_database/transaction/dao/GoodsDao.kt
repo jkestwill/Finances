@@ -51,9 +51,8 @@ abstract class GoodsDao internal constructor(
             if (goods.specifications != null)
                 specificationDao.insert(goods.specifications)
             insert(goods.goodsEntity)
-            currencyDao.insert(CurrencyEntity(id = "${"zxc"}", "BYN"))
-            for (money in goods.cost) {
 
+            for (money in goods.cost) {
                 moneyDao.insert(money)
                 goodsMoneyListDao.insert(
                     GoodsMoneyListEntity(
@@ -129,10 +128,6 @@ abstract class GoodsDao internal constructor(
     abstract suspend fun insertList(t: List<GoodsEntity>)
 
 
-//    @Transaction
-//    suspend open fun insertPurchase(goodsPurchaseDTO: GoodsPurchaseDTO){
-//
-//    }
 
 
 }

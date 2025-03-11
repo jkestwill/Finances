@@ -40,6 +40,7 @@ import com.jk.transaction_database.transaction.dao.MoneyAccountDao
 import com.jk.transaction_database.transaction.dao.MoneyDao
 import com.jk.transaction_database.transaction.dao.OperationCategoryDao
 import com.jk.transaction_database.transaction.dao.OperationDao
+import com.jk.transaction_database.transaction.dao.OperationGoodsListDao
 import com.jk.transaction_database.transaction.dao.ScheduleDao
 import com.jk.transaction_database.transaction.dao.SpecificationDao
 import com.jk.transaction_database.transaction.dao.TransactionDao
@@ -93,7 +94,7 @@ import java.util.concurrent.Executors
         StoreAddressListEntity::class,
         GoodsMoneyListEntity::class,
         StoreGoodsListEntity::class
-    ], version = 6, exportSchema = false, autoMigrations = []
+    ], version = 7, exportSchema = false, autoMigrations = []
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -141,6 +142,8 @@ internal abstract class TransactionDatabase : RoomDatabase() {
     abstract fun getMoneyAccountDao(): MoneyAccountDao
 
     abstract fun getGoodsMoneyListDao(): GoodsMoneyListDao
+
+    abstract fun getOperationGoodsListDao():OperationGoodsListDao
 
     fun prepopulate(tableName: String, vararg values: String) {
         query(query = "INSERT INTO $tableName VALUES (${values.joinToString(",")})", args = null)
@@ -267,7 +270,7 @@ class TransactionDatabaseProvider internal constructor(internal val db: Transact
 
     fun getGoodsMoneyListDao(): GoodsMoneyListDao = db.getGoodsMoneyListDao()
 
-
+    fun getOperationGoodsListDao():OperationGoodsListDao = db.getOperationGoodsListDao()
 }
 
 

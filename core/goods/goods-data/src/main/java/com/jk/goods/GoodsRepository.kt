@@ -29,11 +29,11 @@ class GoodsRepository @Inject constructor(
     suspend fun add(goodsList: List<Goods>) =
         goodsDao.insertGoodsRelation(goodsList.map {
             goodsMapper.toGoodsxSpecificationsxMoneyRelation(
-                it.copy(id = StringUUIDGenerator.generate())
+                it.copy(id = StringUUIDGenerator.generate(), cost = it.cost.copy(id = StringUUIDGenerator.generate()))
             )
         })
 
-    suspend fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
+    fun getByIdList(idList: List<String>): Flow<ApiRequest<List<Goods>>> {
         val start = flowOf(ApiRequest.Loading<List<Goods>>())
         val result: Flow<ApiRequest<List<Goods>>> = flow<List<Goods>> {
             emit(goodsDao.getByIdList(idList).map { goodsMapper.toGoods(it) })

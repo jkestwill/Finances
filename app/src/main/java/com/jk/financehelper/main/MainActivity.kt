@@ -8,7 +8,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.jk.common_ui.FinanceHelperSize
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.financehelper.navigation.MainNavGraph
+import com.jk.financehelper.FinanceHelperApp
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = FinanceHelperTheme.colors.primaryBackground
                 ) {
-                    MainNavGraph()
+                    FinanceHelperApp()
 
                 }
             }

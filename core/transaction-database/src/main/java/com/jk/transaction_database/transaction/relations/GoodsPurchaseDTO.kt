@@ -10,5 +10,4 @@ data class GoodsPurchaseDTO(
     val goodsName:String,
     val goodsAmount:String,
 
-) {
-}
+)
