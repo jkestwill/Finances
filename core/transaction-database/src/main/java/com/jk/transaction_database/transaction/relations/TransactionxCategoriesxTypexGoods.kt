@@ -43,8 +43,7 @@ data class TransactionxCategoriesxTypexGoods(
         parentColumn = "operation_id",
         associateBy = Junction(OperationGoodsListEntity::class, "operation_id", "goods_id"),
     )
-    val goodsList: List<GoodsEntity>,
-    @ColumnInfo("goods_amount")
-    val goodsAmount:Int
+    val goodsList: List<GoodsPurchaseDTO>,
+
 
     )

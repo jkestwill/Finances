@@ -18,6 +18,11 @@ import java.time.LocalDateTime
         childColumns  = ["type_id"],
         parentColumns = ["id"],
     ),
+    ForeignKey(
+        entity = MoneyAccountEntity::class,
+        childColumns  = ["money_account_id"],
+        parentColumns = ["id"],
+    ),
 ])
 data class TransactionEntity(
     @PrimaryKey
