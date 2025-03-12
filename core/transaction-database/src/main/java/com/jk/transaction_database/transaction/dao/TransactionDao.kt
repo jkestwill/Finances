@@ -5,11 +5,13 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
 import com.jk.transaction_database.transaction.database.TransactionDatabase
+import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.preview.TransactionPreviewRelation
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
@@ -31,15 +33,7 @@ abstract class TransactionDao internal constructor(
     abstract suspend fun getAll(): List<TransactionEntity>
 
     @Transaction
-    @Query(
-        "SELECT * FROM `transaction` " +
-                "INNER JOIN type ON `transaction`.type_id == type.id " +
-                "INNER JOIN operation ON `transaction`.operation_id==operation.id " +
-                "INNER JOIN category_list ON operation.id == category_list.operation_id " +
-                "INNER JOIN category ON category_list.category_id == category.id " +
-                "LEFT JOIN goods_list ON operation.id == operation.id " +
-                "LEFT JOIN goods ON goods_list.goods_id = goods.id"
-    )
+    @Query("SELECT * FROM full_transaction ")
     public abstract fun getRelation(): List<TransactionxCategoriesxTypexGoods>
 
     @Query("SELECT * FROM `transaction`")
@@ -52,13 +46,13 @@ abstract class TransactionDao internal constructor(
     open suspend fun insert(transaction: TransactionxCategoriesxTypexGoods) {
         operationDao.insert(transaction.operation)
         categoryDao.insert(transaction.categoryList)
-        goodsDao.insertList(transaction.goodsList)
         for (goods in transaction.goodsList) {
+            goodsDao.insert(GoodsEntity(goods.goodsId,goods.goodsName))
             goodsOperationDao.insert(
                 OperationGoodsListEntity(
                     operationId = transaction.operation.operationEntity.id,
-                    goodsId = goods.id,
-                    amount = transaction.goodsAmount
+                    goodsId = goods.goodsId,
+                    amount = goods.amount
                 )
             )
         }

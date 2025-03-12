@@ -11,6 +11,7 @@ import com.jk.transaction_database.transaction.entity.GoodsEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 import com.jk.transaction_database.transaction.entity.OperationEntity
 import com.jk.transaction_database.transaction.entity.TransactionEntity
+import com.jk.transaction_database.transaction.relations.GoodsPurchaseDTO
 import com.jk.transaction_database.transaction.relations.OperationRelation
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import org.mapstruct.Mapper
@@ -42,7 +43,7 @@ interface TransactionMapper {
         source = "operation.goodsList",
         qualifiedByName = ["goodsToGoodsEntity"]
     )
-    @Mapping(target = "goodsAmount", source = "")
+
     fun toTransactionxCategoryXTypeXGoods(transaction: Transaction): TransactionxCategoriesxTypexGoods
 
     @Named("categoryToCategoryEntity")
@@ -61,8 +62,8 @@ interface TransactionMapper {
         )
     }
     @Named("goodsToGoodsEntity")
-    fun goodsToGoodsEntity(goods:GoodsPurchase):GoodsEntity{
-        return GoodsEntity(id = goods.id, name = goods.name)
+    fun goodsToGoodsEntity(goods:GoodsPurchase):GoodsPurchaseDTO{
+        return GoodsPurchaseDTO(goodsId = goods.id, goodsName = goods.name, amount = goods.amount)
     }
 
     @Named("moneyToMoneyEntity")

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.jk.money_data"
+    namespace = "com.jk.money_account_data"
     compileSdk = 35
 
     defaultConfig {
@@ -24,8 +24,12 @@ android {
             )
         }
     }
-    kotlin {
-        jvmToolchain(17)
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 
@@ -34,7 +38,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.appcompat)
 
-    implementation(libs.material)
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     // mapper
@@ -42,10 +45,10 @@ dependencies {
     implementation(libs.mapstruct)
     kapt(libs.mapstruct.processor)
 
-    implementation(project(":common:common-utils"))
-    implementation(project(":common:common-data:money"))
     implementation(project(":core:transaction-database"))
-    
+    implementation(project(":common:common-data:money"))
+    implementation(project(":common:common-utils"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

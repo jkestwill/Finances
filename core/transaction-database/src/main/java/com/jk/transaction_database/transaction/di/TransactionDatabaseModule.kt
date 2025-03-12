@@ -4,6 +4,7 @@ import android.content.Context
 import com.jk.transaction_database.BuildConfig
 import com.jk.transaction_database.transaction.dao.BankDao
 import com.jk.transaction_database.transaction.dao.ExchangeRateDao
+import com.jk.transaction_database.transaction.dao.MoneyAccountDao
 import com.jk.transaction_database.transaction.database.TransactionDatabase
 import com.jk.transaction_database.transaction.database.TransactionDatabaseProvider
 import com.jk.transaction_database.transaction.database.transactionDatabaseProvider
@@ -33,5 +34,10 @@ class TransactionDatabaseModule {
     @Singleton
     fun provideBankDao(transactionDatabase: TransactionDatabaseProvider): BankDao {
         return transactionDatabase.getBankDao()
+    }
+
+    @Provides
+    fun provideMoneyAccountDao(transactionDatabase: TransactionDatabaseProvider):MoneyAccountDao{
+        return transactionDatabase.getMoneyAccountDao()
     }
 }

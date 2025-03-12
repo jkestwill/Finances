@@ -3,6 +3,7 @@ package com.jk.financehelper.utils
 import com.jk.category_common_ui.CategoryUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
+import com.jk.transaction_common_ui.MoneyAccountUI
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.TransactionTypeUI
 import com.jk.transaction_common_ui.TransactionUI
@@ -33,7 +34,8 @@ class DataUtils {
                     goodsList = listOf()
                 ),
                 date = LocalDateTime.now(),
-                type = TransactionTypeUI(id = "ww", "online")
+                type = TransactionTypeUI(id = "ww", "online"),
+                moneyAccountUI = MoneyAccountUI("","", moneyUI = MoneyUI("",20.0,CurrencyUI("","BYN")))
             ),
             TransactionUI(
                 id = "qq",
@@ -56,7 +58,8 @@ class DataUtils {
                     goodsList = listOf()
                 ),
                 date = LocalDateTime.now(),
-                type = TransactionTypeUI(id = "ww", "online")
+                type = TransactionTypeUI(id = "ww", "online"),
+                moneyAccountUI = MoneyAccountUI("","", moneyUI = MoneyUI("",20.0,CurrencyUI("","BYN")))
             ),
         )
 

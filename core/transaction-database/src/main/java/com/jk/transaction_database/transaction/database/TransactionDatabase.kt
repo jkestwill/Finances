@@ -57,6 +57,8 @@ import com.jk.transaction_database.transaction.list.OperationGoodsListEntity
 import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.list.StoreAddressListEntity
 import com.jk.transaction_database.transaction.list.StoreGoodsListEntity
+import com.jk.transaction_database.transaction.relations.GoodsPurchaseDTO
+import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalTimeTypeConverter
@@ -94,7 +96,7 @@ import java.util.concurrent.Executors
         StoreAddressListEntity::class,
         GoodsMoneyListEntity::class,
         StoreGoodsListEntity::class
-    ], version = 7, exportSchema = false, autoMigrations = []
+    ], version = 8, exportSchema = false, autoMigrations = [], views = [TransactionxCategoriesxTypexGoods::class, GoodsPurchaseDTO::class]
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {

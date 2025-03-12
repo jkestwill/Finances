@@ -33,6 +33,7 @@
             <option value="$PROJECT_DIR$/core/money" />
             <option value="$PROJECT_DIR$/core/money/currencyExchangeApi" />
             <option value="$PROJECT_DIR$/core/money/exchange-rate-data" />
+            <option value="$PROJECT_DIR$/core/money/money-account-data" />
             <option value="$PROJECT_DIR$/core/money/money-data" />
             <option value="$PROJECT_DIR$/core/settings" />
             <option value="$PROJECT_DIR$/core/transaction" />
@@ -49,7 +50,6 @@
             <option value="$PROJECT_DIR$/features/transaction" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

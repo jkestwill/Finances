@@ -41,3 +41,4 @@ include(":common:common-ui:category")
 include(":common:common-ui:money")
 include(":common:shared_res")
 
+include(":core:money:money-account-data")

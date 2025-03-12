@@ -11,7 +11,8 @@ data class TransactionUI(
     val id: String,
     val operation: OperationUI,
     val date: LocalDateTime,
-    val type: TransactionTypeUI
+    val type: TransactionTypeUI,
+    val moneyAccountUI:MoneyAccountUI
 ) {
     class Builder() : BaseIdBuilder<TransactionUI>() {
 
@@ -19,6 +20,7 @@ data class TransactionUI(
         private var date: LocalDateTime = LocalDateTime.now()
         private var type: TransactionTypeUI =
             TransactionTypeUI(id = "", name = TransactionTypeUI.Type.OFFLINE.value)
+        val moneyAccountUI:MoneyAccountUI = MoneyAccountUI.Builder().build()
 
         fun setOperation(operationUI: OperationUI): Builder {
             this.operation = operationUI
@@ -36,7 +38,7 @@ data class TransactionUI(
         }
 
         override fun build(): TransactionUI {
-            return TransactionUI(id, operation, date, type)
+            return TransactionUI(id, operation, date, type,moneyAccountUI)
         }
     }
 }

@@ -1,9 +1,9 @@
 package com.jk.transaction_common_data
 
 import com.jk.category_common_data.Category
-import com.jk.common_goods_data.Goods
 import com.jk.common_goods_data.GoodsPurchase
 import com.jk.money_common_data.Money
+import com.jk.money_common_data.MoneyAccount
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -16,11 +16,7 @@ data class Transaction(
 )
 
 
-data class MoneyAccount(
-    val id:String,
-    val name:String,
-    val money: Money
-)
+
 
 data class Operation(
     val id:String,
