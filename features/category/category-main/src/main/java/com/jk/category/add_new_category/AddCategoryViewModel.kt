@@ -35,7 +35,7 @@ class AddCategoryViewModel @Inject constructor(
     private val categoryValidator: CategoryUIValidator,
     @Named(LoggerTags.ADD_CATEGORY)
     private val logger: Logger?,
-    private val dispatchers: com.jk.common_data.Dispatchers
+    private val dispatchers: com.jk.common_data.DispatcherProvider
 ) : ViewModel() {
 
 

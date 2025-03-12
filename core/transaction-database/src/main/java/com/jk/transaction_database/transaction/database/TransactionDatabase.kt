@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.jk.common_data.StringUUIDGenerator
+import com.jk.common_data.sha256
 import com.jk.money_common_data.Currencies
 import com.jk.transaction_database.transaction.GoodsMoneyListDao
 import com.jk.transaction_database.transaction.entity.AddressEntity
@@ -58,6 +59,8 @@ import com.jk.transaction_database.transaction.list.OperationScheduleList
 import com.jk.transaction_database.transaction.list.StoreAddressListEntity
 import com.jk.transaction_database.transaction.list.StoreGoodsListEntity
 import com.jk.transaction_database.transaction.relations.GoodsPurchaseDTO
+import com.jk.transaction_database.transaction.relations.MoneyAccountDTO
+import com.jk.transaction_database.transaction.relations.MoneyDTO
 import com.jk.transaction_database.transaction.relations.TransactionxCategoriesxTypexGoods
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTimeTypeConverter
 import com.jk.transaction_database.transaction.typeconverter.LocalDateTypeConverter
@@ -65,7 +68,9 @@ import com.jk.transaction_database.transaction.typeconverter.LocalTimeTypeConver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.concurrent.Executors
+import java.util.random.RandomGenerator
 
 
 @Database(
@@ -96,7 +101,11 @@ import java.util.concurrent.Executors
         StoreAddressListEntity::class,
         GoodsMoneyListEntity::class,
         StoreGoodsListEntity::class
-    ], version = 8, exportSchema = false, autoMigrations = [], views = [TransactionxCategoriesxTypexGoods::class, GoodsPurchaseDTO::class]
+    ],
+    version = 8,
+    exportSchema = false,
+    autoMigrations = [],
+    views = [TransactionxCategoriesxTypexGoods::class, GoodsPurchaseDTO::class]
 )
 @TypeConverters(value = [LocalDateTimeTypeConverter::class, LocalDateTypeConverter::class, LocalTimeTypeConverter::class])
 internal abstract class TransactionDatabase : RoomDatabase() {
@@ -145,12 +154,22 @@ internal abstract class TransactionDatabase : RoomDatabase() {
 
     abstract fun getGoodsMoneyListDao(): GoodsMoneyListDao
 
-    abstract fun getOperationGoodsListDao():OperationGoodsListDao
+    abstract fun getOperationGoodsListDao(): OperationGoodsListDao
 
     fun prepopulate(tableName: String, vararg values: String) {
         query(query = "INSERT INTO $tableName VALUES (${values.joinToString(",")})", args = null)
     }
 }
+
+//todo delete
+val testData = MoneyAccountDTO(
+    "zxc".sha256(),
+    "picex",
+    MoneyDTO(
+        MoneyEntity(id = "zxc", amount = 0.9, currencyId = "cc", date = LocalDate.now()),
+        CurrencyEntity("cc", "BYN")
+    )
+)
 
 fun transactionDatabaseProvider(
     context: Context,
@@ -173,6 +192,7 @@ fun transactionDatabaseProvider(
             CoroutineScope(this.queryExecutor.asCoroutineDispatcher()).launch {
                 for (i in Currencies.entries)
                     getCurrencyDao().insert(CurrencyEntity(StringUUIDGenerator.generate(), i.name))
+                getMoneyAccountDao().insert(testData)
             }
 
         }
@@ -272,7 +292,7 @@ class TransactionDatabaseProvider internal constructor(internal val db: Transact
 
     fun getGoodsMoneyListDao(): GoodsMoneyListDao = db.getGoodsMoneyListDao()
 
-    fun getOperationGoodsListDao():OperationGoodsListDao = db.getOperationGoodsListDao()
+    fun getOperationGoodsListDao(): OperationGoodsListDao = db.getOperationGoodsListDao()
 }
 
 

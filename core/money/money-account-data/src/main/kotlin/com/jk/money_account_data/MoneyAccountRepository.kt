@@ -1,6 +1,7 @@
 package com.jk.money_account_data
 
 import com.jk.common_data.ApiRequest
+import com.jk.common_data.FinanceHelperException
 import com.jk.money_common_data.MoneyAccount
 import com.jk.transaction_database.transaction.dao.MoneyAccountDao
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +20,23 @@ class MoneyAccountRepository @Inject constructor(
         val start = flowOf<ApiRequest<List<MoneyAccount>>>(ApiRequest.Loading())
         val result = flow<ApiRequest<List<MoneyAccount>>> {
             try {
-                ApiRequest.Success(moneyAccountDao.getAllDTO().map {
+                val result = moneyAccountDao.getAllDTO().map {
                     moneyAccountMapper.toMoneyAccount(it)
-                })
+                }
+                if (result.isEmpty()) {
+                    emit(
+                        ApiRequest.Error(
+                            data = listOf(),
+                            error = FinanceHelperException("List is empty", "money_acc_repo")
+                        )
+                    )
+                } else {
+                    emit(ApiRequest.Success(result))
+                }
             } catch (e: IOException) {
-                ApiRequest.Error(e.message)
+                emit(ApiRequest.Error(null, e))
+            } catch (e: Exception) {
+                emit(ApiRequest.Error(null, e))
             }
         }
         return merge(start, result)

@@ -4,6 +4,8 @@ import com.jk.common_data.Validator
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
+import com.jk.transaction.MoneyAccountUIMapper
+import com.jk.transaction.MoneyAccountUIMapperImpl
 import com.jk.transaction.validator.CurrencyValidator
 import com.jk.transaction.validator.GoodsValidator
 import com.jk.transaction.validator.MoneyValidator
@@ -31,4 +33,7 @@ class TransactionModule {
         CurrencyValidator()
     @Provides
     fun provideGoodsUIValidator(moneyValidator: Validator<MoneyUI>):Validator<GoodsUI> = GoodsValidator(moneyValidator)
+
+    @Provides
+    fun provideMoneyAccountUIMapper():MoneyAccountUIMapper = MoneyAccountUIMapperImpl()
 }

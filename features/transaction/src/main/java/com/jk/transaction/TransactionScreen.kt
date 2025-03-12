@@ -1,10 +1,10 @@
-
 package com.jk.transaction
 
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -54,6 +57,7 @@ import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import com.jk.shared_res.R
+import com.jk.transaction_common_ui.MoneyAccountUI
 import com.jk.transaction_common_ui.OperationUI
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,15 +76,24 @@ fun TransactionScreen(
     onBack: () -> Unit
 ) {
     val preGoods = viewModel.incomingGoodsFlow.collectAsState()
-    val fullGoodsList = remember{
+    val fullGoodsList = remember {
         mutableStateOf(listOf<GoodsPurchaseUI.Builder>())
     }
-
+    val moneyAccountStateList = viewModel.moneyAccountList.collectAsState(initial = State.None)
     LaunchedEffect(key1 = preGoods.value) {
-        when(preGoods.value){
-            is State.Success-> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsPurchaseUI>>).data.map { GoodsPurchaseUI.Builder(it) }
-            is State.Loading-> Log.e("TAG", "TransactionScreen: Loading goods from list...", )
-            is State.Error-> Log.e("TAG", "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsPurchaseUI>>).message}", )
+        when (preGoods.value) {
+            is State.Success -> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsPurchaseUI>>).data.map {
+                GoodsPurchaseUI.Builder(
+                    it
+                )
+            }
+
+            is State.Loading -> Log.e("TAG", "TransactionScreen: Loading goods from list...")
+            is State.Error -> Log.e(
+                "TAG",
+                "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsPurchaseUI>>).message}",
+            )
+
             State.None -> {}
         }
     }
@@ -138,9 +151,13 @@ fun TransactionScreen(
 
         }
     }, bottomBar = {
-        Column(modifier=Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             // !!!!!!!!!!!!!!!!!поменять!!!!!!!!!!!!!!!!!!!!!!
-            TotalSection(modifier=Modifier.fillMaxWidth(), totalSum =0.0, currency = CurrencyUI("zxc","BYN"))
+            TotalSection(
+                modifier = Modifier.fillMaxWidth(),
+                totalSum = 0.0,
+                currency = CurrencyUI("zxc", "BYN")
+            )
             // add/cancel/save buttons
             Row(
                 modifier = Modifier.padding(FinanceHelperTheme.shape.headerPadding),
@@ -236,7 +253,12 @@ fun TransactionScreen(
                     Log.e("TAG", "TransactionScreen:${it} ")
                 }
             )
-
+            MoneyAccountSection(
+                modifier = Modifier.fillMaxWidth(),
+                moneyAccountStateList = moneyAccountStateList.value,
+                onSelect = {
+                    Log.e("TAG", "onMoneyAccSelect: ${it}")
+                })
             CategorySection(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -273,6 +295,60 @@ fun TransactionScreen(
                     .padding(start = 10.dp, end = 10.dp)
             )
 
+        }
+    }
+}
+
+@Composable
+fun MoneyAccountSection(
+    moneyAccountStateList: State<List<MoneyAccountUI>>,
+    modifier: Modifier = Modifier,
+    onSelect: (moneyAccountId: String) -> Unit = {}
+) {
+    when (moneyAccountStateList) {
+        is State.Success -> {
+            MoneyAccountSection(
+                moneyAccountStateList = moneyAccountStateList.data,
+                modifier = modifier,
+                onSelect = onSelect
+            )
+        }
+
+        is State.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is State.Error -> {
+            if (moneyAccountStateList.data?.isEmpty() == true)
+                Text("List is empty")
+        }
+
+        is State.None -> {
+
+        }
+    }
+}
+
+@Composable
+fun MoneyAccountSection(
+    moneyAccountStateList: List<MoneyAccountUI>,
+    modifier: Modifier = Modifier,
+    onSelect: (moneyAccountId: String) -> Unit = {}
+) {
+
+    LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        items(moneyAccountStateList, key = { it.id }) {
+            Box(modifier = Modifier.clickable { onSelect(it.id) }) {
+                Text(text = it.name, modifier = Modifier.align(Alignment.TopStart))
+                Text(
+                    text = it.moneyUI.amount.toString(),
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
+                Text(
+                    text = it.moneyUI.currency.name,
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                )
+            }
         }
     }
 }
@@ -414,8 +490,8 @@ fun GoodsSection(
     list: List<GoodsPurchaseUI.Builder>,
     currencyListState: State<List<CurrencyUI>>,
     onGoodsAdd: (List<String>?) -> Unit,
-    onNewGoods:(GoodsPurchaseUI.Builder)->Unit,
-    onRemoveGoods:(GoodsPurchaseUI.Builder)->Unit,
+    onNewGoods: (GoodsPurchaseUI.Builder) -> Unit,
+    onRemoveGoods: (GoodsPurchaseUI.Builder) -> Unit,
     onGoodsListChange: (List<GoodsPurchaseUI.Builder>) -> Unit
 ) {
     val deletedImmutables = remember {
@@ -442,8 +518,8 @@ fun GoodsSection(
             },
             onRemove = {
                 onRemoveGoods(it)
-                    goodsList.value -= it
-                    deletedImmutables.value += it.build().id
+                goodsList.value -= it
+                deletedImmutables.value += it.build().id
             },
             onAdd = {
                 onNewGoods(it)
@@ -494,23 +570,30 @@ fun ScheduleSection(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun TotalSection(modifier:Modifier=Modifier,totalSum:Double,currency:CurrencyUI){
-    val defaultCurrency  = remember {
+fun TotalSection(modifier: Modifier = Modifier, totalSum: Double, currency: CurrencyUI) {
+    val defaultCurrency = remember {
         mutableStateOf(currency)
     }
-    Column(modifier=modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Row (horizontalArrangement = Arrangement.spacedBy(5.dp)){
-            Text(text = "${stringResource(id = R.string.total).uppercase()}:", style = FinanceHelperTheme.typography.h3)
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            Text(
+                text = "${stringResource(id = R.string.total).uppercase()}:",
+                style = FinanceHelperTheme.typography.h3
+            )
             Text(text = totalSum.toString(), style = FinanceHelperTheme.typography.h3)
-            ExpandedListItem(item =defaultCurrency.value , color = FinanceHelperTheme.colors.defaultButtonColor) {
-                defaultCurrency.value=it
+            ExpandedListItem(
+                item = defaultCurrency.value,
+                color = FinanceHelperTheme.colors.defaultButtonColor
+            ) {
+                defaultCurrency.value = it
             }
         }
     }
 }
+
 @Preview(apiLevel = 34)
 @Composable
-fun TotalSectionPreview(){
+fun TotalSectionPreview() {
     FinanceHelperTheme {
         TotalSection(totalSum = 200.11, currency = CurrencyUI("zxc", "BYN"))
     }

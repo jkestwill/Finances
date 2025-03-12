@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.jk.common_data.Dispatchers
+import com.jk.common_data.DispatcherProvider
 import com.jk.common_data.SearchParams
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.models.GoodsUI
@@ -25,7 +25,7 @@ import javax.inject.Inject
 class GoodsListViewModel @Inject constructor(
     private val goodsRepository: GoodsRepository,
     private val goodsUIMapper: GoodsUIMapper,
-    private val dispatcherProvider: Dispatchers
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private var _goodsStateFlow: MutableStateFlow<PagingData<GoodsPreviewUI>> =

@@ -1,4 +1,4 @@
-package com.jk.transaction
+package com.jk.transaction.model
 
 import com.jk.money_common_ui.MoneyUI
 

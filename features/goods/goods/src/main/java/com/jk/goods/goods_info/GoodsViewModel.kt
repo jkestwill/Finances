@@ -2,7 +2,7 @@ package com.jk.goods.goods_info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jk.common_data.Dispatchers
+import com.jk.common_data.DispatcherProvider
 import com.jk.common_data.Validator
 import com.jk.common_data.map
 import com.jk.common_ui.State
@@ -29,7 +29,7 @@ class GoodsViewModel @Inject constructor(
     private val currencyUIMapper: CurrencyUIMapper,
     private val goodsMapper: GoodsUIMapper,
     private val goodsValidator: Validator<GoodsUI>,
-    private val dispatcher: Dispatchers
+    private val dispatcher: DispatcherProvider
 ) : ViewModel() {
 
     private var _goodsFlow = MutableStateFlow<State<GoodsUI>>(State.None)

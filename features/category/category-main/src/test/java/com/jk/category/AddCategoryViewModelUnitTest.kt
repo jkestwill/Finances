@@ -37,7 +37,7 @@ class AddCategoryViewModelUnitTest {
     @Mock
     private lateinit var categoryValidator: CategoryUIValidator
     @Mock
-    private val dispatchers: com.jk.common_data.Dispatchers = com.jk.common_data.Dispatchers(default=Dispatchers.Default)
+    private val dispatchers: com.jk.common_data.DispatcherProvider = com.jk.common_data.DispatcherProvider(default=Dispatchers.Default)
     @InjectMocks
     private lateinit var addCategoryViewModel:AddCategoryViewModel
 
