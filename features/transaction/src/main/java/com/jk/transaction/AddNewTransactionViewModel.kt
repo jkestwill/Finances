@@ -10,6 +10,7 @@ import com.jk.category.CategoryUIMapper
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.DispatcherProvider
+import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
@@ -24,6 +25,7 @@ import com.jk.money_account_data.MoneyAccountRepository
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
+import com.jk.shared_res.BusinessExceptionsHandler
 import com.jk.transaction.validator.TransactionValidator
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.ScheduleUI
@@ -57,6 +59,7 @@ class AddNewTransactionViewModel @Inject constructor(
     private val goodsMapper: GoodsUIMapper,
     private val moneyAccountRepository: MoneyAccountRepository,
     private val moneyAccountUIMapper: MoneyAccountUIMapper,
+    private val businessExceptionsHandler: BusinessExceptionsHandler,
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
     private val dispatchers: DispatcherProvider,
 ) : ViewModel() {
@@ -175,7 +178,9 @@ class AddNewTransactionViewModel @Inject constructor(
                 transactionValidator.validate(newTransactionState.value)
                 transactionRepository.addTransaction(transactionMapper.toTransaction(transactionUI.build()))
                 onSuccess()
-            } catch (e: IllegalArgumentException) {
+            } catch (e: FinanceHelperException.BusinessLogicException) {
+                // todo переменная для ошибок либо же связать с CharacterLimitTextField
+                 businessExceptionsHandler.handle(e)
                 onFailure(e.message ?: "error creating transaction")
                 logger?.info(e.message)
                 return@launch

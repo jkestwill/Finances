@@ -1,6 +1,8 @@
 package com.jk.transaction.validator
 
+import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.Validator
+import com.jk.common_data.exceptions.GoodsNameLengthException
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.MoneyUI
 import javax.inject.Inject
@@ -13,9 +15,11 @@ class GoodsValidator @Inject constructor(private val moneyValidator: Validator<M
 
         when {
             preBuild.name.isEmpty() -> {
-                throw IllegalArgumentException("Goods name can't be empty")
+                //"Goods name can't be empty"
+                throw GoodsNameLengthException()
             }
         }
 
     }
 }
+

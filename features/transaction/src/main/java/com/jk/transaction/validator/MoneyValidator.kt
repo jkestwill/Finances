@@ -1,6 +1,7 @@
 package com.jk.transaction.validator
 
 import com.jk.common_data.Validator
+import com.jk.common_data.exceptions.MoneyConstraints
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import javax.inject.Inject
@@ -11,13 +12,8 @@ class MoneyValidator @Inject constructor(
     override fun validate(target: MoneyUI) {
         currencyValidator.validate(target.currency)
         when {
-            target.amount < 0 -> {
+            target.amount < MoneyConstraints.AMOUNT_MIN -> {
                 throw IllegalArgumentException("Money amount can't be below zero")
-            }
-
-            target.currency.name.isEmpty() -> {
-                // provide default value in config
-                throw IllegalArgumentException("Currency name can't be empty")
             }
         }
     }

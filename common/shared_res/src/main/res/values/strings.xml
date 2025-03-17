@@ -48,6 +48,12 @@
     <string name="goods">Goods</string>
     <string name="general">General</string>
 
+    <string name="money_min_value">Money amount must not be lower than %1$d</string>
+
+    <string name="currency_name_length_error">Currency name length must equals %1$d</string>
+
+    <string name="goods_empty_name_error">Goods name can\'t be empty</string>
+
     <string-array name="goods_list_header">
         <item name="goods_name">Name</item>
         <item name="goods_amount">Amount</item>

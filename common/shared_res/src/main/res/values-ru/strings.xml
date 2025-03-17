@@ -48,6 +48,13 @@
     <string name="category">Категория</string>
     <string name="categories">Категории</string>
     <string name="currency">Валюта</string>
+
+    <string name="currency_name_length_error">Длина названия валюты должна быть равна %1$d</string>
+
+    <string name="money_min_value">Цена не может быть ниже чем %1$d</string>
+
+    <string name="goods_empty_name_error">Название товара не может быт пустым</string>
+
     <string-array name="goods_list_header">
         <item name="goods_name">Название</item>
         <item name="goods_amount">Количество</item>
