@@ -6,8 +6,8 @@ import com.jk.transaction_database.transaction.entity.CurrencyEntity
 import com.jk.transaction_database.transaction.entity.MoneyEntity
 
 data class MoneyDTO(
-    @Embedded
+    @Embedded("money_")
     val moneyEntity:MoneyEntity,
-    @Relation(parentColumn = "currency_id", entityColumn =  "id")
+    @Embedded("currency_")
     val currency:CurrencyEntity
 )

@@ -45,12 +45,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jk.common_data.sha256
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.DraggableWidthContent
 import com.jk.common_ui.composable.rememberIncrement
 import com.jk.goods_common_ui.models.GoodsPurchaseUI
-import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
@@ -60,7 +59,7 @@ import com.jk.money_common_ui.MoneyUI
 fun GoodsList(
     modifier: Modifier = Modifier,
     goodsList: List<GoodsPurchaseUI.Builder>,
-    currencyListState: State<List<CurrencyUI>>,
+    currencyListState: UIState<List<CurrencyUI>>,
     onGoodsListChange: (List<GoodsPurchaseUI.Builder>) -> Unit,
     onChange: (GoodsPurchaseUI.Builder, Int) -> Unit,
     onAdd: (GoodsPurchaseUI.Builder) -> Unit,
@@ -138,7 +137,7 @@ fun GoodsList(
 @Composable
 fun EditableListItem(
     modifier: Modifier,
-    currencyListState: State<List<CurrencyUI>>,
+    currencyListState: UIState<List<CurrencyUI>>,
     item: GoodsPurchaseUI.Builder,
     onChange: (GoodsPurchaseUI.Builder) -> Unit,
     onRemove: () -> Unit,

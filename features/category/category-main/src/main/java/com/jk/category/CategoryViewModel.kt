@@ -9,7 +9,7 @@ import com.jk.category_data.CategoryRepository
 import com.jk.category_data.CategorySortBy
 import com.jk.common_ui.toState
 import com.jk.common_data.SearchParams
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.map
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
@@ -37,8 +37,8 @@ class CategoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var _categoryFlow =
-        MutableStateFlow<State<CategoryUI>>(State.None)
-    val categoryFlow: StateFlow<State<CategoryUI>> get() = _categoryFlow
+        MutableStateFlow<UIState<CategoryUI>>(UIState.None)
+    val categoryFlow: StateFlow<UIState<CategoryUI>> get() = _categoryFlow
 
     private var _transactionPagingList =
         MutableStateFlow<PagingData<TransactionPreviewUI>>(PagingData.empty())

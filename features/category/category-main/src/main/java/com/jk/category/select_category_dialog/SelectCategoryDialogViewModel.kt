@@ -12,7 +12,7 @@ import com.jk.category.CategoryUIMapper
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 
@@ -43,9 +43,9 @@ class SelectCategoryDialogViewModel @Inject constructor(
             SharingStarted.Lazily, PagingData.empty()
         )
 
-    private val _preselectedCategoryFlow: MutableStateFlow<State<List<CategoryUI>>> =
-        MutableStateFlow(State.None)
-    val preselectedCategoryFlow: StateFlow<State<List<CategoryUI>>> get() = _preselectedCategoryFlow
+    private val _preselectedCategoryFlow: MutableStateFlow<UIState<List<CategoryUI>>> =
+        MutableStateFlow(UIState.None)
+    val preselectedCategoryFlow: StateFlow<UIState<List<CategoryUI>>> get() = _preselectedCategoryFlow
 
     var selectedCategoryList = mutableStateListOf<CategoryUI>()
     fun getCategoryListById(listId: List<String>) {

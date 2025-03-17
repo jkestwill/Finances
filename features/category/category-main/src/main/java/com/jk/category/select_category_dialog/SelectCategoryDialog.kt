@@ -29,7 +29,7 @@ import com.jk.category.CategoryVerticalList
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.Red
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.clickAnimation
 import com.jk.shared_res.R
 
@@ -54,9 +54,9 @@ fun SelectCategoryDialog(
 
     LaunchedEffect(key1 = preselectedCategoryList) {
         when (preselectedCategoryList) {
-            is State.Success -> {
+            is UIState.Success -> {
                 viewModel.selectedCategoryList.clear()
-                viewModel.selectedCategoryList.addAll((preselectedCategoryList as State.Success<List<CategoryUI>>).data)
+                viewModel.selectedCategoryList.addAll((preselectedCategoryList as UIState.Success<List<CategoryUI>>).data)
             }
 
             else -> {}

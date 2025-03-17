@@ -5,14 +5,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.composable.TextWithDropDownMenu
 
 
 @Composable
 fun CurrencyDropDownMenu(
     modifier: Modifier=Modifier,
-    currencyListState: State<List<CurrencyUI>>,
+    currencyListState: UIState<List<CurrencyUI>>,
     color: Color,
     placeholderText: String,
     onClick: (CurrencyUI) -> Unit
@@ -20,7 +20,7 @@ fun CurrencyDropDownMenu(
     val currencyList = remember(currencyListState) {
         derivedStateOf {
             when (currencyListState) {
-                is State.Success -> {
+                is UIState.Success -> {
                     currencyListState.data
                 }
 

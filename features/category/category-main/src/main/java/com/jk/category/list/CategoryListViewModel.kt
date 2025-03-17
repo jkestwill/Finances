@@ -10,7 +10,7 @@ import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +42,7 @@ class CategoryListViewModel @Inject constructor(
 
     val categoryListFlow: StateFlow<PagingData<CategoryUI>> get() = _categoryListFLow
 
-    val categoryDeleteState = MutableStateFlow<State<Unit>>(State.None)
+    val categoryDeleteState = MutableStateFlow<UIState<Unit>>(UIState.None)
 
     var selectedCategoryIdList = MutableStateFlow(listOf<String>())
 
@@ -51,8 +51,8 @@ class CategoryListViewModel @Inject constructor(
     fun observeCategoryDeleteState() {
         viewModelScope.launch {
             categoryDeleteState.collect {
-                if (it is State.Success) {
-                    categoryDeleteState.value = State.None
+                if (it is UIState.Success) {
+                    categoryDeleteState.value = UIState.None
                     selectedCategoryIdList.value = listOf()
                 }
             }

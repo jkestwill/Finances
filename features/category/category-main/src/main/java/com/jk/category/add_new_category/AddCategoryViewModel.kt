@@ -10,7 +10,7 @@ import com.jk.category_data.CategoryRepository
 import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.sha256
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.toState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -43,8 +43,8 @@ class AddCategoryViewModel @Inject constructor(
         MutableSharedFlow<String>(1, onBufferOverflow = BufferOverflow.DROP_LATEST)
     val addCategoryError: SharedFlow<String> get() = _addCategoryError
 
-    private var _addCategoryResponse = MutableStateFlow<State<Long>>(State.None)
-    val addCategoryResponse: StateFlow<State<Long>> get() = _addCategoryResponse
+    private var _addCategoryResponse = MutableStateFlow<UIState<Long>>(UIState.None)
+    val addCategoryResponse: StateFlow<UIState<Long>> get() = _addCategoryResponse
 
 
     fun addCategory(name: String, color: Int?) {

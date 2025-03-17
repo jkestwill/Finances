@@ -1,10 +1,12 @@
 package com.jk.category_data
 
+import android.database.sqlite.SQLiteReadOnlyDatabaseException
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.jk.category_common_data.Category
 import com.jk.common_data.ApiRequest
+import com.jk.common_data.AppErrors
 import com.jk.common_data.SearchParams
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import dagger.assisted.Assisted
@@ -39,8 +41,8 @@ class CategoryRepository @Inject constructor(
         val result: Flow<ApiRequest<Unit>> = flow {
             try {
                 emit(ApiRequest.Success(categoryDao.delete(categoryIdList)))
-            } catch (e: Exception) {
-                emit(ApiRequest.Error<Unit>(data = null, error = e))
+            } catch (e: SQLiteReadOnlyDatabaseException) {
+                emit(ApiRequest.Error<Unit>(data = null, error = AppErrors.NotEnoughSpace))
             }
         }
         return merge(startFlow, result)

@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyexchangeapi.ExchangeRateRequestParams
 import com.jk.common_data.map
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.toState
 import com.jk.exchange_rate_data.ApiRequestMergeStrategy
 import com.jk.exchange_rate_data.CurrencyExchangeRepository
 import com.jk.money_common_ui.ExchangeRateUI
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +28,8 @@ class ExchangeRateViewModel @Inject constructor(
 ) : ViewModel() {
     private val job = SupervisorJob()
 
-    private var _exchangeRateState = MutableStateFlow<State<ExchangeRateUI>>(State.None)
-    val exchangeRateState: StateFlow<State<ExchangeRateUI>> get() = _exchangeRateState
+    private var _exchangeRateState = MutableStateFlow<UIState<ExchangeRateUI>>(UIState.None)
+    val exchangeRateState: StateFlow<UIState<ExchangeRateUI>> get() = _exchangeRateState
 
     //todo exchangeService идет по дефолту в настройках
     fun getBynToCurrencyExchange(currencyIn: String, currencyOut:String, exchangeServiceName:String) {
@@ -47,7 +46,7 @@ class ExchangeRateViewModel @Inject constructor(
                     .stateIn(
                         scope = viewModelScope,
                         started = SharingStarted.Lazily,
-                        initialValue = State.None
+                        initialValue = UIState.None
                     )
             )
         }

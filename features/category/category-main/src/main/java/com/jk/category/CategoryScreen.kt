@@ -51,7 +51,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.Celadon
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.composable.AutoSizeText
 import com.jk.shared_res.R
 import com.jk.transaction_common_ui.TransactionPreviewUI
@@ -77,7 +77,7 @@ fun CategoryScreen(
     val color by remember(category.value) {
         derivedStateOf {
             when (category.value) {
-                is State.Success -> (category.value as State.Success<CategoryUI>).data.color.toULong()
+                is UIState.Success -> (category.value as UIState.Success<CategoryUI>).data.color.toULong()
                 else -> {
                     Celadon.value
                 }
@@ -162,7 +162,7 @@ fun CategoryScreen(
 @Composable
 fun CategoryHeader(
     modifier: Modifier,
-    categoryState: State<CategoryUI>,
+    categoryState: UIState<CategoryUI>,
     color: Color,
     onSearchTranslationY: (Float) -> Unit,
     onSearch: (String) -> Unit
@@ -171,19 +171,19 @@ fun CategoryHeader(
     val categoryName = remember(categoryState) {
         derivedStateOf {
             when (categoryState) {
-                is State.Loading -> {
+                is UIState.Loading -> {
                     categoryState.data?.name ?: ""
                 }
 
-                is State.Success -> {
+                is UIState.Success -> {
                     categoryState.data.name
                 }
 
-                is State.Error -> {
+                is UIState.Error -> {
                     categoryState.data?.name ?: categoryState.message
                 }
 
-                is State.None -> {
+                is UIState.None -> {
                     errorMessage
                 }
 

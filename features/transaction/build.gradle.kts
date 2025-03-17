@@ -36,6 +36,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
+    kotlinOptions{
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+    }
 }
 
 dependencies {

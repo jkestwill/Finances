@@ -56,7 +56,7 @@ import com.jk.category_common_ui.CategoryUI
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.RotateableBlock
 import com.jk.common_ui.RotationOptions
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.composable.Limit
 import com.jk.common_ui.composable.Search
 import com.jk.common_ui.composable.TextError
@@ -256,7 +256,7 @@ fun BoxScope.SelectItemsMenu(
     val deleteState = viewModel.categoryDeleteState.collectAsState()
     viewModel.observeCategoryDeleteState()
     when (deleteState.value) {
-        is State.Loading -> {
+        is UIState.Loading -> {
             Box(
                 modifier = Modifier
                     .background(
@@ -269,11 +269,11 @@ fun BoxScope.SelectItemsMenu(
             }
         }
 
-        is State.Success -> {
+        is UIState.Success -> {
 
         }
 
-        is State.Error -> {
+        is UIState.Error -> {
             // нарисовать зеленую гниду с табличкой ошибки ххиихихиххихихихи
             ErrorCategory(
                 modifier = Modifier.align(Alignment.TopStart),
@@ -282,7 +282,7 @@ fun BoxScope.SelectItemsMenu(
 
         }
 
-        State.None -> {}
+        UIState.None -> {}
     }
 
     LaunchedEffect(key1 = deleteState.value) {

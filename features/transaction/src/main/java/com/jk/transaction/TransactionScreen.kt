@@ -46,12 +46,11 @@ import com.jk.category_common_ui.CategoryUI
 import com.jk.common_data.sha256
 import com.jk.common_ui.ExpandedSection
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.composable.ExpandedListItem
 import com.jk.goods_common_ui.GoodsList
 import com.jk.goods_common_ui.models.GoodsPurchaseUI
-import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyAmountText
 import com.jk.money_common_ui.CurrencyDropDownMenu
 import com.jk.money_common_ui.CurrencyUI
@@ -79,22 +78,22 @@ fun TransactionScreen(
     val fullGoodsList = remember {
         mutableStateOf(listOf<GoodsPurchaseUI.Builder>())
     }
-    val moneyAccountStateList = viewModel.moneyAccountList.collectAsState(initial = State.None)
+    val moneyAccountStateList = viewModel.moneyAccountList.collectAsState(initial = UIState.None)
     LaunchedEffect(key1 = preGoods.value) {
         when (preGoods.value) {
-            is State.Success -> fullGoodsList.value += (preGoods.value as State.Success<List<GoodsPurchaseUI>>).data.map {
+            is UIState.Success -> fullGoodsList.value += (preGoods.value as UIState.Success<List<GoodsPurchaseUI>>).data.map {
                 GoodsPurchaseUI.Builder(
                     it
                 )
             }
 
-            is State.Loading -> Log.e("TAG", "TransactionScreen: Loading goods from list...")
-            is State.Error -> Log.e(
+            is UIState.Loading -> Log.e("TAG", "TransactionScreen: Loading goods from list...")
+            is UIState.Error -> Log.e(
                 "TAG",
-                "TransactionScreen: error loading goods from list ${(preGoods.value as State.Error<List<GoodsPurchaseUI>>).message}",
+                "TransactionScreen: error loading goods from list ${(preGoods.value as UIState.Error<List<GoodsPurchaseUI>>).message}",
             )
 
-            State.None -> {}
+            UIState.None -> {}
         }
     }
     LaunchedEffect(key1 = goodsIdList) {
@@ -301,12 +300,12 @@ fun TransactionScreen(
 
 @Composable
 fun MoneyAccountSection(
-    moneyAccountStateList: State<List<MoneyAccountUI>>,
+    moneyAccountStateList: UIState<List<MoneyAccountUI>>,
     modifier: Modifier = Modifier,
     onSelect: (moneyAccountId: String) -> Unit = {}
 ) {
     when (moneyAccountStateList) {
-        is State.Success -> {
+        is UIState.Success -> {
             MoneyAccountSection(
                 moneyAccountStateList = moneyAccountStateList.data,
                 modifier = modifier,
@@ -314,16 +313,16 @@ fun MoneyAccountSection(
             )
         }
 
-        is State.Loading -> {
+        is UIState.Loading -> {
             CircularProgressIndicator()
         }
 
-        is State.Error -> {
+        is UIState.Error -> {
             if (moneyAccountStateList.data?.isEmpty() == true)
                 Text("List is empty")
         }
 
-        is State.None -> {
+        is UIState.None -> {
 
         }
     }
@@ -338,15 +337,15 @@ fun MoneyAccountSection(
 
     LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
         items(moneyAccountStateList, key = { it.id }) {
-            Box(modifier = Modifier.clickable { onSelect(it.id) }) {
-                Text(text = it.name, modifier = Modifier.align(Alignment.TopStart))
+            Column (modifier = Modifier.clickable { onSelect(it.id) }) {
+                Text(text = it.name, modifier = Modifier)
                 Text(
                     text = it.moneyUI.amount.toString(),
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier
                 )
                 Text(
                     text = it.moneyUI.currency.name,
-                    modifier = Modifier.align(Alignment.BottomEnd)
+                    modifier = Modifier
                 )
             }
         }
@@ -359,7 +358,7 @@ fun MoneyAccountSection(
 @Composable
 fun TransactionInfoSection(
     modifier: Modifier = Modifier,
-    currencyList: State<List<CurrencyUI>>,
+    currencyList: UIState<List<CurrencyUI>>,
     goodsList: Double,
     onChange: (OperationUI.Builder) -> Unit
 ) {
@@ -488,7 +487,7 @@ fun CategoryGrid(
 fun GoodsSection(
     modifier: Modifier = Modifier,
     list: List<GoodsPurchaseUI.Builder>,
-    currencyListState: State<List<CurrencyUI>>,
+    currencyListState: UIState<List<CurrencyUI>>,
     onGoodsAdd: (List<String>?) -> Unit,
     onNewGoods: (GoodsPurchaseUI.Builder) -> Unit,
     onRemoveGoods: (GoodsPurchaseUI.Builder) -> Unit,

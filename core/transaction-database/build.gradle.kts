@@ -75,6 +75,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation (libs.core.ktx)
+    testImplementation(kotlin("test"))
 }
 
 

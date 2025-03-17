@@ -22,7 +22,7 @@ abstract class MoneyDao internal constructor(
     @Update(entity = MoneyEntity::class)
     abstract suspend fun update(t: MoneyEntity)
 
-    @Insert(entity = MoneyEntity::class, onConflict = OnConflictStrategy.IGNORE)
+    @Insert(entity = MoneyEntity::class, onConflict = OnConflictStrategy.ABORT)
     abstract suspend fun insert(t: MoneyEntity)
 
     @Query(value = "SELECT * FROM money")

@@ -16,7 +16,7 @@ class MoneyAccountRepository @Inject constructor(
     private val moneyAccountMapper: MoneyAccountMapper
 ) {
 
-    fun getAll(): Flow<ApiRequest<List<MoneyAccount>>> {
+    fun getAllFromDB(): Flow<ApiRequest<List<MoneyAccount>>> {
         val start = flowOf<ApiRequest<List<MoneyAccount>>>(ApiRequest.Loading())
         val result = flow<ApiRequest<List<MoneyAccount>>> {
             try {
@@ -34,12 +34,17 @@ class MoneyAccountRepository @Inject constructor(
                     emit(ApiRequest.Success(result))
                 }
             } catch (e: IOException) {
-                emit(ApiRequest.Error(null, e))
+                emit(ApiRequest.Error(null, FinanceHelperException("Database IO exception: ${e.message}", "money_acc_repo")))
             } catch (e: Exception) {
-                emit(ApiRequest.Error(null, e))
+                emit(ApiRequest.Error(null, FinanceHelperException(e.message,"money_acc_repo")))
             }
         }
         return merge(start, result)
     }
+
+    suspend fun insert(moneyAccount: MoneyAccount){
+        moneyAccountDao.insert(moneyAccountMapper.toDTO(moneyAccount))
+    }
+
 
 }

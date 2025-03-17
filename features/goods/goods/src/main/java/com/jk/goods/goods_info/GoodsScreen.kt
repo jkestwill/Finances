@@ -17,7 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.jk.common_data.sha256
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.composable.CharacterLimitTextField
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.CurrencyDropDownMenu
@@ -42,8 +42,8 @@ fun GoodsScreen(viewModel: GoodsViewModel, goodsId: String? = null) {
 
 @Composable
 fun GoodsGeneralInfo(
-    goodsUIState: State<GoodsUI>,
-    currencyListState: State<List<CurrencyUI>>,
+    goodsUIState: UIState<GoodsUI>,
+    currencyListState: UIState<List<CurrencyUI>>,
     onCreate: (GoodsUI) -> Unit
 ) {
 
@@ -52,7 +52,7 @@ fun GoodsGeneralInfo(
     }
 // не показывать анимацию если загрузка слишком быстрая
     LaunchedEffect(goodsUIState) {
-        if (goodsUIState is State.Loading) {
+        if (goodsUIState is UIState.Loading) {
             delay(100)
             isLoadingAnimation.value = true
         } else {
@@ -60,20 +60,20 @@ fun GoodsGeneralInfo(
         }
     }
     when (goodsUIState) {
-        is State.Success -> {
+        is UIState.Success -> {
             GoodsGeneralInfo(goodsUIState.data, currencyListState, onCreate = onCreate)
         }
 
-        is State.Loading -> {
+        is UIState.Loading -> {
             if (isLoadingAnimation.value)
                 CircularProgressIndicator()
         }
 
-        is State.Error -> {
+        is UIState.Error -> {
 
         }
 
-        is State.None -> {
+        is UIState.None -> {
             GoodsGeneralInfo(null, currencyListState, onCreate)
         }
     }
@@ -82,7 +82,7 @@ fun GoodsGeneralInfo(
 @Composable
 fun GoodsGeneralInfo(
     goodsUI: GoodsUI?,
-    currencyListState: State<List<CurrencyUI>>,
+    currencyListState: UIState<List<CurrencyUI>>,
     onCreate: (GoodsUI) -> Unit
 ) {
     val name = rememberSaveable() {

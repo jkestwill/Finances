@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.jk.common_ui.FinanceHelperTheme
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.clickAnimation
 import com.jk.common_ui.colorPickList
 import com.jk.common_ui.composable.Error
@@ -249,24 +249,24 @@ fun AddCategory(viewModel: AddCategoryViewModel, onNewCategoryCreated: () -> Uni
     val context = LocalContext.current
 
     when (state.value) {
-        is State.None -> {
+        is UIState.None -> {
             Log.e(TAG, "AddCategory:NONE")
         }
 
-        is State.Loading -> {
+        is UIState.Loading -> {
             Log.e(TAG, "AddCategory:LOADING")
         }
 
-        is State.Success -> {
+        is UIState.Success -> {
             Log.e(TAG, "AddCategory:Success")
             onNewCategoryCreated()
         }
 
-        is State.Error -> {
+        is UIState.Error -> {
             Log.e(TAG, "AddCategory:ERROR")
             Toast.makeText(
                 context,
-                (state.value as State.Error<Long>).message,
+                (state.value as UIState.Error<Long>).message,
                 Toast.LENGTH_LONG
             ).show()
         }

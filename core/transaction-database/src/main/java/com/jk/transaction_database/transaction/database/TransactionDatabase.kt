@@ -166,8 +166,8 @@ val testData = MoneyAccountDTO(
     "zxc".sha256(),
     "picex",
     MoneyDTO(
-        MoneyEntity(id = "zxc", amount = 0.9, currencyId = "cc", date = LocalDate.now()),
-        CurrencyEntity("cc", "BYN")
+        MoneyEntity(id = "zxc", amount = 0.9, currencyId = "36e479ec-2451-441e-9282-d19fe264fe15", date = LocalDate.now()),
+        CurrencyEntity("36e479ec-2451-441e-9282-d19fe264fe15", "USD")
     )
 )
 
@@ -192,7 +192,7 @@ fun transactionDatabaseProvider(
             CoroutineScope(this.queryExecutor.asCoroutineDispatcher()).launch {
                 for (i in Currencies.entries)
                     getCurrencyDao().insert(CurrencyEntity(StringUUIDGenerator.generate(), i.name))
-                getMoneyAccountDao().insert(testData)
+             // getMoneyAccountDao().insert(testData)
             }
 
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.jk.common_data.DispatcherProvider
 import com.jk.common_data.Validator
 import com.jk.common_data.map
-import com.jk.common_ui.State
+import com.jk.common_ui.UIState
 import com.jk.common_ui.toState
 import com.jk.goods.GoodsRepository
 import com.jk.goods_common_ui.models.GoodsUI
@@ -32,10 +32,10 @@ class GoodsViewModel @Inject constructor(
     private val dispatcher: DispatcherProvider
 ) : ViewModel() {
 
-    private var _goodsFlow = MutableStateFlow<State<GoodsUI>>(State.None)
-    val goodsFlow: StateFlow<State<GoodsUI>> = _goodsFlow
+    private var _goodsFlow = MutableStateFlow<UIState<GoodsUI>>(UIState.None)
+    val goodsFlow: StateFlow<UIState<GoodsUI>> = _goodsFlow
 
-    val currencyListFlow: StateFlow<State<List<CurrencyUI>>> =
+    val currencyListFlow: StateFlow<UIState<List<CurrencyUI>>> =
         currencyRepository.getCurrencyList()
             .map { state ->
                 state.map { currencyList ->
@@ -47,7 +47,7 @@ class GoodsViewModel @Inject constructor(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = State.None
+                initialValue = UIState.None
             )
 
     fun getById(id: String) {
@@ -59,7 +59,7 @@ class GoodsViewModel @Inject constructor(
                 .stateIn(
                     viewModelScope,
                     started = SharingStarted.Lazily,
-                    initialValue = State.None
+                    initialValue = UIState.None
                 )
                 .collect {
                     _goodsFlow.value = it

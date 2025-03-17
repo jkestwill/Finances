@@ -10,18 +10,15 @@ import com.jk.transaction_database.transaction.entity.TransactionTypeEntity
 import com.jk.transaction_database.transaction.list.OperationCategoryList
 
 data class TransactionPreviewRelation(
-    @Embedded
+    @Embedded("tr_")
     val transactionEntity: TransactionEntity,
-    @Relation(entity = OperationEntity::class,entityColumn = "id", parentColumn = "operation_id")
-    val operationEntity: OperationPreviewEntity,
-    @Relation(
-        entityColumn = "id",
-        parentColumn = "type_id"
-    )
+    @Embedded
+    val operationEntity: OperationPreviewDTO,
+    @Embedded("type_")
     val typeEntity: TransactionTypeEntity,
 
     @Relation(entity = CategoryEntity::class,
-        parentColumn = "operation_id",
+        parentColumn = "tr_operation_id",
         entityColumn = "id",
         associateBy = Junction(
             value = OperationCategoryList::class,

@@ -4,7 +4,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jk.common_goods_data.Goods
 import com.jk.goods.mapper.GoodsMapper
+import com.jk.goods.mapper.GoodsMapperImpl
 import com.jk.goods.mapper.SpecificationsMapper
+import com.jk.goods.mapper.SpecificationsMapperImpl
 import com.jk.money_common_data.Currency
 import com.jk.money_common_data.Money
 import com.jk.transaction_database.transaction.dao.CurrencyDao
@@ -92,7 +94,6 @@ class ExampleInstrumentedTest {
             Goods(
                 "${it + 30}",
                 name = "goods${it}",
-                amount = 10,
                 specifications = specifiacationsList.map { specificationMapper.toSpecification(it) },
                 cost = money
             )
@@ -104,10 +105,10 @@ class ExampleInstrumentedTest {
             )
         })
         val result = goodsDao.getByIdList(goodsList.map { it.id })
-            .map { it.copy(specifications = it.specifications.sortedBy { s -> s.id }) }
+            .map { it.copy(specifications = it.specifications?.sortedBy { s -> s.id }) }
             .sortedBy { it.goodsEntity.id }
         val sortedGoodsList = goodsList.map { goodsMapper.toGoodsxSpecificationsxMoneyRelation(it) }
-            .map { it.copy(specifications = it.specifications.sortedBy { s -> s.id }) }
+            .map { it.copy(specifications = it.specifications?.sortedBy { s -> s.id }) }
             .sortedBy { it.goodsEntity.id }
 
         assertTrue(sortedGoodsList == result)

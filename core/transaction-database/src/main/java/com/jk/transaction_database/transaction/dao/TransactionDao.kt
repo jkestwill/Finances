@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
 import com.jk.transaction_database.transaction.entity.OperationEntity
@@ -36,7 +35,19 @@ abstract class TransactionDao internal constructor(
     @Query("SELECT * FROM full_transaction ")
     public abstract fun getRelation(): List<TransactionxCategoriesxTypexGoods>
 
-    @Query("SELECT * FROM `transaction`")
+    @Query("SELECT `transaction`.id as tr_id,`transaction`.operation_id as tr_operation_id, `transaction`.date as tr_date, `transaction`.money_account_id as tr_money_account_id, `transaction`.type_id as tr_type_id, " +
+            " operation.id as op_id, operation.money_id as op_money_id, operation.name as op_name, operation.is_expenses as op_is_expenses, " +
+            "type.id as type_id, type.name as type_name," +
+            "op_money.id as op_cost_money_id, op_money.amount as op_cost_money_amount, op_money.currency_id as op_cost_money_currency_id, " +
+            "category.* , category_list.*, " +
+            "currency.id as op_cost_currency_id, currency.name as op_cost_currency_name FROM `transaction` " +
+            "INNER JOIN operation ON operation.id == `transaction`.operation_id " +
+            "INNER JOIN type ON type_id== `transaction`.type_id " +
+            "INNER JOIN money as op_money ON op_money.id == operation.money_id " +
+            "INNER JOIN currency ON currency.id == op_money.id " +
+            "INNER JOIN money_account ON money_account.id == `transaction`.money_account_id " +
+            "INNER JOIN category_list ON category_list.operation_id == operation.id " +
+            "INNER JOIN category ON category.id == category_list.category_id")
     abstract suspend fun getTransactionPreview(): List<TransactionPreviewRelation>
 
     @Insert(entity = TransactionEntity::class, onConflict = OnConflictStrategy.ABORT)
@@ -74,14 +85,19 @@ abstract class TransactionDao internal constructor(
 
     @Transaction
     @Query(
-        value = "SELECT " +
-                " * FROM `category_list` " +
-                "INNER JOIN category ON category_list.category_id == category.id " +
-                "INNER JOIN `operation` ON category_list.operation_id==operation.id " +
-                "INNER JOIN `transaction`ON operation.id == `transaction`.operation_id " +
-                "INNER JOIN type ON type.id == `transaction`.type_id " +
-                "INNER JOIN money ON operation.money_id == money.id " +
-                "INNER JOIN currency ON money.currency_id == currency.id " +
+        value = "SELECT `transaction`.id as tr_id,`transaction`.operation_id as tr_operation_id, `transaction`.date as tr_date, `transaction`.money_account_id as tr_money_account_id, `transaction`.type_id as tr_type_id, " +
+                "operation.id as op_id, operation.money_id as op_money_id, operation.name as op_name, operation.is_expenses as op_is_expenses, " +
+                "type.id as type_id, type.name as type_name," +
+                "op_money.id as op_cost_money_id, op_money.amount as op_cost_money_amount, op_money.currency_id as op_cost_money_currency_id, " +
+                "category.* , category_list.*, " +
+                "currency.id as op_cost_currency_id, currency.name as op_cost_currency_name FROM `transaction` " +
+                "INNER JOIN operation ON operation.id == `transaction`.operation_id " +
+                "INNER JOIN type ON type_id== `transaction`.type_id " +
+                "INNER JOIN money as op_money ON op_money.id == operation.money_id " +
+                "INNER JOIN currency ON currency.id == op_money.id " +
+                "INNER JOIN money_account ON money_account.id == `transaction`.money_account_id " +
+                "INNER JOIN category_list ON category_list.operation_id == operation.id " +
+                "INNER JOIN category ON category.id == category_list.category_id "+
                 "WHERE category.id == :categoryId " +
                 "AND operation.name LIKE '%'||:q||'%'" +
                 "ORDER BY " +

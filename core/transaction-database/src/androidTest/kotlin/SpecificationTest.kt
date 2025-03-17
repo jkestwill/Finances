@@ -68,7 +68,7 @@ class SpecificationTest {
         database.db.clearAllTables()
         val currency = CurrencyEntity(Random.nextInt().toString(), "BYN")
         val moneyId = MoneyEntity(Random.nextInt().toString(), 23.1, currency.id, LocalDate.now())
-        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor", 1)
+        val goodsEntity = GoodsEntity(Random.nextInt().toString(), "Flavor")
         val measure = MeasureEntity("c", "Kg")
         val specification = randomSpecification(30, measureId = measure.id)
         measureDao.insert(measure)
