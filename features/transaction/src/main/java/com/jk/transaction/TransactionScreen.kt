@@ -172,11 +172,7 @@ fun TransactionScreen(
                 Box(
                     modifier = Modifier
                         .clickAnimation {
-                            viewModel.addTransaction(onSuccess = {
-                                Log.e("TransactionScreen", "Success")
-                            }, onFailure = {
-                                Log.e("TransactionScreen", "$it")
-                            })
+                            viewModel.addTransaction()
                         }
                         .background(
                             FinanceHelperTheme.colors.defaultButtonColor,
@@ -419,7 +415,9 @@ fun TransactionInfoSection(
             TransactionNameText(modifier = minHeightModifier.weight(2f),
                 transactionName.value,
                 onValueChange = { transactionName.value = it },
-                onError = {})
+                onError = {
+
+                })
 
             CurrencyAmountText(modifier = minHeightModifier.weight(1f),
                 value = amountString.value,

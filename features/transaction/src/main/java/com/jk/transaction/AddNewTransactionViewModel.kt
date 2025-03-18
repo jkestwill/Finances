@@ -165,7 +165,7 @@ class AddNewTransactionViewModel @Inject constructor(
         }
     }
 
-    fun addTransaction(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun addTransaction() {
         viewModelScope.launch(dispatchers.io) {
             try {
                 val transactionUI: TransactionUI.Builder = newTransactionState.value.setOperation(
@@ -177,16 +177,15 @@ class AddNewTransactionViewModel @Inject constructor(
                 )
                 transactionValidator.validate(newTransactionState.value)
                 transactionRepository.addTransaction(transactionMapper.toTransaction(transactionUI.build()))
-                onSuccess()
+
             } catch (e: FinanceHelperException.BusinessLogicException) {
                 // todo переменная для ошибок либо же связать с CharacterLimitTextField
                  businessExceptionsHandler.handle(e)
-                onFailure(e.message ?: "error creating transaction")
                 logger?.info(e.message)
                 return@launch
-            } catch (e: Exception) {
+            } catch (e: FinanceHelperException.NetworkException) {
                 logger?.info(e.message)
-            }
+            }catch (e:FinanceHelperException.SystemException){}
 
         }
     }

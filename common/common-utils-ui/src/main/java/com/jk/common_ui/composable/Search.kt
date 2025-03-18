@@ -92,8 +92,7 @@ fun Search(
                 .background(
                     color = color.copy(alpha = 0.5f),
                     shape = FinanceHelperTheme.shape.shapeRoundedLow
-                )
-            ,
+                ),
 
                // .focusRequester(focusRequester),
             textStyle = FinanceHelperTheme.typography.h3,

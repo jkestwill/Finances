@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.jk.category_common_data.Category
 import com.jk.common_data.ApiRequest
-import com.jk.common_data.AppErrors
+import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.SearchParams
 import com.jk.transaction_database.transaction.dao.CategoryDao
 import dagger.assisted.Assisted
@@ -42,7 +42,7 @@ class CategoryRepository @Inject constructor(
             try {
                 emit(ApiRequest.Success(categoryDao.delete(categoryIdList)))
             } catch (e: SQLiteReadOnlyDatabaseException) {
-                emit(ApiRequest.Error<Unit>(data = null, error = AppErrors.NotEnoughSpace))
+                emit(ApiRequest.Error<Unit>(data = null, error = FinanceHelperException.SystemException()))
             }
         }
         return merge(startFlow, result)
@@ -74,7 +74,6 @@ class CategoryRepository @Inject constructor(
             emit(categoryDao.getById(categoryId))
         }.map {
             if (it != null) {
-
                 ApiRequest.Success(categoryMapper.toCategory(it))
             } else {
                 ApiRequest.Error<Category>(
@@ -100,7 +99,7 @@ class CategoryRepository @Inject constructor(
                 ApiRequest.Success(category )
             } else {
                 ApiRequest.Error<List<Category>>(
-                    category,
+                    null,
                     NoSuchElementException("Category with id $categoryId doesn't exists")
                 )
             }

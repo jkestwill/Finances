@@ -2,7 +2,6 @@ package com.jk.common_ui.composable
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 import com.jk.common_ui.FinanceHelperTheme
 import com.jk.common_ui.error
@@ -87,9 +85,7 @@ fun CharacterLimitTextField(
                 val errorMatcher = textLimitConfig.matchTextLimit(it)
                 error.value = errorMatcher?.first
                 if (textLimitConfig.isTypingAllowed(it)) onValueChange(
-                    textLimitConfig.textLimit.onValueChange?.invoke(
-                        it
-                    ) ?: it
+                    textLimitConfig.textLimit.onValueChange?.invoke(it)?: it
                 )
             } else {
                 onValueChange(it)
