@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":common:common-data:category"))
     implementation(project(":common:common-data:transaction"))
     implementation(project(":common:common-utils"))
+    implementation(project(":common:common-utils-ui"))
 
 
     testImplementation(libs.junit)

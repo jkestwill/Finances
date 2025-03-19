@@ -1,7 +1,7 @@
 package com.jk.transaction.validator
 
 import com.jk.common_data.Validator
-import com.jk.common_data.exceptions.MoneyConstraints
+import com.jk.money_common_ui.exceptions.MoneyConstraints
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.MoneyUI
 import javax.inject.Inject
