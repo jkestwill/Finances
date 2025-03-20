@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.jk.shared_res"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 26
@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(project(":common:common-utils"))
+    implementation(project(":common:common-utils-ui"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

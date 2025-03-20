@@ -1,7 +1,0 @@
-package com.jk.common_data.exceptions
-
-import com.jk.common_data.FinanceHelperException
-
-class TransactionTypeEmptyException:FinanceHelperException.BusinessLogicException()
-
-class TransactionDateAfterNowException:FinanceHelperException.BusinessLogicException()

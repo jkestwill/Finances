@@ -1,5 +1,6 @@
 package com.jk.transaction
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,6 @@ import com.jk.category.CategoryUIMapper
 import com.jk.category_common_ui.CategoryUI
 import com.jk.category_data.CategoryRepository
 import com.jk.common_data.DispatcherProvider
-import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.LoggerTags
 import com.jk.common_data.SearchParams
 import com.jk.common_data.map
@@ -25,7 +25,6 @@ import com.jk.money_account_data.MoneyAccountRepository
 import com.jk.money_common_ui.CurrencyUI
 import com.jk.money_common_ui.toUI
 import com.jk.money_data.CurrencyRepository
-import com.jk.shared_res.BusinessExceptionsHandler
 import com.jk.transaction.validator.TransactionValidator
 import com.jk.transaction_common_ui.OperationUI
 import com.jk.transaction_common_ui.ScheduleUI
@@ -59,7 +58,7 @@ class AddNewTransactionViewModel @Inject constructor(
     private val goodsMapper: GoodsUIMapper,
     private val moneyAccountRepository: MoneyAccountRepository,
     private val moneyAccountUIMapper: MoneyAccountUIMapper,
-    private val businessExceptionsHandler: BusinessExceptionsHandler,
+    private val transactionStringResourceExceptionHandler: TransactionStringResourceExceptionHandler,
     @Named(LoggerTags.ADD_NEW_TRANSACTION) private val logger: Logger?,
     private val dispatchers: DispatcherProvider,
 ) : ViewModel() {
@@ -70,7 +69,10 @@ class AddNewTransactionViewModel @Inject constructor(
     private var _categoryList = MutableStateFlow<UIState<List<CategoryUI>>>(UIState.None)
     val categoryList: StateFlow<UIState<List<CategoryUI>>> = _categoryList
 
-    private val coroutineIOScope = CoroutineScope(dispatchers.io  + SupervisorJob())
+    private val coroutineIOScope = CoroutineScope(dispatchers.io + SupervisorJob())
+
+    private var _errorMessageStateFlow = MutableStateFlow("")
+    val errorMessageStateFlow: StateFlow<String> get() = _errorMessageStateFlow
 
     val moneyAccountList = moneyAccountRepository.getAllFromDB()
         .map { state ->
@@ -89,22 +91,23 @@ class AddNewTransactionViewModel @Inject constructor(
     // для того чтобы после удаления категории при поровороте экрана или его обновлении не приходили удаленные категории
     var prevCategoryIdList: List<String>? = null
 
-    val currencyListState: StateFlow<UIState<List<CurrencyUI>>> = currencyRepository.getCurrencyList()
-        .map {
-            it.map { list ->
-                list.map { currency ->
-                    currency.toUI()
-                }
-            }.toState()
-        }.onEach {
-            if (it is UIState.Success)
-                logger?.info("${it.data}")
+    val currencyListState: StateFlow<UIState<List<CurrencyUI>>> =
+        currencyRepository.getCurrencyList()
+            .map {
+                it.map { list ->
+                    list.map { currency ->
+                        currency.toUI()
+                    }
+                }.toState()
+            }.onEach {
+                if (it is UIState.Success)
+                    logger?.info("${it.data}")
 
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Lazily, UIState.None
-        )
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Lazily, UIState.None
+            )
 
     val allGoodsFlow =
         goodsRepository.getAllFromDatabase(searchParams = SearchParams.getDefault())
@@ -167,25 +170,26 @@ class AddNewTransactionViewModel @Inject constructor(
 
     fun addTransaction() {
         viewModelScope.launch(dispatchers.io) {
-            try {
-                val transactionUI: TransactionUI.Builder = newTransactionState.value.setOperation(
+            val transactionUI: TransactionUI.Builder =
+                newTransactionState.value.setOperation(
                     operationBuilder.value
                         .setGoodsList(
                             newGoodsBuilderList.map { it.build() }
                         ).setCategoryList(editableCategoriesStateList)
                         .build()
                 )
-                transactionValidator.validate(newTransactionState.value)
-                transactionRepository.addTransaction(transactionMapper.toTransaction(transactionUI.build()))
+            transactionStringResourceExceptionHandler.suspendGetStringErrorFromResource(
+                {
+                    transactionValidator.validate(newTransactionState.value)
+                    transactionRepository.addTransaction(
+                        transactionMapper.toTransaction(transactionUI.build())
+                    )
 
-            } catch (e: FinanceHelperException.BusinessLogicException) {
-                // todo переменная для ошибок либо же связать с CharacterLimitTextField
-                 businessExceptionsHandler.handle(e)
-                logger?.info(e.message)
-                return@launch
-            } catch (e: FinanceHelperException.NetworkException) {
-                logger?.info(e.message)
-            }catch (e:FinanceHelperException.SystemException){}
+                },
+                catchBlock = { errorMessage: String ->
+
+                }
+            )
 
         }
     }

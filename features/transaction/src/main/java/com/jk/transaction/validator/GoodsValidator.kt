@@ -1,8 +1,7 @@
 package com.jk.transaction.validator
 
-import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.Validator
-import com.jk.common_data.exceptions.GoodsNameLengthException
+import com.jk.goods_common_ui.exceptions.GoodsNameLengthException
 import com.jk.goods_common_ui.models.GoodsUI
 import com.jk.money_common_ui.MoneyUI
 import javax.inject.Inject
