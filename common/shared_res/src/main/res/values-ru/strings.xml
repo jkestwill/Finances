@@ -55,6 +55,11 @@
 
     <string name="goods_empty_name_error">Название товара не может быт пустым</string>
 
+    <string name="operation_empty_name_error">Название транзакции не может быть пустым</string>
+
+    <string name="transaction_date_after_error">Дата транзакции не может быть позже чем сейчас</string>
+
+    <string name="transaction_type_empty_error">Тип транзакции не может быть пустым</string>
     <string-array name="goods_list_header">
         <item name="goods_name">Название</item>
         <item name="goods_amount">Количество</item>

@@ -1,8 +1,8 @@
 package com.jk.transaction.validator
 
-import com.jk.common_data.FinanceHelperException
 import com.jk.common_data.Validator
-import com.jk.common_data.sha256
+import com.jk.common_data.exceptions.TransactionDateAfterNowException
+import com.jk.common_data.exceptions.TransactionTypeEmptyException
 import com.jk.transaction_common_ui.TransactionUI
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -16,13 +16,10 @@ class TransactionValidator @Inject constructor(
         operationValidator.validate(preBuild.operation.builder())
         when {
             preBuild.type.name.isEmpty() -> {
-                throw IllegalArgumentException("Transaction type must not be empty")
+                throw TransactionTypeEmptyException()
             }
             preBuild.date > LocalDateTime.now() ->{
-                throw FinanceHelperException("Transaction date can't be later than now","")
-            }
-            preBuild.id.isEmpty() -> {
-                target.id("${preBuild.date}${preBuild.operation.name}${preBuild.operation.money.amount}".sha256())
+                throw TransactionDateAfterNowException()
             }
         }
     }

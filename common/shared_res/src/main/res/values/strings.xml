@@ -54,6 +54,10 @@
 
     <string name="goods_empty_name_error">Goods name can\'t be empty</string>
 
+    <string name="operation_empty_name_error">Transaction name can\'t be empty</string>
+
+    <string name="transaction_date_after_error">Transaction date can\'t be later than now</string>
+    <string name="transaction_type_empty_error">Transaction type must not be empty</string>
     <string-array name="goods_list_header">
         <item name="goods_name">Name</item>
         <item name="goods_amount">Amount</item>
