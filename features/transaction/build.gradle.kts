@@ -8,7 +8,7 @@ android {
     namespace = "com.jk.transaction"
     compileSdk = 34
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
     defaultConfig {
         minSdk = 26

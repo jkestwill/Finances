@@ -15,7 +15,7 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
     buildTypes {
         release {

@@ -32,7 +32,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.9"
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 }
 

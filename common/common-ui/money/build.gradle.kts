@@ -32,7 +32,7 @@ android {
         compose=true
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 }
 

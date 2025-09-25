@@ -27,27 +27,28 @@ import androidx.compose.ui.unit.sp
 /**
  * Данные для колонки таблицы
  */
-data class TableColumn(
+data class TableColumn<T>(
     val key: String,
     val title: String,
     val initialWidth: Dp = 120.dp,
     val minWidth: Dp = 50.dp,
-    val maxWidth: Dp = 300.dp
+    val maxWidth: Dp = 300.dp,
+    val formatter: (T?) -> String = { it?.toString() ?: "" }
 )
 
 /**
- * Данные для строки таблицы
+ * Данные для строки таблицы с типизированными данными
  */
-data class TableRow(
+data class TableRow<T>(
     val id: String,
-    val data: Map<String, String>
+    val data: Map<String, T>
 )
 
 /**
  * Состояние размеров колонок
  */
 @Composable
-fun rememberColumnWidthState(columns: List<TableColumn>) = remember(columns) {
+fun <T> rememberColumnWidthState(columns: List<TableColumn<T>>) = remember(columns) {
     mutableStateMapOf<String, Dp>().apply {
         columns.forEach { column ->
             this[column.key] = column.initialWidth
@@ -59,9 +60,9 @@ fun rememberColumnWidthState(columns: List<TableColumn>) = remember(columns) {
  * Компонент таблицы с изменяемой шириной колонок
  */
 @Composable
-fun ResizableTable(
-    columns: List<TableColumn>,
-    rows: List<TableRow>,
+fun <T> ResizableTable(
+    columns: List<TableColumn<T>>,
+    rows: List<TableRow<T>>,
     modifier: Modifier = Modifier,
     headerBackgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     rowBackgroundColor: Color = MaterialTheme.colorScheme.surface,
@@ -106,8 +107,8 @@ fun ResizableTable(
 }
 
 @Composable
-private fun TableHeader(
-    columns: List<TableColumn>,
+private fun <T> TableHeader(
+    columns: List<TableColumn<T>>,
     columnWidths: Map<String, Dp>,
     backgroundColor: Color,
     borderColor: Color,
@@ -159,9 +160,9 @@ private fun TableHeader(
 }
 
 @Composable
-private fun TableBody(
-    columns: List<TableColumn>,
-    rows: List<TableRow>,
+private fun <T> TableBody(
+    columns: List<TableColumn<T>>,
+    rows: List<TableRow<T>>,
     columnWidths: Map<String, Dp>,
     rowBackgroundColor: Color,
     alternateRowBackgroundColor: Color,
@@ -186,9 +187,9 @@ private fun TableBody(
 }
 
 @Composable
-private fun TableRowItem(
-    columns: List<TableColumn>,
-    row: TableRow,
+private fun <T> TableRowItem(
+    columns: List<TableColumn<T>>,
+    row: TableRow<T>,
     columnWidths: Map<String, Dp>,
     backgroundColor: Color,
     borderColor: Color
@@ -201,7 +202,8 @@ private fun TableRowItem(
     ) {
         columns.forEach { column ->
             val width = columnWidths[column.key] ?: column.initialWidth
-            val cellData = row.data[column.key] ?: ""
+            val cellValue = row.data[column.key]
+            val cellData = column.formatter(cellValue)
             
             Box(
                 modifier = Modifier
@@ -255,16 +257,16 @@ private fun ColumnResizeHandle(
 }
 
 /**
- * Предварительный просмотр компонента
+ * Предварительный просмотр компонента с типизированными данными
  */
 @Composable
 fun ResizableTablePreview() {
     val sampleColumns = listOf(
-        TableColumn("id", "ID", 60.dp),
-        TableColumn("name", "Название", 150.dp),
-        TableColumn("amount", "Сумма", 100.dp),
-        TableColumn("date", "Дата", 120.dp),
-        TableColumn("category", "Категория", 130.dp)
+        TableColumn<String>("id", "ID", 60.dp),
+        TableColumn<String>("name", "Название", 150.dp),
+        TableColumn<String>("amount", "Сумма", 100.dp),
+        TableColumn<String>("date", "Дата", 120.dp),
+        TableColumn<String>("category", "Категория", 130.dp)
     )
     
     val sampleRows = listOf(

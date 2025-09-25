@@ -11,7 +11,7 @@ android {
         minSdk = 26
     }
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 }
 
