@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -151,20 +152,11 @@ private fun AutoSizeText(
             val currentDensity = LocalDensity.current
             val fontFamilyResolver = LocalFontFamilyResolver.current
             val coercedLineSpacingRatio = lineSpacingRatio.takeIf { it.isFinite() && it >= 1 } ?: 1F
+            val shouldShrink  = remember {
+                mutableStateOf(false)
+            }
             val shouldMoveBackward: (TextUnit) -> Boolean = {
-                shouldShrink(
-                    text = text,
-                    textStyle = combinedTextStyle.copy(
-                        fontSize = it,
-                        lineHeight = it * coercedLineSpacingRatio,
-                    ),
-                    maxLines = maxLines,
-                    minLines = minLines,
-                    softWrap = softWrap,
-                    layoutDirection = layoutDirection,
-                    density = currentDensity,
-                    fontFamilyResolver = fontFamilyResolver,
-                )
+                shouldShrink.value
             }
 
             val electedFontSize = kotlin.run {
@@ -197,7 +189,11 @@ private fun AutoSizeText(
                 maxLines = maxLines,
                 minLines = minLines,
                 inlineContent = inlineContent.value,
-                onTextLayout = onTextLayout,
+                onTextLayout = {
+
+
+
+                },
                 style = combinedTextStyle.copy(
                     fontSize = electedFontSize,
                     lineHeight = electedFontSize * coercedLineSpacingRatio,

@@ -1,8 +1,6 @@
 package com.jk.transaction.validator
 
 import com.jk.common_data.Validator
-import com.jk.common_data.exceptions.OperationNameLengthException
-import com.jk.common_data.sha256
 import com.jk.money_common_ui.MoneyUI
 import com.jk.transaction_common_ui.OperationUI
 import javax.inject.Inject
